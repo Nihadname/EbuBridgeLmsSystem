@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{24459C5D-2945-4EB5-A732-DD693462BC18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EbuBridgeLmsSystem.Domain", "Core\EbuBridgeLmsSystem.Domain\EbuBridgeLmsSystem.Domain.csproj", "{7CF2E0D9-C48D-4E03-B7CB-EC376C7071CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EbuBridgeLmsSystem.Application", "Core\EbuBridgeLmsSystem.Application\EbuBridgeLmsSystem.Application.csproj", "{16A60666-9117-492E-8410-14B15975E672}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{F657DE2E-A9D2-4485-B544-7A073E7997C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EbuBridgeLmsSystem.Infrastructure", "Infrastructure\EbuBridgeLmsSystem.Infrastructure\EbuBridgeLmsSystem.Infrastructure.csproj", "{E16C6F6C-EA7D-4E02-A243-D30DD4F6AFCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EbuBridgeLmsSystem.Persistance", "Infrastructure\EbuBridgeLmsSystem.Persistance\EbuBridgeLmsSystem.Persistance.csproj", "{35664EB7-9F30-418C-9E2B-35717BDB65F1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{EBDCADE3-695D-4C1A-84B4-1693DB8B366D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EbuBridgeLmsSystem.Api", "Presentation\EbuBridgeLmsSystem.Api\EbuBridgeLmsSystem.Api.csproj", "{07CBBEE8-BA37-4239-94E2-68C5D8A4B7FE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7CF2E0D9-C48D-4E03-B7CB-EC376C7071CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CF2E0D9-C48D-4E03-B7CB-EC376C7071CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CF2E0D9-C48D-4E03-B7CB-EC376C7071CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CF2E0D9-C48D-4E03-B7CB-EC376C7071CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16A60666-9117-492E-8410-14B15975E672}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16A60666-9117-492E-8410-14B15975E672}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16A60666-9117-492E-8410-14B15975E672}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16A60666-9117-492E-8410-14B15975E672}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E16C6F6C-EA7D-4E02-A243-D30DD4F6AFCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E16C6F6C-EA7D-4E02-A243-D30DD4F6AFCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E16C6F6C-EA7D-4E02-A243-D30DD4F6AFCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E16C6F6C-EA7D-4E02-A243-D30DD4F6AFCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35664EB7-9F30-418C-9E2B-35717BDB65F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35664EB7-9F30-418C-9E2B-35717BDB65F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35664EB7-9F30-418C-9E2B-35717BDB65F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35664EB7-9F30-418C-9E2B-35717BDB65F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07CBBEE8-BA37-4239-94E2-68C5D8A4B7FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07CBBEE8-BA37-4239-94E2-68C5D8A4B7FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07CBBEE8-BA37-4239-94E2-68C5D8A4B7FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07CBBEE8-BA37-4239-94E2-68C5D8A4B7FE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7CF2E0D9-C48D-4E03-B7CB-EC376C7071CB} = {24459C5D-2945-4EB5-A732-DD693462BC18}
+		{16A60666-9117-492E-8410-14B15975E672} = {24459C5D-2945-4EB5-A732-DD693462BC18}
+		{E16C6F6C-EA7D-4E02-A243-D30DD4F6AFCD} = {F657DE2E-A9D2-4485-B544-7A073E7997C6}
+		{35664EB7-9F30-418C-9E2B-35717BDB65F1} = {F657DE2E-A9D2-4485-B544-7A073E7997C6}
+		{07CBBEE8-BA37-4239-94E2-68C5D8A4B7FE} = {EBDCADE3-695D-4C1A-84B4-1693DB8B366D}
+	EndGlobalSection
+EndGlobal
