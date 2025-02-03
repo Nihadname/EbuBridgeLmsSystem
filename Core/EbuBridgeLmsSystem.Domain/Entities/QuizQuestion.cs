@@ -1,12 +1,6 @@
 ﻿using LearningManagementSystem.Core.Entities.Common;
-using Microsoft.VisualBasic.FileIO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace LearningManagementSystem.Core.Entities
+namespace EbuBridgeLmsSystem.Domain.Entities
 {
     public class QuizQuestion:BaseEntity
     {

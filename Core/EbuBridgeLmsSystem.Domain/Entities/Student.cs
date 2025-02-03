@@ -1,12 +1,6 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities;
-using LearningManagementSystem.Core.Entities.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LearningManagementSystem.Core.Entities.Common;
 
-namespace LearningManagementSystem.Core.Entities
+namespace EbuBridgeLmsSystem.Domain.Entities
 {
     public class Student:BaseEntity
     { 

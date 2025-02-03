@@ -1,10 +1,4 @@
-﻿using LearningManagementSystem.Core.Entities;
-using LearningManagementSystem.Core.Entities.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LearningManagementSystem.Core.Entities.Common;
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
@@ -47,6 +41,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public Student Student { get; set; }
         public Teacher Teacher { get; set; }
         public Parent Parent { get; set; }
+        public string   AppUserId   { get; set; }
         public ICollection<Note> Notes { get; set; }
         public ICollection<Report> Reports { get; set; }
         public bool IsFirstTimeLogined { get; set; }
