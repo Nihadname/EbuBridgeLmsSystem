@@ -1,0 +1,15 @@
+﻿using EbuBridgeLmsSystem.Domain.Entities;
+
+namespace EbuBridgeLmsSystem.Application.Dtos.Fee
+{
+    public class FeeListItemDto
+    {
+        public Guid Id { get; set; }
+        public decimal Amount { get; set; }
+        public DateTime DueDate { get; set; }
+        public DateTime? PaidDate { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
+        public string PaymentReference { get; set; }
+    }
+}
