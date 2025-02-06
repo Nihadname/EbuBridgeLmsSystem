@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Parent
 {
-    public class ParentRegisterDto
+    public sealed class ParentRegisterDto
     {
         public RegisterDto Register { get; set; }
         public ParentCreateDto Parent { get; set; }

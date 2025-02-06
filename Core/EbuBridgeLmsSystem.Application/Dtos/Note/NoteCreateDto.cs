@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Note
 {
-    public class NoteCreateDto
+    public sealed class NoteCreateDto
     {
         public string Title { get; set; }
         public string Description { get; set; }

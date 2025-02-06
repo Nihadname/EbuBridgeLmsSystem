@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Course
 {
-    public record CourseReturnDto
+    public sealed record CourseReturnDto
     {
         public Guid Id { get; init; }
         public string ImageUrl { get; init; }
@@ -10,7 +10,7 @@ namespace EbuBridgeLmsSystem.Application.Dtos.Course
         public string Description { get; init; }
         public ICollection<LessonInCourseReturnDto> Lessons { get; init; }
     }
-    public record LessonInCourseReturnDto
+    public sealed record LessonInCourseReturnDto
     {
         public Guid Id { get; init; }
         public string Title { get; init; }

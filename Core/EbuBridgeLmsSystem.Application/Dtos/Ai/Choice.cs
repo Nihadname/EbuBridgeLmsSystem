@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Ai
 {
-    public class Choice
+    public sealed class Choice
     {
         public Message Message { get; set; }
 

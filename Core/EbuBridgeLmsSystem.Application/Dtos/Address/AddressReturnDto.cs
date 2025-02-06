@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Address
 {
-    public record AddressReturnDto
+    public sealed record AddressReturnDto
     {
         public string Country { get; init; }
         public string City { get; init; }
@@ -15,7 +15,7 @@ namespace EbuBridgeLmsSystem.Application.Dtos.Address
         public AppUserInAdress appUserInAdress { get; init; }
     }
 
-    public record AppUserInAdress
+    public sealed record AppUserInAdress
     {
         public string UserName { get; init; }
     }

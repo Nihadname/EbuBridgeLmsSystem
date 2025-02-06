@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Auth
 {
-    public record UserGetDto
+    public sealed record UserGetDto
     {
         public string FullName { get; init; }
         public string Id { get; init; }

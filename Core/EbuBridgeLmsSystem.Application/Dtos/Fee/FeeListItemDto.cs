@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Fee
 {
-    public class FeeListItemDto
+    public sealed class FeeListItemDto
     {
         public Guid Id { get; set; }
         public decimal Amount { get; set; }

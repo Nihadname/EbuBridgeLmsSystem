@@ -1,6 +1,6 @@
 ﻿namespace EbuBridgeLmsSystem.Application.Dtos.Note
 {
-    public record NoteReturnDto
+    public sealed record NoteReturnDto
     {
         public Guid Id { get; init; }
         public string Title { get; init; }

@@ -1,6 +1,6 @@
 ﻿namespace EbuBridgeLmsSystem.Application.Dtos.Ai
 {
-    public class OpenAIResponse
+    public sealed class OpenAIResponse
     {
         public Choice[] Choices { get; set; }
 

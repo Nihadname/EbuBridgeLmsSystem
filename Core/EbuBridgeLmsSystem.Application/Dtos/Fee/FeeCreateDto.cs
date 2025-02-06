@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Fee
 {
-    public class FeeCreateDto
+    public sealed class FeeCreateDto
     {
         public decimal Amount { get; set; }
         public DateTime? DueDate { get; set; }

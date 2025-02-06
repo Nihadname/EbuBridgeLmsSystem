@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Auth
 {
-    public class ResetPasswordEmailDto
+    public sealed class ResetPasswordEmailDto
     {
         public string Email { get; set; }
         public string Token { get; set; }

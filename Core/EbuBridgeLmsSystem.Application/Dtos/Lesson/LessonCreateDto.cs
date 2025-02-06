@@ -1,6 +1,6 @@
 ﻿namespace EbuBridgeLmsSystem.Application.Dtos.Lesson
 {
-    public class LessonCreateDto
+    public sealed class LessonCreateDto
     {
         public string Title { get; set; }
         public DateTime ScheduledDate { get; set; }

@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Teacher
 {
-    public record TeacherCreateDto
+    public sealed record TeacherCreateDto
     {
         public string Description { get; set; }
         public string degree { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace EbuBridgeLmsSystem.Application.Dtos.Address
 {
-    public record AddressListItemDto
+    public sealed record AddressListItemDto
     {
         public string Country { get; init; }
         public string City { get; init; }

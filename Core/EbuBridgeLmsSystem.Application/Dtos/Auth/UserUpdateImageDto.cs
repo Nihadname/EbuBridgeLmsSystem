@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Auth
 {
-    public record UserUpdateImageDto
+    public sealed record UserUpdateImageDto
     {
         public IFormFile Image { get; init; }
     }

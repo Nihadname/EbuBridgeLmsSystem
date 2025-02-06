@@ -1,6 +1,6 @@
 ﻿namespace EbuBridgeLmsSystem.Application.Dtos.Course
 {
-    public record CourseListItemDto
+    public sealed record CourseListItemDto
     {
         public Guid Id { get; init; }
         public string Name { get; init; }

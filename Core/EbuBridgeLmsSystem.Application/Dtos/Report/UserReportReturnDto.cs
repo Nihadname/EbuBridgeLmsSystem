@@ -1,6 +1,6 @@
 ﻿namespace EbuBridgeLmsSystem.Application.Dtos.Report
 {
-    public record UserReportReturnDto
+    public sealed record UserReportReturnDto
     {
         public string UserName { get; init; }
     }

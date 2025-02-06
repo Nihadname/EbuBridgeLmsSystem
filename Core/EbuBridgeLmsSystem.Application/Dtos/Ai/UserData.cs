@@ -1,6 +1,6 @@
 ﻿namespace EbuBridgeLmsSystem.Application.Dtos.Ai
 {
-    public class UserData
+    public sealed class UserData
     {
         public int Age { get; set; }
         public string StudyTime { get; set; }

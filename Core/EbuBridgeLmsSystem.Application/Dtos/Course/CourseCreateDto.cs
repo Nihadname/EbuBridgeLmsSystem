@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Course
 {
-    public record CourseCreateDto
+    public sealed record CourseCreateDto
     {
         public IFormFile formFile { get; init; }
         public string Name { get; init; }
@@ -18,7 +18,7 @@ namespace EbuBridgeLmsSystem.Application.Dtos.Course
 
 
     }
-    public enum Language
+    public  enum Language
     {
         English,
         Azerbaijani

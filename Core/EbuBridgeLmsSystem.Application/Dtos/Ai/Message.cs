@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Ai
 {
-    public class Message
+    public sealed class Message
     {
         public string Content { get; set; }
 

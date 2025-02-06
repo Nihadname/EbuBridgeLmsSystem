@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Auth
 {
-    public record ChangePasswordDto
+    public sealed record ChangePasswordDto
     {
         public string CurrentPassword { get; init; }
         public string NewPassword { get; init; }

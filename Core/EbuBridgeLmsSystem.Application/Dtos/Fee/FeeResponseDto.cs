@@ -1,6 +1,6 @@
 ﻿namespace EbuBridgeLmsSystem.Application.Dtos.Fee
 {
-    public class FeeResponseDto
+    public sealed class FeeResponseDto
     {
         public decimal Amount { get; set; }
         public string Currency { get; set; }
@@ -9,7 +9,7 @@
         public string Message { get; set; }
     }
 
-    public class AppUserInFee
+    public sealed class AppUserInFee
     {
         public string UserName { get; set; }
     }

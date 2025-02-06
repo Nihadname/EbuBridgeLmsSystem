@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Fee
 {
-    public record FeeImageUploadDto
+    public sealed record FeeImageUploadDto
     {
         public Guid Id { get; set; }
         public IFormFile image { get; init; }

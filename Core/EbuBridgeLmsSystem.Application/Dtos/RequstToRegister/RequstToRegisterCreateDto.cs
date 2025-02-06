@@ -1,6 +1,6 @@
 ﻿namespace EbuBridgeLmsSystem.Application.Dtos.RequstToRegister
 {
-    public class RequstToRegisterCreateDto
+    public sealed class RequstToRegisterCreateDto
     {
         public string FullName { get; set; }
         public int Age { get; set; }

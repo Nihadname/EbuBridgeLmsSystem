@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Report
 {
-    public class ReportCreateDto
+    public sealed class ReportCreateDto
     {
         public string Description { get; set; }
         [JsonIgnore]

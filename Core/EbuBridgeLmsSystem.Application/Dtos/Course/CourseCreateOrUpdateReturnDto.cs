@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Course
 {
-    public record CourseCreateOrUpdateReturnDto
+    public sealed record CourseCreateOrUpdateReturnDto
     {
         public Guid Id { get; init; }
         public string ImageUrl { get; init; }
