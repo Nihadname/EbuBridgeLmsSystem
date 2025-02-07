@@ -2,11 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Persistance
 {
@@ -15,7 +10,8 @@ namespace EbuBridgeLmsSystem.Persistance
         public static void AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("AppConnectionString"))
+                options.UseSqlServer(configuration.GetConnectionString("AppConnectionString"),
+                b => b.MigrationsAssembly("EbuBridgeLmsSystem.Persistance"))
             );
 
         }

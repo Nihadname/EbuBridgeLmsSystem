@@ -1,4 +1,5 @@
 using EbuBridgeLmsSystem.Api;
+using EbuBridgeLmsSystem.Infrastructure;
 using EbuBridgeLmsSystem.Persistance;
 using MicroElements.OpenApi.FluentValidation;
 
@@ -14,6 +15,7 @@ builder.Services.AddSwaggerGen();
 var config = builder.Configuration;
 builder.Services.Register(config);
 builder.Services.AddPersistenceServices(config);
+builder.Services.AddInfrastructureServices(config);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
