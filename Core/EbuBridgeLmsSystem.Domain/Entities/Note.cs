@@ -8,6 +8,6 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public string Description { get; set; }
         public string CategoryName { get; set; }
         public Guid UserId { get; set; }
-        public User User { get; set; }
+        public AppUser User { get; set; }
     }
 }

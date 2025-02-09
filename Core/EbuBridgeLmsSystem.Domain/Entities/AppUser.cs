@@ -1,8 +1,9 @@
 ﻿using LearningManagementSystem.Core.Entities.Common;
+using Microsoft.AspNetCore.Identity;
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
-    public class User:BaseEntity
+    public class AppUser:IdentityUser
     {
         public string fullName { get; set; }
         public string? Image { get; set; }

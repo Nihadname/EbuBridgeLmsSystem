@@ -1,5 +1,4 @@
 ﻿using EbuBridgeLmsSystem.Domain.Entities;
-using EbuBridgeLmsSystem.Persistance.IdentityEntity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -30,7 +29,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<Report> reports { get; set; }
         public DbSet<ReportOption> reportOptions { get; set; }
         public DbSet<CourseStudent> courseStudents { get; set; }
-        public DbSet<User> users { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

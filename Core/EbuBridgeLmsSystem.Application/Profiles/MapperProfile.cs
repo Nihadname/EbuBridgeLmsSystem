@@ -31,7 +31,7 @@ namespace EbuBridgeLmsSystem.Application.Profiles
                        _contextAccessor.HttpContext.Request.Host.Host,
                        _contextAccessor.HttpContext.Request.Host.Port ?? 80).Uri.AbsoluteUri
       : "https://defaulturl.com/";
-            CreateMap<User, UserGetDto>();
+            CreateMap<AppUser, UserGetDto>();
             CreateMap<TeacherCreateDto, Teacher>();
             CreateMap<ParentCreateDto, Parent>();
             CreateMap<RequstToRegisterCreateDto, RequestToRegister>();
@@ -50,7 +50,7 @@ namespace EbuBridgeLmsSystem.Application.Profiles
             CreateMap<NoteUpdateDto, Note>()
                             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<ReportCreateDto, Report>();
-            CreateMap<User, UserReportReturnDto>();
+            CreateMap<AppUser, UserReportReturnDto>();
             CreateMap<ReportOption, ReportOptionInReportReturnDto>();
             CreateMap<Report, ReportReturnDto>()
                                .ForMember(s => s.userReportReturnDto, map => map.MapFrom(d => d.User))
@@ -61,13 +61,13 @@ namespace EbuBridgeLmsSystem.Application.Profiles
             CreateMap<ReportOption, ReportOptionReturnDto>();
             CreateMap<Course, CourseListItemDto>();
             CreateMap<AddressCreateDto, Address>();
-            CreateMap<AppUserInAdress, User>();
+            CreateMap<AppUserInAdress, AppUser>();
             CreateMap<Address, AddressReturnDto>();
             CreateMap<Lesson, LessonInCourseReturnDto>();
             CreateMap<Course, CourseReturnDto>()
                 .ForMember(s => s.Lessons, map => map.MapFrom(d => d.lessons));
             CreateMap<FeeCreateDto, Fee>();
-            CreateMap< User, AppUserInFee>();
+            CreateMap< AppUser, AppUserInFee>();
             CreateMap<Fee, FeeListItemDto>();
             CreateMap<Fee, FeeReturnDto>();
             CreateMap<Address, AddressListItemDto>();

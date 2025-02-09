@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
+    public class AppUserConfiguration : IEntityTypeConfiguration<IdentityEntity.AppUser>
     {
-        public void Configure(EntityTypeBuilder<AppUser> builder)
+        public void Configure(EntityTypeBuilder<IdentityEntity.AppUser> builder)
         {
             builder.Property(s => s.UserName).HasMaxLength(100).IsRequired(true);
             builder.Property(s => s.Email).IsRequired()
@@ -21,7 +21,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
                                       @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
             builder.HasOne(a => a.DomainUser)
             .WithOne()
-            .HasForeignKey<User>(u => u.AppUserId);
+            .HasForeignKey<AppUser>(u => u.AppUserId);
         }
     }
 }

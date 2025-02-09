@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\EbuBridgeLmsSystem.Domain\EbuBridgeLmsSystem.Domain.csproj" />
+    <ProjectReference Include="..\..\Core\EbuBridgeLmsSystem.Application\EbuBridgeLmsSystem.Application.csproj" />
   </ItemGroup>
 
 </Project>
