@@ -3,6 +3,7 @@ using EbuBridgeLmsSystem.Application.Profiles;
 using EbuBridgeLmsSystem.Application.Validators.AuthValidators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Hangfire;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +32,8 @@ namespace EbuBridgeLmsSystem.Application
 
                 return mapperConfig.CreateMapper();
             });
-
+            serviceDescriptors.AddHangfire(x => x.UseSqlServerStorage(configuration.GetConnectionString("AppConnectionString")));
+            serviceDescriptors.AddHangfireServer();
         }
     }
 }
