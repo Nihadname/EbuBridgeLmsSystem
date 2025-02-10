@@ -1,0 +1,14 @@
+﻿using EbuBridgeLmsSystem.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Token
+{
+    public interface ITokenService
+    {
+        string GetToken(string SecretKey, string Audience, string Issuer, AppUser existUser, IList<string> roles);
+    }
+}

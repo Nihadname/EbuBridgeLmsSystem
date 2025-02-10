@@ -5,6 +5,9 @@ using EbuBridgeLmsSystem.Application.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using EbuBridgeLmsSystem.Application.Interfaces;
+using EbuBridgeLmsSystem.Infrastructure.Concretes;
+using Resend;
 
 namespace EbuBridgeLmsSystem.Infrastructure
 {
@@ -37,7 +40,15 @@ namespace EbuBridgeLmsSystem.Infrastructure
 
                 return cloudinary;
             });
-
+            services.AddScoped<IPhotoOrVideoService, PhotoOrVideoService>();
+            services.AddOptions();
+            services.AddHttpClient<ResendClient>();
+            services.Configure<ResendClientOptions>(o =>
+            {
+                o.ApiToken = Environment.GetEnvironmentVariable("Resend:ApiKey")!;
+            });
+            services.AddTransient<IResend, ResendClient>();
+            services.AddScoped<IEmailService, EmailService>();
         }
     }
 }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EbuBridgeLmsSystem.Persistance.AuthHandler
+namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
 {
-    public class AuthService:IAuthService
+    public interface IAuthService
     {
     }
 }

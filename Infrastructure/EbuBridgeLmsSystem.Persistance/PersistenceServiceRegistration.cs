@@ -1,5 +1,7 @@
 ﻿using EbuBridgeLmsSystem.Application.Settings;
 using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Persistance.AuthHandler.Auth;
+using EbuBridgeLmsSystem.Persistance.AuthHandler.Token;
 using EbuBridgeLmsSystem.Persistance.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -51,6 +53,8 @@ namespace EbuBridgeLmsSystem.Persistance
                ClockSkew = TimeSpan.Zero
            };
        });
+            services.AddScoped<ITokenService,TokenService>();
+            services.AddScoped<IAuthService,AuthService>();
         }
     }
 }
