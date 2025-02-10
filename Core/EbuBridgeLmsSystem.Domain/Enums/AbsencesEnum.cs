@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace EbuBridgeLmsSystem.Application.Helpers.Enums
+namespace EbuBridgeLmsSystem.Domain.Enums
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum AbsencesEnum

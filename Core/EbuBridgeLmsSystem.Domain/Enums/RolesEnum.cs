@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EbuBridgeLmsSystem.Application.Helpers.Enums
+namespace EbuBridgeLmsSystem.Domain.Enums
 {
     public enum RolesEnum
     {

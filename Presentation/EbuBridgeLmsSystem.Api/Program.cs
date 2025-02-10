@@ -1,7 +1,12 @@
 using EbuBridgeLmsSystem.Api;
+using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Infrastructure;
 using EbuBridgeLmsSystem.Persistance;
+using EbuBridgeLmsSystem.Persistance.Data;
+using EbuBridgeLmsSystem.Persistance.SeedDatas;
 using MicroElements.OpenApi.FluentValidation;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,5 +41,21 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+try
+{
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
+    await context.Database.MigrateAsync();
+    await UserSeed.SeedAdminUserAsync(userManager, roleManager);
+    await UserSeed.SeedUserWhoHaveAllRoles(services);
+}
+catch (Exception ex)
+{
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "error during migration");
+};
 app.Run();
