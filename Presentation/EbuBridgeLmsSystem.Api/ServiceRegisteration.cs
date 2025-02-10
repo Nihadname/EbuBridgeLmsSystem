@@ -70,6 +70,16 @@ namespace EbuBridgeLmsSystem.Api
                    return new BadRequestObjectResult(response);
                };
            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                });
+            });
         }
     }
 }

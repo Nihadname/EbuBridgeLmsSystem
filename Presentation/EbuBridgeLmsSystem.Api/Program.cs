@@ -1,4 +1,5 @@
 using EbuBridgeLmsSystem.Api;
+using EbuBridgeLmsSystem.Application;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Infrastructure;
 using EbuBridgeLmsSystem.Persistance;
@@ -21,6 +22,7 @@ var config = builder.Configuration;
 builder.Services.Register(config);
 builder.Services.AddPersistenceServices(config);
 builder.Services.AddInfrastructureServices(config);
+builder.Services.RegisterApplicationLayerServices(config);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -37,6 +39,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors("AllowAllOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
 
