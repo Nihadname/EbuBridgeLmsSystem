@@ -1,11 +1,5 @@
 ﻿using EbuBridgeLmsSystem.Application.Interfaces;
-using Microsoft.Extensions.Configuration;
 using Resend;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Infrastructure.Concretes
 {

@@ -1,8 +1,11 @@
 ﻿using EbuBridgeLmsSystem.Application.Settings;
 using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Repositories;
 using EbuBridgeLmsSystem.Persistance.AuthHandler.Auth;
 using EbuBridgeLmsSystem.Persistance.AuthHandler.Token;
 using EbuBridgeLmsSystem.Persistance.Data;
+using EbuBridgeLmsSystem.Persistance.Data.Implementations;
+using LearningManagementSystem.Core.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +58,19 @@ namespace EbuBridgeLmsSystem.Persistance
        });
             services.AddScoped<ITokenService,TokenService>();
             services.AddScoped<IAuthService,AuthService>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<ICourseRepository,CourseRepository>();
+            services.AddScoped<IFeeRepository, FeeRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ILessonRepository, LessonRepository>();
+            services.AddScoped<INoteRepository, NoteRepository>();
+            services.AddScoped<IParentRepository, ParentRepository>();
+            services.AddScoped<IReportOptionRepository, ReportOptionRepository>();
+            services.AddScoped<IReportRepository, ReportRepository>();
+            services.AddScoped<IReportOptionRepository,ReportOptionRepository>();
+            services.AddScoped<IRequstToRegisterRepository, RequstToRegisterRepository>();
+            services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<ITeacherRepository, TeacherRepository>();
         }
     }
 }
