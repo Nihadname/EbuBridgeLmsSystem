@@ -14,7 +14,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public string pinterestUrl { get; set; }
         public string SkypeUrl { get; set; }
         public string IntaUrl { get; set; }
-        public Guid UserId { get; set; }
-        public AppUser User { get; set; }
+        public string AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }

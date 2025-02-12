@@ -14,12 +14,12 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
             builder.Property(s => s.IsBlocked).HasDefaultValue(false);
             builder.Property(s => s.BirthDate).IsRequired(true);
             builder.HasCheckConstraint("CK_User_MinimumAge", "DATEDIFF(YEAR, BirthDate, GETDATE()) >= 15");
-            builder.HasMany(s => s.Reports).WithOne(s => s.User).HasForeignKey(s => s.UserId)
+            builder.HasMany(s => s.Reports).WithOne(s => s.AppUser).HasForeignKey(s => s.AppUserId)
                 .OnDelete(DeleteBehavior.NoAction);
-            builder.HasOne(s=>s.Address).WithOne(s=>s.User).HasForeignKey<Address>(s=>s.UserId);
-            builder.HasOne(s=>s.Parent).WithOne(s=>s.User).HasForeignKey<Parent>(s=>s.UserId);
-            builder.HasOne(s=>s.Teacher).WithOne(s=>s.User).HasForeignKey<Teacher>(s=>s.UserId);    
-            builder.HasOne(s=>s.Student).WithOne(s=>s.User).HasForeignKey<Student>(s=>s.UserId);
+            builder.HasOne(s=>s.Address).WithOne(s=>s.AppUser).HasForeignKey<Address>(s=>s.AppUserId);
+            builder.HasOne(s=>s.Parent).WithOne(s=>s.AppUser).HasForeignKey<Parent>(s=>s.AppUserId);
+            builder.HasOne(s=>s.Teacher).WithOne(s=>s.AppUser).HasForeignKey<Teacher>(s=>s.AppUserId);    
+            builder.HasOne(s=>s.Student).WithOne(s=>s.AppUser).HasForeignKey<Student>(s=>s.AppUserId);
 
         }
     }

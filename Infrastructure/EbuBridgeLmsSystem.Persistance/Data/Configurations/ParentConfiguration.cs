@@ -8,7 +8,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Parent> builder)
         {
-            builder.HasOne(s=>s.User).WithOne(a => a.Parent)
+            builder.HasOne(s=>s.AppUser).WithOne(a => a.Parent)
         .OnDelete(DeleteBehavior.Cascade);
             builder.HasIndex(s => s.CreatedTime);
         }

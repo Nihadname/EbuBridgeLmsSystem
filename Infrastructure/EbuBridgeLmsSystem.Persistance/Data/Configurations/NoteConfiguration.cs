@@ -11,8 +11,8 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
             builder.Property(s=>s.Title).HasMaxLength(50);
             builder.Property(s=> s.Description).HasMaxLength(250);
             builder.Property(s=>s.CategoryName).HasMaxLength(90);
-            builder.HasOne(s=>s.User).WithMany(a => a.Notes)
-        .OnDelete(DeleteBehavior.Cascade).HasForeignKey(s=>s.UserId);
+            builder.HasOne(s=>s.AppUser).WithMany(a => a.Notes)
+        .OnDelete(DeleteBehavior.Cascade).HasForeignKey(s=>s.AppUserId);
             builder.HasIndex(s => s.CreatedTime);
         }
     }

@@ -7,7 +7,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public string Title { get; set; }
         public string Description { get; set; }
         public string CategoryName { get; set; }
-        public Guid UserId { get; set; }
-        public AppUser User { get; set; }
+        public string AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }

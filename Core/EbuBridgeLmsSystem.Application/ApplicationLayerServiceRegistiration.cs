@@ -7,6 +7,7 @@ using Hangfire;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Stripe;
 
 namespace EbuBridgeLmsSystem.Application
 {
@@ -34,6 +35,8 @@ namespace EbuBridgeLmsSystem.Application
             });
             serviceDescriptors.AddHangfire(x => x.UseSqlServerStorage(configuration.GetConnectionString("AppConnectionString")));
             serviceDescriptors.AddHangfireServer();
+            var stripeSettings= configuration.GetSection("Stripe");
+            StripeConfiguration.ApiKey = stripeSettings["SecretKey"];
         }
     }
 }

@@ -1,14 +1,21 @@
 ﻿using AutoMapper;
+using EbuBridgeLmsSystem.Application.AppDefaults;
+using EbuBridgeLmsSystem.Application.Dtos.Auth;
+using EbuBridgeLmsSystem.Application.Helpers.Extensions;
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Application.Settings;
 using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Enums;
 using EbuBridgeLmsSystem.Persistance.AuthHandler.Token;
 using EbuBridgeLmsSystem.Persistance.Data;
 using EbuBridgeLmsSystem.Persistance.Data.Implementations;
+using Hangfire;
+using LearningManagementSystem.Core.Entities.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +47,103 @@ namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
             _emailService = emailService;
             _photoOrVideoService = photoOrVideoService;
         }
+        public async Task<Result<UserGetDto>> RegisterForStudent(RegisterDto registerDto)
+        {
+            var appUserResult = await CreateUser(registerDto);
+            if (!appUserResult.IsSuccess) return Result<UserGetDto>.Failure(appUserResult.ErrorKey, appUserResult.Message, appUserResult.Errors, (ErrorType)appUserResult.ErrorType);
 
+            await _userManager.AddToRoleAsync(appUserResult.Data, RolesEnum.Student.ToString());
+            await _userManager.UpdateAsync(appUserResult.Data);
+            var Student = new Student();
+            Student.AvarageScore = null;
+            Student.AppUserId = appUserResult.Data.Id;
+            Student.IsEnrolled = false;
+            await _unitOfWork.StudentRepository.Create(Student);
+            await _unitOfWork.Commit();
+
+            var MappedUser = _mapper.Map<UserGetDto>(appUserResult.Data);
+            return Result<UserGetDto>.Success(MappedUser);
+        }
+
+        private async Task<Result<AppUser>> CreateUser(RegisterDto registerDto)
+        {
+            var existUser = await _userManager.FindByNameAsync(registerDto.UserName);
+            if (existUser != null) return Result<AppUser>.Failure("UserName", "UserName is already Taken", null, ErrorType.BusinessLogicError);
+            var existUserEmail = await _userManager.FindByEmailAsync(registerDto.Email);
+            if (existUserEmail != null)
+                return Result<AppUser>.Failure("Email", "Email is already taken", null, ErrorType.BusinessLogicError);
+            if (await _userManager.Users.FirstOrDefaultAsync(s => s.PhoneNumber.ToLower() == registerDto.PhoneNumber.ToLower()) is not null)
+            {
+                return Result<AppUser>.Failure("PhoneNumber", "PhoneNumber already exists", null, ErrorType.BusinessLogicError);
+            }
+            if (DateTime.Now.Year - registerDto.BirthDate.Year < 15)
+            {
+                return Result<AppUser>.Failure("BirthDate", "Student can not be younger than 15", null, ErrorType.BusinessLogicError);
+            }
+            AppUser appUser = new AppUser();
+            appUser.UserName = registerDto.UserName;
+            appUser.Email = registerDto.Email;
+            appUser.fullName = registerDto.FullName;
+            appUser.PhoneNumber = registerDto.PhoneNumber;
+            appUser.Image = AppDefaultValue.DefaultProfileImageUrl;
+            appUser.CreatedTime = DateTime.UtcNow;
+            appUser.BirthDate = registerDto.BirthDate;
+            appUser.IsFirstTimeLogined = true;
+            appUser.IsReportedHighly = false;
+            var result = await _userManager.CreateAsync(appUser, registerDto.Password);
+
+            if (!result.Succeeded)
+            {
+                var errorMessages = result.Errors.ToDictionary(e => e.Code, e => e.Description);
+                List<string> errors = new List<string>();
+                foreach (KeyValuePair<string, string> keyValues in errorMessages)
+                {
+                    errors.Add(keyValues.Key + " " + keyValues.Value);
+                }
+
+                var response = Result<string>.Failure("User  errors found", null, errors, ErrorType.ValidationError);
+            }
+            var customerOptions = new Stripe.CustomerCreateOptions
+            {
+                Email = appUser.Email,
+                Name = appUser.UserName
+            };
+            var service = new CustomerService();
+            var stripeCustomer = await service.CreateAsync(customerOptions);
+            appUser.CustomerId = stripeCustomer.Id;
+            var ExistedRequestRegister = await _unitOfWork.RequstToRegisterRepository.GetEntity(s => s.Email == appUser.Email);
+            if (ExistedRequestRegister != null)
+            {
+                string body;
+                using (StreamReader sr = new StreamReader("wwwroot/templates/SendingAccountInformation.html"))
+                {
+                    body = sr.ReadToEnd();
+                }
+                body = body.Replace("{{UserName}}", appUser.UserName).Replace("{{Password}}", registerDto.Password)
+                    .Replace("{{Email}}", appUser.Email);
+
+                BackgroundJob.Enqueue(() => _emailService.SendEmailAsync(appUser.Email, "Account details", body, true));
+
+            }
+            await SendVerificationCode(appUser.Email);
+            return Result<AppUser>.Success(appUser);
+        }
+        public async Task<Result<string>> SendVerificationCode(string email)
+        {
+            if (string.IsNullOrEmpty(email)) return Result<string>.Failure("email", "email is null", null, ErrorType.ValidationError);
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null) return Result<string>.Failure("user", "user is null", null, ErrorType.NotFoundError);
+            var verificationCode = new Random().Next(100000, 999999).ToString();
+            string salt;
+            string hashedCode = verificationCode.GenerateHash(out salt);
+            user.VerificationCode = hashedCode;
+            user.Salt = salt;
+            user.ExpiredDate = DateTime.UtcNow.AddMinutes(10);
+            user.IsEmailVerificationCodeValid = false;
+            await _userManager.UpdateAsync(user);
+            var body = $"<h1>Welcome!</h1><p>Thank you for joining us. We're excited to have you!, this is your verfication code {verificationCode} </p>";
+            BackgroundJob.Enqueue(() => _emailService.SendEmailAsync(user.Email, "verfication code",body,true));
+            return Result<string>.Success("Verification code sent");
+        }
     }
 }

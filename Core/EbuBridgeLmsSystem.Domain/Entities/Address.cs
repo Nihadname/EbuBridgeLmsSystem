@@ -8,8 +8,8 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public string City { get; set; }
         public string Region { get; set; }
         public string Street { get; set; }
-        public Guid UserId { get; set; }
-        public AppUser  User { get; set; }
+        public string AppUserId { get; set; }
+        public AppUser  AppUser { get; set; }
 
     }
 }

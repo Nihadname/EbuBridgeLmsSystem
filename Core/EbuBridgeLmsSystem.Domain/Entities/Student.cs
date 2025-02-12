@@ -5,8 +5,8 @@ namespace EbuBridgeLmsSystem.Domain.Entities
     public class Student:BaseEntity
     { 
         public decimal? AvarageScore { get; set; }
-        public Guid UserId { get; set; }
-        public AppUser User { get; set; }
+        public string AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
         public Guid? ParentId { get; set; }
         public Parent Parent { get; set; }
         public ICollection<LessonStudent> lessonStudents { get; set; }
