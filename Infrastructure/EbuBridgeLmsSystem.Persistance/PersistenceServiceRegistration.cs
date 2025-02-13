@@ -1,4 +1,5 @@
-﻿using EbuBridgeLmsSystem.Application.Settings;
+﻿using EbuBridgeLmsSystem.Application.Interfaces;
+using EbuBridgeLmsSystem.Application.Settings;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using EbuBridgeLmsSystem.Persistance.AuthHandler.Auth;

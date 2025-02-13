@@ -15,7 +15,7 @@ namespace EbuBridgeLmsSystem.Infrastructure.Concretes
         public async Task SendEmailAsync(string to, string subject, string body, bool isHtml = true)
         {
             var message = new EmailMessage();
-            message.From = "nihadcoding@gmail.com";
+            message.From = "info@kuzeygo.com";
             message.To.Add(to);
             message.Subject =subject;
             message.HtmlBody = body;

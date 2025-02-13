@@ -1,15 +1,13 @@
-﻿using EbuBridgeLmsSystem.Application.Dtos.Auth;
-using EbuBridgeLmsSystem.Application.Features.AppUser.Commands.CreateAppUserAsStudent;
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace EbuBridgeLmsSystem.Application.Validators.AuthValidators
+namespace EbuBridgeLmsSystem.Application.Features.AppUser.Commands.CreateAppUserAsStudent
 {
-    public class RegisterValidator : AbstractValidator<RegisterDto>
+    public class CreateAppUserAsStudentCommandValidator : AbstractValidator<CreateAppUserAsStudentCommand>
     {
-        public RegisterValidator()
+        public CreateAppUserAsStudentCommandValidator()
         {
             RuleFor(s => s.UserName).NotEmpty().WithMessage("not empty")
-                .MaximumLength(100).WithMessage("max is 100");
+               .MaximumLength(100).WithMessage("max is 100");
 
             RuleFor(s => s.FullName).NotEmpty().WithMessage("not empty")
                 .MaximumLength(150).WithMessage("max is 150");
@@ -34,7 +32,6 @@ namespace EbuBridgeLmsSystem.Application.Validators.AuthValidators
                 }
 
             });
-
         }
     }
 }

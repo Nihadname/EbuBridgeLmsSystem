@@ -16,11 +16,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Stripe;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
 {
@@ -125,13 +120,12 @@ namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
                 BackgroundJob.Enqueue(() => _emailService.SendEmailAsync(appUser.Email, "Account details", body, true));
 
             }
-            await SendVerificationCode(appUser.Email);
+            await SendVerificationCode(new SendVerificationCodeDto {Email= appUser.Email });
             return Result<AppUser>.Success(appUser);
         }
-        public async Task<Result<string>> SendVerificationCode(string email)
+        public async Task<Result<string>> SendVerificationCode(SendVerificationCodeDto sendVerificationCodeDto)
         {
-            if (string.IsNullOrEmpty(email)) return Result<string>.Failure("email", "email is null", null, ErrorType.ValidationError);
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(sendVerificationCodeDto.Email);
             if (user is null) return Result<string>.Failure("user", "user is null", null, ErrorType.NotFoundError);
             var verificationCode = new Random().Next(100000, 999999).ToString();
             string salt;

@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
+namespace EbuBridgeLmsSystem.Application.Interfaces
 {
     public interface IAuthService
     {
         Task<Result<UserGetDto>> RegisterForStudent(RegisterDto registerDto);
-        Task<Result<string>> SendVerificationCode(string email);
+        Task<Result<string>> SendVerificationCode(SendVerificationCodeDto sendVerificationCodeDto);
     }
 }

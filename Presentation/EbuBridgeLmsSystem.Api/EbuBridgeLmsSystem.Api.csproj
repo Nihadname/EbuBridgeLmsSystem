@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="App\ClientSide\" />
     <Folder Include="Controllers\" />
   </ItemGroup>
 

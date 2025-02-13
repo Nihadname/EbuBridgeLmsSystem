@@ -9,7 +9,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
         public void Configure(EntityTypeBuilder<AppUser> builder)
         {
             builder.Property(s => s.fullName).HasMaxLength(150).IsRequired(true);
-            builder.Property(s => s.VerificationCode).HasMaxLength(6);
+            builder.Property(s => s.VerificationCode);
             builder.HasIndex(s => s.CreatedTime);
             builder.Property(s => s.IsBlocked).HasDefaultValue(false);
             builder.Property(s => s.BirthDate).IsRequired(true);

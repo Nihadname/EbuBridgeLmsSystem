@@ -1,10 +1,12 @@
 using EbuBridgeLmsSystem.Api;
+using EbuBridgeLmsSystem.Api.Middlewares;
 using EbuBridgeLmsSystem.Application;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Infrastructure;
 using EbuBridgeLmsSystem.Persistance;
 using EbuBridgeLmsSystem.Persistance.Data;
 using EbuBridgeLmsSystem.Persistance.SeedDatas;
+using Hangfire;
 using MicroElements.OpenApi.FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -38,8 +40,10 @@ if (app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseHangfireDashboard();
 app.UseRouting();
 app.UseCors("AllowAllOrigins");
+app.UseMiddleware<CustomExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

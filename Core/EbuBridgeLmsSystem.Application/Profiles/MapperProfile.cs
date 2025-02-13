@@ -9,6 +9,7 @@ using EbuBridgeLmsSystem.Application.Dtos.Report;
 using EbuBridgeLmsSystem.Application.Dtos.ReportOption;
 using EbuBridgeLmsSystem.Application.Dtos.RequstToRegister;
 using EbuBridgeLmsSystem.Application.Dtos.Teacher;
+using EbuBridgeLmsSystem.Application.Features.AppUser.Commands.CreateAppUserAsStudent;
 using EbuBridgeLmsSystem.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
@@ -71,6 +72,7 @@ namespace EbuBridgeLmsSystem.Application.Profiles
             CreateMap<Fee, FeeListItemDto>();
             CreateMap<Fee, FeeReturnDto>();
             CreateMap<Address, AddressListItemDto>();
+            CreateMap<CreateAppUserAsStudentCommand, RegisterDto>().ReverseMap();
         }
     }
 }
