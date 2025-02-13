@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EbuBridgeLmsSystem.Application.Dtos.Auth;
+using LearningManagementSystem.Core.Entities.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +10,7 @@ namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
 {
     public interface IAuthService
     {
+        Task<Result<UserGetDto>> RegisterForStudent(RegisterDto registerDto);
+        Task<Result<string>> SendVerificationCode(string email);
     }
 }

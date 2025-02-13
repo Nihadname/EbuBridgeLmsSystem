@@ -1,5 +1,6 @@
 ﻿using LearningManagementSystem.Core.Entities.Common;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
@@ -52,5 +53,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public string Salt { get; set; }
         public DateTime? ExpiredDate { get; set; }
         public string CustomerId { get; set; }
+
+       
     }
 }
