@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EbuBridgeLmsSystem.Application.AppDefaults;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
+using EbuBridgeLmsSystem.Application.Dtos.Student;
 using EbuBridgeLmsSystem.Application.Dtos.Teacher;
 using EbuBridgeLmsSystem.Application.Helpers.Extensions;
 using EbuBridgeLmsSystem.Application.Interfaces;
@@ -47,21 +48,20 @@ namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
             _photoOrVideoService = photoOrVideoService;
             _logger = logger;
         }
-        public async Task<Result<UserGetDto>> RegisterForStudent(RegisterDto registerDto)
+        public async Task<Result<UserGetDto>> RegisterForStudent(StudentRegistrationDto studentRegistrationDto)
         {
             await _unitOfWork.BeginTransactionAsync();
             try
             {
-                var appUserResult = await CreateUser(registerDto);
+                var appUserResult = await CreateUser(studentRegistrationDto.RegisterDto);
                 if (!appUserResult.IsSuccess) return Result<UserGetDto>.Failure(appUserResult.ErrorKey, appUserResult.Message, appUserResult.Errors, (ErrorType)appUserResult.ErrorType);
 
                 await _userManager.AddToRoleAsync(appUserResult.Data, RolesEnum.Student.ToString());
-                await _userManager.UpdateAsync(appUserResult.Data);
-                var Student = new Student();
-                Student.AvarageScore = null;
-                Student.AppUserId = appUserResult.Data.Id;
-                Student.IsEnrolled = false;
-                await _unitOfWork.StudentRepository.Create(Student);
+                studentRegistrationDto.StudentCreateDto.IsEnrolled = false;
+                studentRegistrationDto.StudentCreateDto.AppUserId=appUserResult.Data.AppUserId;
+                studentRegistrationDto.StudentCreateDto.AvarageScore = null;
+                var mappedStudent =_mapper.Map<Student>(studentRegistrationDto.StudentCreateDto);
+                await _unitOfWork.StudentRepository.Create(mappedStudent);
                 await _unitOfWork.CommitTransactionAsync();
 
                 var MappedUser = _mapper.Map<UserGetDto>(appUserResult.Data);
@@ -90,11 +90,13 @@ namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
                 var MappedUser = _mapper.Map<UserGetDto>(appUserResult.Data);
                 return Result<UserGetDto>.Success(MappedUser);
             }
-            catch
+            catch (Exception ex)
             {
-                await _unitOfWork.RollbackTransactionAsync();
-                _logger.LogError(ex, "Error occurred during user registration");
-                return Result<UserGetDto>.Failure("InternalServerError", "An error occurred during registration.", null, ErrorType.SystemError); 
+                {
+                    await _unitOfWork.RollbackTransactionAsync();
+                    _logger.LogError(ex, "Error occurred during user registration");
+                    return Result<UserGetDto>.Failure("InternalServerError", "An error occurred during registration.", null, ErrorType.SystemError);
+                }
             }
         }
 
