@@ -10,9 +10,11 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
         public IStudentRepository StudentRepository { get; }
         public ITeacherRepository TeacherRepository { get; }
         public IParentRepository ParentRepository { get; }
-        public Task Commit();
-        Task RollbackTransactionAsync();
-        public Task<IDbContextTransaction> BeginTransactionAsync();
+        Task BeginTransactionAsync(CancellationToken cancellationToken = default);
+        Task CommitTransactionAsync(CancellationToken cancellationToken = default);
+        Task RollbackTransactionAsync(CancellationToken cancellationToken = default);
+        Task SaveChangesAsync(CancellationToken cancellationToken = default);
+        void Dispose();
         public IRequstToRegisterRepository RequstToRegisterRepository { get; }
         public ICourseRepository courseRepository { get; }
         public INoteRepository NoteRepository { get; }

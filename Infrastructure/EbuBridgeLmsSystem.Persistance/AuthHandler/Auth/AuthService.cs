@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EbuBridgeLmsSystem.Application.AppDefaults;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
+using EbuBridgeLmsSystem.Application.Dtos.Teacher;
 using EbuBridgeLmsSystem.Application.Helpers.Extensions;
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Application.Settings;
@@ -14,8 +15,10 @@ using LearningManagementSystem.Core.Entities.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Stripe;
+using System.Security.Cryptography;
 
 namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
 {
@@ -30,7 +33,8 @@ namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IEmailService _emailService;
         private readonly IPhotoOrVideoService _photoOrVideoService;
-        public AuthService(IOptions<JwtSettings> jwtSettings, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper, ITokenService tokenService, ApplicationDbContext context, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IEmailService emailService, IHttpContextAccessor contextAccessor, IPhotoOrVideoService photoOrVideoService)
+        private readonly ILogger _logger;
+        public AuthService(IOptions<JwtSettings> jwtSettings, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper, ITokenService tokenService, ApplicationDbContext context, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IEmailService emailService, IHttpContextAccessor contextAccessor, IPhotoOrVideoService photoOrVideoService, ILogger logger)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -41,23 +45,57 @@ namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
             _httpContextAccessor = httpContextAccessor;
             _emailService = emailService;
             _photoOrVideoService = photoOrVideoService;
+            _logger = logger;
         }
         public async Task<Result<UserGetDto>> RegisterForStudent(RegisterDto registerDto)
         {
-            var appUserResult = await CreateUser(registerDto);
-            if (!appUserResult.IsSuccess) return Result<UserGetDto>.Failure(appUserResult.ErrorKey, appUserResult.Message, appUserResult.Errors, (ErrorType)appUserResult.ErrorType);
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                var appUserResult = await CreateUser(registerDto);
+                if (!appUserResult.IsSuccess) return Result<UserGetDto>.Failure(appUserResult.ErrorKey, appUserResult.Message, appUserResult.Errors, (ErrorType)appUserResult.ErrorType);
 
-            await _userManager.AddToRoleAsync(appUserResult.Data, RolesEnum.Student.ToString());
-            await _userManager.UpdateAsync(appUserResult.Data);
-            var Student = new Student();
-            Student.AvarageScore = null;
-            Student.AppUserId = appUserResult.Data.Id;
-            Student.IsEnrolled = false;
-            await _unitOfWork.StudentRepository.Create(Student);
-            await _unitOfWork.Commit();
+                await _userManager.AddToRoleAsync(appUserResult.Data, RolesEnum.Student.ToString());
+                await _userManager.UpdateAsync(appUserResult.Data);
+                var Student = new Student();
+                Student.AvarageScore = null;
+                Student.AppUserId = appUserResult.Data.Id;
+                Student.IsEnrolled = false;
+                await _unitOfWork.StudentRepository.Create(Student);
+                await _unitOfWork.CommitTransactionAsync();
 
-            var MappedUser = _mapper.Map<UserGetDto>(appUserResult.Data);
-            return Result<UserGetDto>.Success(MappedUser);
+                var MappedUser = _mapper.Map<UserGetDto>(appUserResult.Data);
+                return Result<UserGetDto>.Success(MappedUser);
+            }
+            catch(Exception ex)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                _logger.LogError(ex, "Error occurred during user registration");
+                return Result<UserGetDto>.Failure("InternalServerError", "An error occurred during registration.", null, ErrorType.SystemError);
+            }
+            
+        }
+        public async Task<Result<UserGetDto>> RegisterForTeacher(TeacherRegistrationDto teacherRegistrationDto)
+        {
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                var appUserResult = await CreateUser(teacherRegistrationDto.Register);
+                if (!appUserResult.IsSuccess) return Result<UserGetDto>.Failure(appUserResult.ErrorKey, appUserResult.Message, appUserResult.Errors, (ErrorType)appUserResult.ErrorType);
+                await _userManager.AddToRoleAsync(appUserResult.Data, RolesEnum.Teacher.ToString());
+                teacherRegistrationDto.Teacher.AppUserId = appUserResult.Data.Id;
+                var MappedTeacher = _mapper.Map<Teacher>(teacherRegistrationDto.Teacher);
+                await _unitOfWork.TeacherRepository.Create(MappedTeacher);
+                await _unitOfWork.CommitTransactionAsync();
+                var MappedUser = _mapper.Map<UserGetDto>(appUserResult.Data);
+                return Result<UserGetDto>.Success(MappedUser);
+            }
+            catch
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                _logger.LogError(ex, "Error occurred during user registration");
+                return Result<UserGetDto>.Failure("InternalServerError", "An error occurred during registration.", null, ErrorType.SystemError); 
+            }
         }
 
         private async Task<Result<AppUser>> CreateUser(RegisterDto registerDto)
@@ -71,7 +109,7 @@ namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
             {
                 return Result<AppUser>.Failure("PhoneNumber", "PhoneNumber already exists", null, ErrorType.BusinessLogicError);
             }
-            if (DateTime.Now.Year - registerDto.BirthDate.Year < 15)
+            if (DateTime.UtcNow.Year - registerDto.BirthDate.Year < 15)
             {
                 return Result<AppUser>.Failure("BirthDate", "Student can not be younger than 15", null, ErrorType.BusinessLogicError);
             }
@@ -127,7 +165,7 @@ namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
         {
             var user = await _userManager.FindByEmailAsync(sendVerificationCodeDto.Email);
             if (user is null) return Result<string>.Failure("user", "user is null", null, ErrorType.NotFoundError);
-            var verificationCode = new Random().Next(100000, 999999).ToString();
+            var verificationCode = RandomNumberGenerator.GetInt32(100000, 999999).ToString();
             string salt;
             string hashedCode = verificationCode.GenerateHash(out salt);
             user.VerificationCode = hashedCode;

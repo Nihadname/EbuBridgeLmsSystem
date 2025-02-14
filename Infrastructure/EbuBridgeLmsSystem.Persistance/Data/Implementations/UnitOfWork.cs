@@ -1,6 +1,7 @@
 ﻿using EbuBridgeLmsSystem.Domain.Repositories;
 using EbuBridgeLmsSystem.Persistance.Data;
 using LearningManagementSystem.Core.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
@@ -9,13 +10,13 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
     {
 
         private readonly ApplicationDbContext _applicationDbContext;
+        private bool _disposed;
 
-        public ICourseRepository CourseRepository { get; private set; }
         public IStudentRepository StudentRepository { get; private set; }
         public ITeacherRepository TeacherRepository { get; private set; }
         public IParentRepository ParentRepository { get; private set; }
         public IRequstToRegisterRepository RequstToRegisterRepository { get; private set; }
-        public ICourseRepository courseRepository { get; private set; }
+        public ICourseRepository CourseRepository { get; private set; }
         public INoteRepository NoteRepository { get; private set; }
         public IReportRepository ReportRepository { get; private set; }
         public IReportOptionRepository ReportOptionRepository { get; private set; }
@@ -29,7 +30,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
             TeacherRepository = new TeacherRepository(applicationDbContext);
             ParentRepository = new ParentRepository(applicationDbContext);
             RequstToRegisterRepository = new RequstToRegisterRepository(applicationDbContext);
-            CourseRepository = new CourseRepository(applicationDbContext);
             NoteRepository = new NoteRepository(applicationDbContext);
             ReportRepository = new ReportRepository(applicationDbContext);
             ReportOptionRepository = new ReportOptionRepository(applicationDbContext);
@@ -38,22 +38,53 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
             _applicationDbContext = applicationDbContext;
 
         }
-        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
         {
-            return await _applicationDbContext.Database.BeginTransactionAsync();
-        }
-        public async Task RollbackTransactionAsync()
-        {
-            await _applicationDbContext.Database.RollbackTransactionAsync();
+            var transaction = _applicationDbContext.Database.CurrentTransaction;
+            if (transaction == null)
+            {
+                await _applicationDbContext.Database.BeginTransactionAsync(cancellationToken);
+            }
         }
 
-        public async Task Commit()
+        public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
         {
-            await _applicationDbContext.SaveChangesAsync();
+            var transaction = _applicationDbContext.Database.CurrentTransaction;
+            if (transaction != null)
+            {
+                await transaction.CommitAsync();
+            }
+        }
+
+        public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
+        {
+            var transaction = _applicationDbContext.Database.CurrentTransaction;
+            if (transaction != null)
+            {
+                await transaction.RollbackAsync();
+            }
+        }
+
+        public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            await _applicationDbContext.SaveChangesAsync(cancellationToken);
         }
         public void Dispose()
         {
-            _applicationDbContext.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        private void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _applicationDbContext.Dispose();
+                }
+            }
+
+            _disposed = true;
         }
     }
 }
