@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using EbuBridgeLmsSystem.Application.Features.AppUser.Commands.CreateAppUserAsStudent;
+using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsStudent;
 using EbuBridgeLmsSystem.Application.Profiles;
 using EbuBridgeLmsSystem.Application.Validators.AuthValidators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Hangfire;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

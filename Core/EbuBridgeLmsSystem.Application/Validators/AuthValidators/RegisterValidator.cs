@@ -1,5 +1,4 @@
 ﻿using EbuBridgeLmsSystem.Application.Dtos.Auth;
-using EbuBridgeLmsSystem.Application.Features.AppUser.Commands.CreateAppUserAsStudent;
 using FluentValidation;
 
 namespace EbuBridgeLmsSystem.Application.Validators.AuthValidators
