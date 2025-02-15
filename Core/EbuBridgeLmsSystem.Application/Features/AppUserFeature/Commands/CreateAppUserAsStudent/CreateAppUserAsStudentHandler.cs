@@ -3,10 +3,12 @@ using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth;
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Enums;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
 
 namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsStudent
@@ -17,21 +19,41 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailService _emailService;
         private readonly UserManager<AppUser> _userManager;
-        public CreateAppUserAsStudentHandler(IMapper mapper, UserManager<AppUser> userManager, IEmailService emailService, IUnitOfWork unitOfWork)
+        private readonly ILogger<CreateAppUserAsStudentHandler> _logger;
+        public CreateAppUserAsStudentHandler(IMapper mapper, UserManager<AppUser> userManager, IEmailService emailService, IUnitOfWork unitOfWork, ILogger<CreateAppUserAsStudentHandler> logger)
         {
             _mapper = mapper;
             _userManager = userManager;
             _emailService = emailService;
             _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         async Task<Result<UserGetDto>> IRequestHandler<CreateAppUserAsStudentCommand, Result<UserGetDto>>.Handle(CreateAppUserAsStudentCommand request, CancellationToken cancellationToken)
         {
-            var appUserResult =await _userManager.CreateUser(request.RegisterDto, _unitOfWork, _emailService);
-            if(!appUserResult.IsSuccess)
-              return  Result<UserGetDto>.Failure(appUserResult.ErrorKey, appUserResult.Message, appUserResult.Errors, (ErrorType)appUserResult.ErrorType);
-
-            return Result<UserGetDto>.Success(null);
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                var appUserResult = await _userManager.CreateUser(request.RegisterDto, _unitOfWork, _emailService);
+                if (!appUserResult.IsSuccess)
+                    return Result<UserGetDto>.Failure(appUserResult.ErrorKey, appUserResult.Message, appUserResult.Errors, (ErrorType)appUserResult.ErrorType);
+                await _userManager.AddToRoleAsync(appUserResult.Data, RolesEnum.Student.ToString());
+                request.StudentCreateDto.AppUserId = appUserResult.Data.AppUserId;
+                request.StudentCreateDto.IsEnrolled = false;
+                request.StudentCreateDto.AvarageScore = null;
+                var mappedStudent = _mapper.Map<Student>(request.StudentCreateDto);
+                await _unitOfWork.StudentRepository.Create(mappedStudent);
+                await _unitOfWork.CommitTransactionAsync();
+                var mappedUser = _mapper.Map<UserGetDto>(appUserResult.Data);
+                return Result<UserGetDto>.Success(mappedUser);
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                _logger.LogError(ex, "Error occurred during user registration");
+                return Result<UserGetDto>.Failure("InternalServerError", "An error occurred during registration.", null, ErrorType.SystemError);
+            }
+           
         }
     }
 }
