@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Student
 {
-    public class StudentRegistrationDto
+    public record StudentRegistrationDto
     {
-        public StudentCreateDto  StudentCreateDto { get; set; }
-        public RegisterDto RegisterDto { get; set; }
+        public StudentCreateDto  StudentCreateDto { get; init; }
+        public RegisterDto RegisterDto { get; init; }
     }
 }
