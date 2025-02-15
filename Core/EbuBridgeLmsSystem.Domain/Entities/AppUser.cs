@@ -6,6 +6,8 @@ namespace EbuBridgeLmsSystem.Domain.Entities
 {
     public class AppUser:IdentityUser
     {
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedTime { get; set; }
         public string fullName { get; set; }
         public string? Image { get; set; }
         public bool IsBlocked { get; set; }

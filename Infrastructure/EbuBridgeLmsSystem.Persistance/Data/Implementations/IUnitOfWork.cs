@@ -16,7 +16,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
         Task SaveChangesAsync(CancellationToken cancellationToken = default);
         void Dispose();
         public IRequstToRegisterRepository RequstToRegisterRepository { get; }
-        public ICourseRepository courseRepository { get; }
         public INoteRepository NoteRepository { get; }
         public IReportRepository ReportRepository { get; }
         public IReportOptionRepository ReportOptionRepository { get; }

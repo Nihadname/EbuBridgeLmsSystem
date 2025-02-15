@@ -11,7 +11,6 @@ namespace EbuBridgeLmsSystem.Application.Interfaces
 {
     public interface IAuthService
     {
-        Task<Result<UserGetDto>> RegisterForStudent(StudentRegistrationDto studentRegistrationDto);
-        Task<Result<string>> SendVerificationCode(SendVerificationCodeDto sendVerificationCodeDto);
+        
     }
 }

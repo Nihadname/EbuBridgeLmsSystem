@@ -1,6 +1,7 @@
 ﻿using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
+using System.Text.Json.Serialization;
 
 namespace EbuBridgeLmsSystem.Application.Features.AppUser.Commands.CreateAppUserAsStudent
 {
@@ -13,5 +14,11 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUser.Commands.CreateAppUser
         public string Password { get; init; }
         public string RepeatPassword { get; init; }
         public DateTime BirthDate { get; init; }
+        [JsonIgnore]
+        public decimal? AvarageScore { get; set; }
+        [JsonIgnore]
+        public string AppUserId { get; set; }
+        [JsonIgnore]
+        public bool IsEnrolled { get; set; }
     }
 }

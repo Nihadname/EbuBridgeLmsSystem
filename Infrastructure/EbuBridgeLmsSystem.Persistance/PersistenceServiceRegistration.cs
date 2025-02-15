@@ -58,7 +58,7 @@ namespace EbuBridgeLmsSystem.Persistance
            };
        });
             services.AddScoped<ITokenService,TokenService>();
-            services.AddScoped<IAuthService,AuthService>();
+            //services.AddScoped<IAuthService,AuthService>();
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<ICourseRepository,CourseRepository>();
             services.AddScoped<IFeeRepository, FeeRepository>();

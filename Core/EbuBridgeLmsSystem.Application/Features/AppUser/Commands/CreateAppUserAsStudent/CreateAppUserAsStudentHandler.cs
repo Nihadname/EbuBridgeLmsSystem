@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
+using EbuBridgeLmsSystem.Application.Dtos.Student;
 using EbuBridgeLmsSystem.Application.Interfaces;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
@@ -25,8 +26,8 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUser.Commands.CreateAppUser
 
         async Task<Result<UserGetDto>> IRequestHandler<CreateAppUserAsStudentCommand, Result<UserGetDto>>.Handle(CreateAppUserAsStudentCommand request, CancellationToken cancellationToken)
         {
-            var registerDto = _mapper.Map<RegisterDto>(request);
-        return await _authService.RegisterForStudent(registerDto);
+            var registerDto = _mapper.Map<StudentRegistrationDto>(request);
+            return Result<UserGetDto>.Success(null);
         }
     }
 }

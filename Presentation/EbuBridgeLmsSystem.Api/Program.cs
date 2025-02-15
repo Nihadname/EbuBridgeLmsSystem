@@ -42,7 +42,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseHangfireDashboard();
 app.UseRouting();
-app.UseCors("AllowAllOrigins");
+app.UseCors(x=>x.AllowAnyHeader()
+.AllowCredentials()
+.AllowAnyMethod()
+.SetIsOriginAllowed(t=>true)
+.SetPreflightMaxAge(TimeSpan.FromMinutes(10)));
 app.UseMiddleware<CustomExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();

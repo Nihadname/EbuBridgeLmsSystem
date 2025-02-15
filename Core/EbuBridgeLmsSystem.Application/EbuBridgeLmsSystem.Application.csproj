@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Student\" />
     <Folder Include="Features\AppUser\Queries\" />
   </ItemGroup>
 

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
+using EbuBridgeLmsSystem.Application.Dtos.Student;
 using EbuBridgeLmsSystem.Application.Features.AppUser.Commands.CreateAppUserAsStudent;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -21,9 +22,9 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
             _mapper = mapper;
         }
         [HttpPost]
-        public async Task<IActionResult> RegisterForStudent(RegisterDto registerDto)
+        public async Task<IActionResult> RegisterForStudent(StudentRegistrationDto studentRegistrationDto)
         {
-            var mappedRegisterDto=_mapper.Map<CreateAppUserAsStudentCommand>(registerDto);
+            var mappedRegisterDto=_mapper.Map<CreateAppUserAsStudentCommand>(studentRegistrationDto);
             var result = await _mediator.Send(mappedRegisterDto);
            return Ok(result);
         }

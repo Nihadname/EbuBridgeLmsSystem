@@ -74,6 +74,30 @@ namespace EbuBridgeLmsSystem.Application.Profiles
             CreateMap<Fee, FeeReturnDto>();
             CreateMap<Address, AddressListItemDto>();
             CreateMap<StudentCreateDto, Student>();
+            CreateMap<CreateAppUserAsStudentCommand, StudentRegistrationDto>()
+                .ConstructUsing(cmd => new StudentRegistrationDto
+                {
+                    RegisterDto = new RegisterDto(),
+                    StudentCreateDto = new StudentCreateDto()
+                })
+            .ForMember(s => s.RegisterDto.FullName, map => map.MapFrom(d => d.FullName))
+            .ForMember(s => s.RegisterDto.UserName, map => map.MapFrom(d => d.UserName))
+            .ForMember(s => s.RegisterDto.Email, map => map.MapFrom(d => d.Email))
+            .ForMember(s => s.RegisterDto.PhoneNumber, map => map.MapFrom(d => d.PhoneNumber))
+            .ForMember(s => s.RegisterDto.Password, map => map.MapFrom(d => d.Password))
+            .ForMember(s => s.RegisterDto.RepeatPassword, map => map.MapFrom(d => d.RepeatPassword))
+            .ForMember(s => s.RegisterDto.BirthDate, map => map.MapFrom(d => d.BirthDate))
+            .ForMember(s => s.StudentCreateDto.AvarageScore, map => map.MapFrom(d => d.AvarageScore))
+            .ForMember(s => s.StudentCreateDto.AppUserId, map => map.MapFrom(d => d.AppUserId))
+            .ForMember(s => s.StudentCreateDto.IsEnrolled, map => map.MapFrom(d => d.IsEnrolled));
+
+
+
+
+
+
+
+
         }
     }
 }

@@ -34,6 +34,8 @@ namespace EbuBridgeLmsSystem.Application.Validators.AuthValidators
                 }
 
             });
+            RuleFor(x => x.BirthDate)
+            .Must(date => DateTime.UtcNow.Year - date.Year >= 15);
 
         }
     }
