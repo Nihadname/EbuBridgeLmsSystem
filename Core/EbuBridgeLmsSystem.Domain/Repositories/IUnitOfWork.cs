@@ -1,8 +1,6 @@
-﻿using EbuBridgeLmsSystem.Domain.Repositories;
-using LearningManagementSystem.Core.Repositories;
-using Microsoft.EntityFrameworkCore.Storage;
+﻿using LearningManagementSystem.Core.Repositories;
 
-namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
+namespace EbuBridgeLmsSystem.Domain.Repositories
 {
     public interface IUnitOfWork
     {

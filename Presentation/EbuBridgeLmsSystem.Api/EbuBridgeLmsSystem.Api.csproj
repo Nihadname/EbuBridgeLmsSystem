@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <Folder Include="App\ClientSide\" />
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

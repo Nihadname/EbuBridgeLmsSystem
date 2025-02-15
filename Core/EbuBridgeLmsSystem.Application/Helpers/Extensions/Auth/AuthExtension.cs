@@ -1,9 +1,8 @@
 ﻿using EbuBridgeLmsSystem.Application.AppDefaults;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
-using EbuBridgeLmsSystem.Application.Helpers.Extensions;
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
-using EbuBridgeLmsSystem.Persistance.Data.Implementations;
+using EbuBridgeLmsSystem.Domain.Repositories;
 using Hangfire;
 using LearningManagementSystem.Core.Entities.Common;
 using Microsoft.AspNetCore.Identity;
@@ -11,16 +10,16 @@ using Microsoft.EntityFrameworkCore;
 using Stripe;
 using System.Security.Cryptography;
 
-namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
+namespace EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth
 {
-    public static class AuthExtension 
+    public static class AuthExtension
     {
-      
+
         public static async Task<Result<AppUser>> CreateUser(this UserManager<AppUser> userManager,
             RegisterDto registerDto,
             IUnitOfWork unitOfWork,
-            IEmailService emailService,
-            CustomerService stripeService)
+            IEmailService emailService
+            )
         {
             var existUser = await userManager.FindByNameAsync(registerDto.UserName);
             if (existUser != null) return Result<AppUser>.Failure("UserName", "UserName is already Taken", null, ErrorType.BusinessLogicError);
@@ -31,7 +30,7 @@ namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
             {
                 return Result<AppUser>.Failure("PhoneNumber", "PhoneNumber already exists", null, ErrorType.BusinessLogicError);
             }
-           
+
             AppUser appUser = new AppUser();
             appUser.UserName = registerDto.UserName;
             appUser.Email = registerDto.Email;
@@ -53,9 +52,10 @@ namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
                     errors.Add(keyValues.Key + " " + keyValues.Value);
                 }
 
-                var response = Result<string>.Failure("User  errors found", null, errors, ErrorType.ValidationError);
+                var response = Result<AppUser>.Failure("User  errors found", null, errors, ErrorType.ValidationError);
+                return response;
             }
-            var customerOptions = new Stripe.CustomerCreateOptions
+            var customerOptions = new CustomerCreateOptions
             {
                 Email = appUser.Email,
                 Name = appUser.UserName
@@ -77,13 +77,13 @@ namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Auth
                 BackgroundJob.Enqueue(() => emailService.SendEmailAsync(appUser.Email, "Account details", body, true));
 
             }
-            var sendVerificationCodeResult= await userManager.SendVerificationCode(new SendVerificationCodeDto { Email = appUser.Email },emailService);
+            var sendVerificationCodeResult = await userManager.SendVerificationCode(new SendVerificationCodeDto { Email = appUser.Email }, emailService);
             if (!sendVerificationCodeResult.IsSuccess)
-                Result<AppUser>.Failure(sendVerificationCodeResult.ErrorKey, sendVerificationCodeResult.Message, sendVerificationCodeResult.Errors, (ErrorType)sendVerificationCodeResult.ErrorType);
+              return  Result<AppUser>.Failure(sendVerificationCodeResult.ErrorKey, sendVerificationCodeResult.Message, sendVerificationCodeResult.Errors, (ErrorType)sendVerificationCodeResult.ErrorType);
             return Result<AppUser>.Success(appUser);
         }
         public static async Task<Result<string>> SendVerificationCode(this UserManager<AppUser> userManager,
-            SendVerificationCodeDto sendVerificationCodeDto ,
+            SendVerificationCodeDto sendVerificationCodeDto,
             IEmailService emailService)
         {
             var user = await userManager.FindByEmailAsync(sendVerificationCodeDto.Email);
