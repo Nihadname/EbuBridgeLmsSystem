@@ -8,7 +8,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
 {
     public record CreateAppUserAsStudentCommand:IRequest<Result<UserGetDto>>
     {
-        public StudentCreateDto StudentCreateDto { get; init; }
-        public RegisterDto RegisterDto { get; init; }
+        public required StudentCreateDto StudentCreateDto { get; init; }
+        public required RegisterDto RegisterDto { get; init; }
     }
 }

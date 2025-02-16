@@ -29,6 +29,9 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<Report> reports { get; set; }
         public DbSet<ReportOption> reportOptions { get; set; }
         public DbSet<CourseStudent> courseStudents { get; set; }
+        public DbSet<Degree> Degrees { get; set; }
+        public DbSet<Faculty> Faculties { get; set; }
+        public DbSet<TeacherFacultyDegree> TeacherFacultyDegrees { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

@@ -1,4 +1,9 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AutoMapper;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth;
 using EbuBridgeLmsSystem.Application.Interfaces;
@@ -10,26 +15,22 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
-
-namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsStudent
+namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsTeacher
 {
-    public class CreateAppUserAsStudentHandler : IRequestHandler<CreateAppUserAsStudentCommand,Result<UserGetDto>>
+    public class CreateAppUserAsTeacherHandler:IRequestHandler<CreateAppUserAsTeacherCommand, Result<UserGetDto>>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailService _emailService;
         private readonly UserManager<AppUser> _userManager;
-        private readonly ILogger<CreateAppUserAsStudentHandler> _logger;
-        public CreateAppUserAsStudentHandler(IMapper mapper, UserManager<AppUser> userManager, IEmailService emailService, IUnitOfWork unitOfWork, ILogger<CreateAppUserAsStudentHandler> logger)
+        private readonly ILogger<CreateAppUserAsTeacherHandler> _logger;
+        public CreateAppUserAsTeacherHandler(UserManager<AppUser> userManager, ILogger<CreateAppUserAsTeacherHandler> logger)
         {
-            _mapper = mapper;
             _userManager = userManager;
-            _emailService = emailService;
-            _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
-        async Task<Result<UserGetDto>> IRequestHandler<CreateAppUserAsStudentCommand, Result<UserGetDto>>.Handle(CreateAppUserAsStudentCommand request, CancellationToken cancellationToken)
+        public async Task<Result<UserGetDto>> Handle(CreateAppUserAsTeacherCommand request, CancellationToken cancellationToken)
         {
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
@@ -37,15 +38,10 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
                 var appUserResult = await _userManager.CreateUser(request.RegisterDto, _unitOfWork, _emailService);
                 if (!appUserResult.IsSuccess)
                     return Result<UserGetDto>.Failure(appUserResult.ErrorKey, appUserResult.Message, appUserResult.Errors, (ErrorType)appUserResult.ErrorType);
-                await _userManager.AddToRoleAsync(appUserResult.Data, RolesEnum.Student.ToString());
-                request.StudentCreateDto.AppUserId = appUserResult.Data.AppUserId;
-                request.StudentCreateDto.IsEnrolled = false;
-                request.StudentCreateDto.AvarageScore = null;
-                var mappedStudent = _mapper.Map<Student>(request.StudentCreateDto);
-                await _unitOfWork.StudentRepository.Create(mappedStudent);
-                await _unitOfWork.CommitTransactionAsync(cancellationToken);
-                var mappedUser = _mapper.Map<UserGetDto>(appUserResult.Data);
-                return Result<UserGetDto>.Success(mappedUser);
+                await _userManager.AddToRoleAsync(appUserResult.Data, RolesEnum.Teacher.ToString());
+                request.TeacherCreateDto.AppUserId= appUserResult.Data.AppUserId;
+
+
             }
             catch (Exception ex)
             {
@@ -53,7 +49,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
                 _logger.LogError(ex, "Error occurred during user registration");
                 return Result<UserGetDto>.Failure("InternalServerError", "An error occurred during registration.", null, ErrorType.SystemError);
             }
-           
+            return null; 
         }
     }
 }
