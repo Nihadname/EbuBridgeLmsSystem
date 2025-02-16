@@ -38,7 +38,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
                 if (!appUserResult.IsSuccess)
                     return Result<UserGetDto>.Failure(appUserResult.ErrorKey, appUserResult.Message, appUserResult.Errors, (ErrorType)appUserResult.ErrorType);
                 await _userManager.AddToRoleAsync(appUserResult.Data, RolesEnum.Student.ToString());
-                request.StudentCreateDto.AppUserId = appUserResult.Data.AppUserId;
+                request.StudentCreateDto.AppUserId = appUserResult.Data.Id;
                 request.StudentCreateDto.IsEnrolled = false;
                 request.StudentCreateDto.AvarageScore = null;
                 var mappedStudent = _mapper.Map<Student>(request.StudentCreateDto);

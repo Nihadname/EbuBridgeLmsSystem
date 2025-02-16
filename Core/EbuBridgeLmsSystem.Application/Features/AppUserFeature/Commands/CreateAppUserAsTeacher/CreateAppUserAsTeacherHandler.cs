@@ -39,9 +39,12 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
                 if (!appUserResult.IsSuccess)
                     return Result<UserGetDto>.Failure(appUserResult.ErrorKey, appUserResult.Message, appUserResult.Errors, (ErrorType)appUserResult.ErrorType);
                 await _userManager.AddToRoleAsync(appUserResult.Data, RolesEnum.Teacher.ToString());
-                request.TeacherCreateDto.AppUserId= appUserResult.Data.AppUserId;
-
-
+                request.TeacherCreateDto.AppUserId= appUserResult.Data.Id;
+                var mappedTeacher=_mapper.Map<Teacher>(request.TeacherCreateDto);
+                await _unitOfWork.TeacherRepository.Create(mappedTeacher);
+                await _unitOfWork.CommitTransactionAsync(cancellationToken);
+                var mappedUser = _mapper.Map<UserGetDto>(appUserResult.Data);
+                return Result<UserGetDto>.Success(mappedUser);
             }
             catch (Exception ex)
             {
@@ -49,7 +52,6 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
                 _logger.LogError(ex, "Error occurred during user registration");
                 return Result<UserGetDto>.Failure("InternalServerError", "An error occurred during registration.", null, ErrorType.SystemError);
             }
-            return null; 
         }
     }
 }

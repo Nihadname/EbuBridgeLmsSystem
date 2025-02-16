@@ -11,14 +11,12 @@ namespace EbuBridgeLmsSystem.Application.Validators.TeacherValidators
                 .NotEmpty().WithMessage("Description is required.")
                 .MinimumLength(10).WithMessage("Description must be at least 10 characters long.");
 
-            RuleFor(x => x.degree)
-                .NotEmpty().WithMessage("Degree is required.");
+           
 
             RuleFor(x => x.experience)
                 .GreaterThanOrEqualTo(0).WithMessage("Experience must be a non-negative number.");
 
-            RuleFor(x => x.faculty)
-                .NotEmpty().WithMessage("Faculty is required.");
+            
 
             RuleFor(x => x.Position)
                 .NotEmpty().WithMessage("Position is required.");
