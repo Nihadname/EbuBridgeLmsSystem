@@ -32,6 +32,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<Degree> Degrees { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<TeacherFacultyDegree> TeacherFacultyDegrees { get; set; }
+        public DbSet<RefreshToken> refreshTokens { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

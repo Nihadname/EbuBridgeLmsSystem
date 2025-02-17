@@ -45,6 +45,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public Student Student { get; set; }
         public Teacher Teacher { get; set; }
         public Parent Parent { get; set; }
+        public RefreshToken RefreshToken { get; set; }
         public ICollection<Note> Notes { get; set; }
         public ICollection<Report> Reports { get; set; }
         public bool IsFirstTimeLogined { get; set; }
