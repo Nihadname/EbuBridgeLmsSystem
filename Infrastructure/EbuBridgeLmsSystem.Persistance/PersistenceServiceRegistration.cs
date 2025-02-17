@@ -71,6 +71,7 @@ namespace EbuBridgeLmsSystem.Persistance
             services.AddScoped<IRequstToRegisterRepository, RequstToRegisterRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<ITeacherRepository, TeacherRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         }
     }
 }

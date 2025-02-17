@@ -22,6 +22,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
         public IReportOptionRepository ReportOptionRepository { get; private set; }
         public IAddressRepository AddressRepository { get; private set; }
         public IFeeRepository FeeRepository { get; private set; }
+        public IRefreshTokenRepository RefreshTokenRepository { get; private set; }
 
         public UnitOfWork(ApplicationDbContext applicationDbContext)
         {
@@ -35,6 +36,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
             ReportOptionRepository = new ReportOptionRepository(applicationDbContext);
             AddressRepository = new AddressRepository(applicationDbContext);
             FeeRepository = new FeeRepository(applicationDbContext);
+            RefreshTokenRepository= new RefreshTokenRepository(applicationDbContext);
             _applicationDbContext = applicationDbContext;
 
         }

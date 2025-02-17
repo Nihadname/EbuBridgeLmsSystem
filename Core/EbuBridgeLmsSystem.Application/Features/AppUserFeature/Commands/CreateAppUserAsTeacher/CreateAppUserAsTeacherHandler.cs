@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth;
 using EbuBridgeLmsSystem.Application.Interfaces;

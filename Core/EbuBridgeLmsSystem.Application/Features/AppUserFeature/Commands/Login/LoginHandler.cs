@@ -2,9 +2,11 @@
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Application.Settings;
 using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Repositories;
 using Hangfire;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -17,12 +19,16 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
         private readonly IEmailService _emailService;
         private readonly JwtSettings _jwtSettings;
         private readonly ITokenService _tokenService;
-        public LoginHandler(IOptions<JwtSettings> jwtSettings, UserManager<AppUser> userManager, IEmailService emailService, ITokenService tokenService)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IHttpContextAccessor _contextAccessor;
+        public LoginHandler(IOptions<JwtSettings> jwtSettings, UserManager<AppUser> userManager, IEmailService emailService, ITokenService tokenService, IUnitOfWork unitOfWork, IHttpContextAccessor contextAccessor)
         {
             _userManager = userManager;
             _emailService = emailService;
             _jwtSettings = jwtSettings.Value;
             _tokenService = tokenService;
+            _unitOfWork = unitOfWork;
+            _contextAccessor = contextAccessor;
         }
 
         public async Task<Result<AuthResponseDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -74,6 +80,17 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
             var Audience = _jwtSettings.Audience;
             var SecretKey = _jwtSettings.secretKey;
             var Issuer = _jwtSettings.Issuer;
+            var refreshTokenGenerated = _tokenService.GenerateRefreshToken();
+            RefreshToken refreshToken = new RefreshToken { AppUser = user, AppUserId = user.Id, Token = refreshTokenGenerated, Expires = DateTime.UtcNow.AddDays(7) };
+            await refreshToken.UpdateStatus();
+            await _unitOfWork.RefreshTokenRepository.Create(refreshToken);
+            _contextAccessor.HttpContext?.Response.Cookies.Append("refreshToken", refreshTokenGenerated, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(7)
+            });
             return Result<AuthResponseDto>.Success(new AuthResponseDto
             {
                 IsSuccess = true,
