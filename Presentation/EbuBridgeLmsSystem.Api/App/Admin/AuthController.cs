@@ -6,6 +6,7 @@ using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppU
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsStudent;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsTeacher;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EbuBridgeLmsSystem.Api.App.Admin
@@ -23,6 +24,7 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
             _mapper = mapper;
         }
         [HttpPost("RegisterForStudent")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> RegisterForStudent(StudentRegistrationDto studentRegistrationDto)
         {
             var mappedRegisterDto=_mapper.Map<CreateAppUserAsStudentCommand>(studentRegistrationDto);
@@ -30,6 +32,7 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
            return Ok(result);
         }
         [HttpPost("RegisterForTeacher")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterForTeacher(TeacherRegistrationDto teacherRegistrationDto)
         {
             var mappedRegisterDto = _mapper.Map<CreateAppUserAsTeacherCommand>(teacherRegistrationDto);
@@ -37,6 +40,7 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
             return Ok(result);
         }
         [HttpPost("RegisterForParent")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterForParent(ParentRegisterDto parentRegisterDto)
         {
             var mappedRegisterDto = _mapper.Map<CreateAppUserAsParentCommand>(parentRegisterDto);

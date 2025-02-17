@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Token
+namespace EbuBridgeLmsSystem.Application.Interfaces
 {
     public interface ITokenService
     {

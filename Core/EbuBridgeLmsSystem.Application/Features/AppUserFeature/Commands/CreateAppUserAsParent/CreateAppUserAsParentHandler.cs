@@ -76,7 +76,6 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
 
 
             }
-            return null;
         }
     }
 }

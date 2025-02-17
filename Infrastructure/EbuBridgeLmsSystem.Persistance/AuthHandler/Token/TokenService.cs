@@ -1,12 +1,9 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities;
+﻿using EbuBridgeLmsSystem.Application.Interfaces;
+using EbuBridgeLmsSystem.Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Token
 {
