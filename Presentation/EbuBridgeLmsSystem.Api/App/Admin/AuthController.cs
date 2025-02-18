@@ -6,7 +6,9 @@ using EbuBridgeLmsSystem.Application.Dtos.Teacher;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsParent;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsStudent;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsTeacher;
+using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.RevokeRefreshToken;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.VerifyCode;
+using EbuBridgeLmsSystem.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -54,6 +56,14 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
         {
             var mappedverifyCodeDto = _mapper.Map<VerifyCodeCommand>(verifyCodeDto);
             var result=await _mediator.Send(mappedverifyCodeDto);
+            return Ok(result);
+        }
+        [HttpPut("RevokeRefreshToken")]
+        [Authorize]
+        public async Task<IActionResult> RevokeRefreshToken()
+        {
+            var refreshTokenCommand = new RevokeRefreshTokenCommand();
+            var result = await _mediator.Send(refreshTokenCommand);
             return Ok(result);
         }
 

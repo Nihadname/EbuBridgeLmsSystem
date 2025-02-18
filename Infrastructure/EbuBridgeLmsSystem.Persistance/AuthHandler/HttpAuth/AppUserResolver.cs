@@ -1,4 +1,5 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities;
+﻿using EbuBridgeLmsSystem.Application.Interfaces;
+using EbuBridgeLmsSystem.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;

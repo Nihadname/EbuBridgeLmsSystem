@@ -18,7 +18,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public DateTime? Revoked { get; set; }
         public Task UpdateStatus()
         {
-            IsExpired = DateTime.UtcNow >= Expires;
+            IsExpired = DateTime.UtcNow >= Expires || Revoked != null;
             IsActive = !IsExpired && Revoked == null;
             return Task.CompletedTask;
         }

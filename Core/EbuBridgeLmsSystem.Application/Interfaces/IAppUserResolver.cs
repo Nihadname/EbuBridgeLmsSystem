@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EbuBridgeLmsSystem.Persistance.AuthHandler.HttpAuth
+namespace EbuBridgeLmsSystem.Application.Interfaces
 {
     public interface IAppUserResolver
     {
