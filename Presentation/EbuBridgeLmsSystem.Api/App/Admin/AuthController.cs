@@ -7,6 +7,7 @@ using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppU
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsStudent;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsTeacher;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.RevokeRefreshToken;
+using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.SendVerificationCode;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.VerifyCode;
 using EbuBridgeLmsSystem.Domain.Entities;
 using MediatR;
@@ -66,6 +67,13 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
             var result = await _mediator.Send(refreshTokenCommand);
             return Ok(result);
         }
+        [HttpGet("SendVerificationCode")]
 
+        public async Task<IActionResult> SendVerificationCode( SendVerificationCodeDto sendVerificationCodeDto)
+        {
+            var mappedSendVerificationCodeDto = _mapper.Map<SendVerificationCodeCommand>(sendVerificationCodeDto);
+            var result = await _mediator.Send(mappedSendVerificationCodeDto);
+            return Ok(result);
+        }
     }
 }

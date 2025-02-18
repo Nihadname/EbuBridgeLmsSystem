@@ -1,0 +1,17 @@
+﻿using FluentValidation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.SendVerificationCode
+{
+    public class SendVerificationCodeCommandValidator : AbstractValidator<SendVerificationCodeCommand>
+    {
+        public SendVerificationCodeCommandValidator()
+        {
+            RuleFor(s => s.Email).NotEmpty().EmailAddress().MaximumLength(200).WithMessage("max is 200");
+        }
+    }
+}
