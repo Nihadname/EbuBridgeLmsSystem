@@ -9,6 +9,7 @@ using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppU
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.RevokeRefreshToken;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.SendVerificationCode;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.VerifyCode;
+using EbuBridgeLmsSystem.Application.Features.ProfileFeature.Queries.Profile;
 using EbuBridgeLmsSystem.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -75,5 +76,14 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
             var result = await _mediator.Send(mappedSendVerificationCodeDto);
             return Ok(result);
         }
+        [HttpGet("Profile")]
+        [Authorize]
+        public async Task<IActionResult> Profile()
+        {
+            var profileQuery = new ProfileQuery();
+            var result = await _mediator.Send(profileQuery);
+            return Ok(result);
+        }
+
     }
 }
