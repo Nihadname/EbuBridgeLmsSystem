@@ -13,6 +13,7 @@ using EbuBridgeLmsSystem.Application.Dtos.Teacher;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsParent;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsStudent;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsTeacher;
+using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.VerifyCode;
 using EbuBridgeLmsSystem.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
@@ -79,7 +80,7 @@ namespace EbuBridgeLmsSystem.Application.Profiles
             CreateMap<CreateAppUserAsStudentCommand, StudentRegistrationDto>().ReverseMap();
             CreateMap<CreateAppUserAsTeacherCommand,TeacherRegistrationDto>().ReverseMap();
             CreateMap<CreateAppUserAsParentCommand,ParentRegisterDto>().ReverseMap();
-         
+         CreateMap<VerifyCodeCommand,VerifyCodeDto>().ReverseMap();
 
 
 

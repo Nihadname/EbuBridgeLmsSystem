@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Dtos.Parent;
 using EbuBridgeLmsSystem.Application.Dtos.Student;
 using EbuBridgeLmsSystem.Application.Dtos.Teacher;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsParent;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsStudent;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsTeacher;
+using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.VerifyCode;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +47,13 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
         {
             var mappedRegisterDto = _mapper.Map<CreateAppUserAsParentCommand>(parentRegisterDto);
             var result = await _mediator.Send(mappedRegisterDto);
+            return Ok(result);
+        }
+        [HttpPut("VerifyCode")]
+        public async Task<IActionResult> VerifyCode(VerifyCodeDto verifyCodeDto)
+        {
+            var mappedverifyCodeDto = _mapper.Map<VerifyCodeCommand>(verifyCodeDto);
+            var result=await _mediator.Send(mappedverifyCodeDto);
             return Ok(result);
         }
 
