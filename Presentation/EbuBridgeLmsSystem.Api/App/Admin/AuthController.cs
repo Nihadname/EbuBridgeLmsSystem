@@ -53,37 +53,8 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
             var result = await _mediator.Send(mappedRegisterDto);
             return Ok(result);
         }
-        [HttpPut("VerifyCode")]
-        public async Task<IActionResult> VerifyCode(VerifyCodeDto verifyCodeDto)
-        {
-            var mappedverifyCodeDto = _mapper.Map<VerifyCodeCommand>(verifyCodeDto);
-            var result=await _mediator.Send(mappedverifyCodeDto);
-            return Ok(result);
-        }
-        [HttpPut("RevokeRefreshToken")]
-        [Authorize]
-        public async Task<IActionResult> RevokeRefreshToken()
-        {
-            var refreshTokenCommand = new RevokeRefreshTokenCommand();
-            var result = await _mediator.Send(refreshTokenCommand);
-            return Ok(result);
-        }
-        [HttpGet("SendVerificationCode")]
-
-        public async Task<IActionResult> SendVerificationCode( SendVerificationCodeDto sendVerificationCodeDto)
-        {
-            var mappedSendVerificationCodeDto = _mapper.Map<SendVerificationCodeCommand>(sendVerificationCodeDto);
-            var result = await _mediator.Send(mappedSendVerificationCodeDto);
-            return Ok(result);
-        }
-        [HttpGet("Profile")]
-        [Authorize]
-        public async Task<IActionResult> Profile()
-        {
-            var profileQuery = new ProfileQuery();
-            var result = await _mediator.Send(profileQuery);
-            return Ok(result);
-        }
+       
+      
 
     }
 }
