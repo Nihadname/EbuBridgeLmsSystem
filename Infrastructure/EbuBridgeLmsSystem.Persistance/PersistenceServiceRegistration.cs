@@ -2,6 +2,7 @@
 using EbuBridgeLmsSystem.Application.Settings;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Repositories;
+using EbuBridgeLmsSystem.Persistance.AuthHandler.HttpAuth;
 using EbuBridgeLmsSystem.Persistance.AuthHandler.Token;
 using EbuBridgeLmsSystem.Persistance.Data;
 using EbuBridgeLmsSystem.Persistance.Data.Implementations;
@@ -57,6 +58,7 @@ namespace EbuBridgeLmsSystem.Persistance
            };
        });
             services.AddScoped<ITokenService,TokenService>();
+            services.AddScoped<IAppUserResolver,AppUserResolver>();
             //services.AddScoped<IAuthService,AuthService>();
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<ICourseRepository,CourseRepository>();

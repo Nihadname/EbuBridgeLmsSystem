@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ForgotPassword
 {
-    public class ForgotPasswordCommandValidator : AbstractValidator<ForgotPasswordCommand>
+    public class ForgotPasswordCommandValidator : AbstractValidator<ForgetPasswordCommand>
     {
         public ForgotPasswordCommandValidator()
         {

@@ -22,8 +22,4 @@
     <ProjectReference Include="..\..\Infrastructure\EbuBridgeLmsSystem.Persistance\EbuBridgeLmsSystem.Persistance.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="App\ClientSide\" />
-  </ItemGroup>
-
 </Project>

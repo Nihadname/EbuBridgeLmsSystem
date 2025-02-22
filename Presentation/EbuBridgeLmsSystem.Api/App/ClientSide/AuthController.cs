@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
+using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ForgotPassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.RevokeRefreshToken;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.SendVerificationCode;
@@ -27,8 +28,8 @@ namespace EbuBridgeLmsSystem.Api.App.ClientSide
         [HttpPut("VerifyCode")]
         public async Task<IActionResult> VerifyCode(VerifyCodeDto verifyCodeDto)
         {
-            var mappedverifyCodeDto = _mapper.Map<VerifyCodeCommand>(verifyCodeDto);
-            var result = await _mediator.Send(mappedverifyCodeDto);
+            var mappedverifyCodeCommand = _mapper.Map<VerifyCodeCommand>(verifyCodeDto);
+            var result = await _mediator.Send(mappedverifyCodeCommand);
             return Ok(result);
         }
         [HttpPut("RevokeRefreshToken")]
@@ -43,8 +44,8 @@ namespace EbuBridgeLmsSystem.Api.App.ClientSide
 
         public async Task<IActionResult> SendVerificationCode(SendVerificationCodeDto sendVerificationCodeDto)
         {
-            var mappedSendVerificationCodeDto = _mapper.Map<SendVerificationCodeCommand>(sendVerificationCodeDto);
-            var result = await _mediator.Send(mappedSendVerificationCodeDto);
+            var mappedSendVerificationCodeCommand = _mapper.Map<SendVerificationCodeCommand>(sendVerificationCodeDto);
+            var result = await _mediator.Send(mappedSendVerificationCodeCommand);
             return Ok(result);
         }
         [HttpGet("Profile")]
@@ -58,8 +59,15 @@ namespace EbuBridgeLmsSystem.Api.App.ClientSide
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            var mappedLoginDto = _mapper.Map<LoginCommand>(loginDto);
-            var result = await _mediator.Send(mappedLoginDto);
+            var mappedLoginCommand = _mapper.Map<LoginCommand>(loginDto);
+            var result = await _mediator.Send(mappedLoginCommand);
+            return Ok(result);
+        }
+        [HttpGet("ForgetPassword")]
+        public async Task<IActionResult> ForgetPassword(ResetPasswordEmailDto resetPasswordEmailDto)
+        {
+            var forgetPasswordCommand=_mapper.Map<ForgetPasswordCommand>(resetPasswordEmailDto);
+            var result = await _mediator.Send(resetPasswordEmailDto);
             return Ok(result);
         }
     }

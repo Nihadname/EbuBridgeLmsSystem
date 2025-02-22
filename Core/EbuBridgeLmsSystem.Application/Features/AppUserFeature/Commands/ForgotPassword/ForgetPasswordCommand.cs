@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ForgotPassword
 {
-    public class ForgotPasswordCommand:IRequest<Result<Unit>>
+    public class ForgetPasswordCommand:IRequest<Result<Unit>>
     {
         public string Email { get; set; }
         public string Token { get; set; }

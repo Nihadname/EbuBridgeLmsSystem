@@ -100,7 +100,15 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth
             BackgroundJob.Enqueue(() => emailService.SendEmailAsync(user.Email, "verfication code", body, true));
             return Result<string>.Success("Verification code sent");
         }
-
+        public static async Task<Result<AppUser>> GetUserByEmailAsync(this UserManager<AppUser> userManager,string email)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return Result<AppUser>.Failure(null, "User not found.", null, ErrorType.NotFoundError);
+            }
+            return Result<AppUser>.Success(user);
+        }
 
     }
 }
