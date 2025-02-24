@@ -19,6 +19,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
                        .HasAnnotation("RegularExpression",
                                       @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
             builder.Property(s=>s.IsDeleted).HasDefaultValue(false);
+
             
         }
     }

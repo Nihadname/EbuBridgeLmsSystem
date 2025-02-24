@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using EbuBridgeLmsSystem.Api.Extensions;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
-using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ChangePassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ForgotPassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.GetUserAccountBack;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login;
@@ -13,9 +12,8 @@ using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.VerifyCode
 using EbuBridgeLmsSystem.Application.Features.ProfileFeature.Queries.Profile;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using CommonErrorType = LearningManagementSystem.Core.Entities.Common.ErrorType;
+
 
 namespace EbuBridgeLmsSystem.Api.App.ClientSide
 {
