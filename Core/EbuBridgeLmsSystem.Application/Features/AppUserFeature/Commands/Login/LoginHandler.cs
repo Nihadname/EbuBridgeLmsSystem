@@ -71,6 +71,17 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
                     return Result<AuthResponseDto>.Failure("UserNameOrGmail", $"you are blocked until {user.BlockedUntil?.ToString("dd MMM yyyy hh:mm")}", null, ErrorType.BusinessLogicError);
                 }
             }
+            var deletedDate = user.DeletedTime;
+            if (deletedDate is not null)
+            {
+                var today = DateTime.Now;
+                var diffOfDates = today.Subtract((DateTime)deletedDate);
+                if (diffOfDates.Days >= 7)
+                {
+                    return Result<AuthResponseDto>.Failure("Error Login", "you lost the chance of getting your account back becuase 7 days already passed", null, ErrorType.BusinessLogicError);
+                }
+            }
+           
             IList<string> roles = await _userManager.GetRolesAsync(user);
             if (user.IsReportedHighly)
             {

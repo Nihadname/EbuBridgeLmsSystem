@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using EbuBridgeLmsSystem.Api.Extensions;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
+using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ChangePassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ForgotPassword;
+using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.GetUserAccountBack;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ResetPassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.RevokeRefreshToken;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.SendVerificationCode;
+using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.UserSoftDelete;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.VerifyCode;
 using EbuBridgeLmsSystem.Application.Features.ProfileFeature.Queries.Profile;
 using MediatR;
@@ -86,6 +89,22 @@ namespace EbuBridgeLmsSystem.Api.App.ClientSide
         {
             var changePasswordCommand = _mapper.Map<ResetPasswordHandleCommand>(changePasswordDto);
             var result = await _mediator.Send(changePasswordCommand);
+            return this.ToActionResult(result);
+        }
+        [Authorize]
+        [HttpDelete("UserDelete")]
+        public async Task<IActionResult> UserDelete()
+        {
+            var userDeleteCommand=new UserSoftDeleteCommand();
+            var result = await _mediator.Send(userDeleteCommand);
+            return this.ToActionResult(result);
+        }
+        [Authorize]
+        [HttpPut("RecoverAccount")]
+        public async Task<IActionResult> RecoverAccount()
+        {
+            var getUserAccountBackCommand = new GetUserAccountBackCommand();
+            var result = await _mediator.Send(getUserAccountBackCommand);
             return this.ToActionResult(result);
         }
     }

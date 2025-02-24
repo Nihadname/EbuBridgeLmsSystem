@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.UserSoftDelete
+namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.GetUserAccountBack
 {
-    public record UserSoftDeleteCommand:IRequest<Result<Unit>>
+    public record GetUserAccountBackCommand:IRequest<Result<Unit>>
     {
-      
+        
     }
 }

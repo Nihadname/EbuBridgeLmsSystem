@@ -1,4 +1,5 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities;
+﻿using EbuBridgeLmsSystem.Application.Interfaces;
+using EbuBridgeLmsSystem.Domain.Entities;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -13,22 +14,31 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.UserSo
     public class UserSoftDeleteHandler : IRequestHandler<UserSoftDeleteCommand, Result<Unit>>
     {
         private readonly UserManager<AppUser> _userManager;
-
-        public UserSoftDeleteHandler(UserManager<AppUser> userManager)
+        private readonly IAppUserResolver _userResolver;
+        public UserSoftDeleteHandler(UserManager<AppUser> userManager, IAppUserResolver userResolver)
         {
             _userManager = userManager;
+            _userResolver = userResolver;
         }
 
         public async Task<Result<Unit>> Handle(UserSoftDeleteCommand request, CancellationToken cancellationToken)
         {
-            var existedUser=await _userManager.FindByIdAsync(request.Id);
-            if (existedUser is null)
-                return Result<Unit>.Failure("Error delete", "Error delete", null, ErrorType.NotFoundError);
-            if(existedUser.IsDeleted is true)
+            var currentUser = await _userResolver.GetCurrentUserAsync();
+            if (currentUser is null)
+                return Result<Unit>.Failure("Error delete", "user not found", null, ErrorType.NotFoundError);
+            if(currentUser.IsDeleted is true)
                 return Result<Unit>.Failure("Error delete", "already deleted", null, ErrorType.NotFoundError);
-            existedUser.IsDeleted=true;
-            existedUser.DeletedTime = DateTime.UtcNow;
-            await _userManager.UpdateAsync(existedUser);
+            currentUser.IsDeleted=true;
+            currentUser.DeletedTime = DateTime.UtcNow;
+            var updateResult= await _userManager.UpdateAsync(currentUser);
+            if (!updateResult.Succeeded)
+            {
+                return Result<Unit>.Failure(
+                    "Deletion Failed",
+                    "Failed to update user status.",
+                    null,
+                    ErrorType.SystemError);
+            }
             return Result<Unit>.Success(Unit.Value);
         }
     }
