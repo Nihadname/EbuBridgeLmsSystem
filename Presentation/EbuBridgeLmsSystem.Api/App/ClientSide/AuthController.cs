@@ -4,6 +4,7 @@ using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ForgotPassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.GetUserAccountBack;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login;
+using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.RefreshTokenCreate;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ResetPassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.RevokeRefreshToken;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.SendVerificationCode;
@@ -104,6 +105,13 @@ namespace EbuBridgeLmsSystem.Api.App.ClientSide
             var getUserAccountBackCommand = new GetUserAccountBackCommand();
             var result = await _mediator.Send(getUserAccountBackCommand);
             return this.ToActionResult(result);
+        }
+        [HttpPost("RefreshToken")]
+        public async Task<IActionResult> RefreshToken()
+        {
+            RefreshTokenCommand refreshTokenCommand = new RefreshTokenCommand();
+            var result = await _mediator.Send(refreshTokenCommand);
+            return Ok(result);
         }
     }
 }

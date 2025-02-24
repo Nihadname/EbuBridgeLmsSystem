@@ -76,7 +76,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
             {
                 var today = DateTime.Now;
                 var diffOfDates = today.Subtract((DateTime)deletedDate);
-                if (diffOfDates.Days >= 7)
+                if (diffOfDates.TotalDays >= 7)
                 {
                     return Result<AuthResponseDto>.Failure("Error Login", "you lost the chance of getting your account back becuase 7 days already passed", null, ErrorType.BusinessLogicError);
                 }
@@ -92,9 +92,16 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
             var SecretKey = _jwtSettings.secretKey;
             var Issuer = _jwtSettings.Issuer;
             var refreshTokenGenerated = _tokenService.GenerateRefreshToken();
+            var existingToken = await _unitOfWork.RefreshTokenRepository.GetEntity(s => s.AppUserId == user.Id);
+            if (existingToken != null)
+            {
+                await _unitOfWork.RefreshTokenRepository.Delete(existingToken);
+
+            }
             RefreshToken refreshToken = new RefreshToken { AppUser = user, AppUserId = user.Id, Token = refreshTokenGenerated, Expires = DateTime.UtcNow.AddDays(7) };
             await refreshToken.UpdateStatus();
             await _unitOfWork.RefreshTokenRepository.Create(refreshToken);
+            
             _contextAccessor.HttpContext?.Response.Cookies.Append("refreshToken", refreshTokenGenerated, new CookieOptions
             {
                 HttpOnly = true,
@@ -102,6 +109,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTime.UtcNow.AddDays(7)
             });
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
             return Result<AuthResponseDto>.Success(new AuthResponseDto
             {
                 IsSuccess = true,

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EbuBridgeLmsSystem.Application.BackgroundServices;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsStudent;
 using EbuBridgeLmsSystem.Application.Profiles;
 using EbuBridgeLmsSystem.Application.Validators.AuthValidators;
@@ -42,7 +43,7 @@ namespace EbuBridgeLmsSystem.Application
             {
                 cfg.RegisterServicesFromAssembly(typeof(CreateAppUserAsStudentHandler).Assembly);
             });
-
+            serviceDescriptors.AddHostedService<UserPermanentDeleteBackgroundService>();
 
         }
     }

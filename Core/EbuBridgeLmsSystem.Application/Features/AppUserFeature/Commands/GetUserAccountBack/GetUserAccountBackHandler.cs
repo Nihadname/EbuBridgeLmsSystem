@@ -26,7 +26,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.GetUse
             var deletedDate = currentUser.DeletedTime;
             var today = DateTime.Now;
             var diffOfDates = today.Subtract((DateTime)deletedDate);
-            if (diffOfDates.Days >= 7)
+            if (diffOfDates.TotalDays >= 7)
             {
                 return Result<Unit>.Failure("Error delete", "you lost the chance of getting your account back becuase 7 days already passed", null, ErrorType.BusinessLogicError);
             }
