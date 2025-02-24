@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EbuBridgeLmsSystem.Api.Extensions;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Dtos.Parent;
 using EbuBridgeLmsSystem.Application.Dtos.Student;
@@ -35,7 +36,7 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
         {
             var mappedRegisterDto=_mapper.Map<CreateAppUserAsStudentCommand>(studentRegistrationDto);
             var result = await _mediator.Send(mappedRegisterDto);
-           return Ok(result);
+           return this.ToActionResult(result);
         }
         [HttpPost("RegisterForTeacher")]
         [Authorize(Roles = "Admin")]
@@ -43,7 +44,7 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
         {
             var mappedRegisterDto = _mapper.Map<CreateAppUserAsTeacherCommand>(teacherRegistrationDto);
             var result=await _mediator.Send(mappedRegisterDto);
-            return Ok(result);
+            return this.ToActionResult(result);
         }
         [HttpPost("RegisterForParent")]
         [Authorize(Roles = "Admin")]
@@ -51,7 +52,7 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
         {
             var mappedRegisterDto = _mapper.Map<CreateAppUserAsParentCommand>(parentRegisterDto);
             var result = await _mediator.Send(mappedRegisterDto);
-            return Ok(result);
+            return this.ToActionResult(result);
         }
        
       

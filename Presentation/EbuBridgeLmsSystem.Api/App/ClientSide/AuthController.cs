@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EbuBridgeLmsSystem.Api.Extensions;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ForgotPassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login;
@@ -11,6 +12,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using CommonErrorType = LearningManagementSystem.Core.Entities.Common.ErrorType;
 
 namespace EbuBridgeLmsSystem.Api.App.ClientSide
 {
@@ -31,7 +33,7 @@ namespace EbuBridgeLmsSystem.Api.App.ClientSide
         {
             var mappedverifyCodeCommand = _mapper.Map<VerifyCodeCommand>(verifyCodeDto);
             var result = await _mediator.Send(mappedverifyCodeCommand);
-            return Ok(result);
+             return this.ToActionResult(result);
         }
         [HttpPut("RevokeRefreshToken")]
         [Authorize]
@@ -39,7 +41,7 @@ namespace EbuBridgeLmsSystem.Api.App.ClientSide
         {
             var refreshTokenCommand = new RevokeRefreshTokenCommand();
             var result = await _mediator.Send(refreshTokenCommand);
-            return Ok(result);
+            return this.ToActionResult(result);
         }
         [HttpGet("SendVerificationCode")]
 
@@ -47,7 +49,7 @@ namespace EbuBridgeLmsSystem.Api.App.ClientSide
         {
             var mappedSendVerificationCodeCommand = _mapper.Map<SendVerificationCodeCommand>(sendVerificationCodeDto);
             var result = await _mediator.Send(mappedSendVerificationCodeCommand);
-            return Ok(result);
+            return this.ToActionResult(result);
         }
         [HttpGet("Profile")]
         [Authorize]
@@ -55,28 +57,28 @@ namespace EbuBridgeLmsSystem.Api.App.ClientSide
         {
             var profileQuery = new ProfileQuery();
             var result = await _mediator.Send(profileQuery);
-            return Ok(result);
+            return this.ToActionResult(result);
         }
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
             var mappedLoginCommand = _mapper.Map<LoginCommand>(loginDto);
             var result = await _mediator.Send(mappedLoginCommand);
-            return Ok(result);
+            return this.ToActionResult(result);
         }
         [HttpGet("ForgetPassword")]
         public async Task<IActionResult> ForgetPassword(ResetPasswordEmailDto resetPasswordEmailDto)
         {
             var forgetPasswordCommand=_mapper.Map<ForgetPasswordCommand>(resetPasswordEmailDto);
-            var result = await _mediator.Send(resetPasswordEmailDto);
-            return Ok(result);
+            var result = await _mediator.Send(forgetPasswordCommand);
+            return this.ToActionResult(result);
         }
         [HttpPut("ResetPassword")]
         public async Task<IActionResult> ResetPassword(ResetPasswordHandleDto resetPasswordHandleDto)
         {
             var resetPasswordCommand=_mapper.Map<ResetPasswordHandleCommand>(resetPasswordHandleDto);
-            var result = await _mediator.Send(resetPasswordHandleDto);
-            return Ok(result);
+            var result = await _mediator.Send(resetPasswordCommand);
+            return this.ToActionResult(result);
         }
         [Authorize]
         [HttpPut("ChangePassword")]
@@ -84,7 +86,7 @@ namespace EbuBridgeLmsSystem.Api.App.ClientSide
         {
             var changePasswordCommand = _mapper.Map<ResetPasswordHandleCommand>(changePasswordDto);
             var result = await _mediator.Send(changePasswordCommand);
-            return Ok(result);
+            return this.ToActionResult(result);
         }
     }
 }
