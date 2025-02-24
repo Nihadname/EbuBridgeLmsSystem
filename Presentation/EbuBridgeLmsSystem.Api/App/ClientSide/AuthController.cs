@@ -2,6 +2,7 @@
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ForgotPassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login;
+using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ResetPassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.RevokeRefreshToken;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.SendVerificationCode;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.VerifyCode;
@@ -68,6 +69,21 @@ namespace EbuBridgeLmsSystem.Api.App.ClientSide
         {
             var forgetPasswordCommand=_mapper.Map<ForgetPasswordCommand>(resetPasswordEmailDto);
             var result = await _mediator.Send(resetPasswordEmailDto);
+            return Ok(result);
+        }
+        [HttpPut("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordHandleDto resetPasswordHandleDto)
+        {
+            var resetPasswordCommand=_mapper.Map<ResetPasswordHandleCommand>(resetPasswordHandleDto);
+            var result = await _mediator.Send(resetPasswordHandleDto);
+            return Ok(result);
+        }
+        [Authorize]
+        [HttpPut("ChangePassword")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto changePasswordDto)
+        {
+            var changePasswordCommand = _mapper.Map<ResetPasswordHandleCommand>(changePasswordDto);
+            var result = await _mediator.Send(changePasswordCommand);
             return Ok(result);
         }
     }

@@ -10,11 +10,13 @@ using EbuBridgeLmsSystem.Application.Dtos.ReportOption;
 using EbuBridgeLmsSystem.Application.Dtos.RequstToRegister;
 using EbuBridgeLmsSystem.Application.Dtos.Student;
 using EbuBridgeLmsSystem.Application.Dtos.Teacher;
+using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ChangePassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsParent;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsStudent;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsTeacher;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ForgotPassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login;
+using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ResetPassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.SendVerificationCode;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.VerifyCode;
 using EbuBridgeLmsSystem.Domain.Entities;
@@ -83,12 +85,12 @@ namespace EbuBridgeLmsSystem.Application.Profiles
             CreateMap<CreateAppUserAsStudentCommand, StudentRegistrationDto>().ReverseMap();
             CreateMap<CreateAppUserAsTeacherCommand,TeacherRegistrationDto>().ReverseMap();
             CreateMap<CreateAppUserAsParentCommand,ParentRegisterDto>().ReverseMap();
-         CreateMap<VerifyCodeCommand,VerifyCodeDto>().ReverseMap();
+            CreateMap<VerifyCodeCommand,VerifyCodeDto>().ReverseMap();
             CreateMap<SendVerificationCodeCommand,SendVerificationCodeDto>().ReverseMap();
             CreateMap<LoginCommand,LoginDto>().ReverseMap();
             CreateMap<ForgetPasswordCommand,ResetPasswordEmailDto>().ReverseMap();
-
-
+            CreateMap<ResetPasswordHandleCommand, ResetPasswordHandleDto>().ReverseMap();
+            CreateMap<ChangePasswordCommand,ChangePasswordDto>().ReverseMap();
 
 
         }
