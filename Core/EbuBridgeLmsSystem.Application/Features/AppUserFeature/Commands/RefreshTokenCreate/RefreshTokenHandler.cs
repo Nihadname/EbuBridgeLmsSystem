@@ -49,17 +49,19 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Refres
                 var user = existedRefreshToken.AppUser;
                 if (user == null)
                     return Result<AuthRefreshTokenResponseDto>.Failure("Id", "User does not exist", null, ErrorType.UnauthorizedError);
-                await _unitOfWork.RefreshTokenRepository.Delete(existedRefreshToken);
                 IList<string> roles = await _userManager.GetRolesAsync(user);
                 var Audience = _jwtSettings.Audience;
                 var SecretKey = _jwtSettings.secretKey;
                 var Issuer = _jwtSettings.Issuer;
                 var newrefreshTokenGenerated = _tokenService.GenerateRefreshToken();
                 var newAccessToken = _tokenService.GetToken(SecretKey, Audience, Issuer, user, roles);
-                RefreshToken refreshTokenAsObject = new RefreshToken { AppUserId = user.Id, Token = newrefreshTokenGenerated, Expires = DateTime.UtcNow.AddDays(7) };
-                await refreshTokenAsObject.UpdateStatus();
-                await _unitOfWork.RefreshTokenRepository.Create(refreshTokenAsObject);
+                existedRefreshToken.Token = newrefreshTokenGenerated;
+                existedRefreshToken.Expires = DateTime.UtcNow.AddDays(7);
+                await existedRefreshToken.UpdateStatus();
+                await _unitOfWork.RefreshTokenRepository.Update(existedRefreshToken);
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+                _httpContextAccessor.HttpContext?.Response.Cookies.Delete("refreshToken");
                 _httpContextAccessor.HttpContext?.Response.Cookies.Append("refreshToken", newrefreshTokenGenerated, new CookieOptions
                 {
                     HttpOnly = true,

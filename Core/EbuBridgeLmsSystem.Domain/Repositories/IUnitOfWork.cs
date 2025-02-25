@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Domain.Repositories
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         public ICourseRepository CourseRepository { get; }
         public IStudentRepository StudentRepository { get; }

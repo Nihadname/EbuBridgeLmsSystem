@@ -95,13 +95,19 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
             var existingToken = await _unitOfWork.RefreshTokenRepository.GetEntity(s => s.AppUserId == user.Id);
             if (existingToken != null)
             {
-                await _unitOfWork.RefreshTokenRepository.Delete(existingToken);
+                existingToken.Token = refreshTokenGenerated;
+                existingToken.Expires = DateTime.UtcNow.AddDays(7);
+               await existingToken.UpdateStatus();
+                await _unitOfWork.RefreshTokenRepository.Update(existingToken);
 
             }
-            RefreshToken refreshToken = new RefreshToken { AppUser = user, AppUserId = user.Id, Token = refreshTokenGenerated, Expires = DateTime.UtcNow.AddDays(7) };
-            await refreshToken.UpdateStatus();
-            await _unitOfWork.RefreshTokenRepository.Create(refreshToken);
-            
+            else
+            {
+                RefreshToken refreshToken = new RefreshToken { AppUser = user, AppUserId = user.Id, Token = refreshTokenGenerated, Expires = DateTime.UtcNow.AddDays(7) };
+                await refreshToken.UpdateStatus();
+                await _unitOfWork.RefreshTokenRepository.Create(refreshToken);
+            }
+            _contextAccessor.HttpContext?.Response.Cookies.Delete("refreshToken");
             _contextAccessor.HttpContext?.Response.Cookies.Append("refreshToken", refreshTokenGenerated, new CookieOptions
             {
                 HttpOnly = true,

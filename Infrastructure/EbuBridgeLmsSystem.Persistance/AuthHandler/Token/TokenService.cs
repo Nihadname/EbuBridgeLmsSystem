@@ -30,7 +30,7 @@ namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Token
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 SigningCredentials = credentials,
-                Expires = DateTime.MaxValue,
+                Expires = DateTime.UtcNow.AddMinutes(5),
                 Subject = ci,
                 Audience = Audience,
                 Issuer = Issuer,
