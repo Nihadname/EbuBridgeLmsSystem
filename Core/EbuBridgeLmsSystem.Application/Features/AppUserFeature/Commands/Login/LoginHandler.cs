@@ -33,55 +33,29 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
 
         public async Task<Result<AuthResponseDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.Users.Include(s => s.Student).
-               FirstOrDefaultAsync(s => s.Email.ToLower() == request.UserNameOrGmail.ToLower());
+            var user = await FindUserAsync(request.UserNameOrGmail);
             if (user == null)
             {
-                user = await _userManager.Users
-                    .Include(s => s.Student)
-                    .FirstOrDefaultAsync(s => s.UserName.ToLower() == request.UserNameOrGmail.ToLower());
-                if (user == null)
-                {
-                    return Result<AuthResponseDto>.Failure("UserNameOrGmail", "userName or email is wrong\"", null, ErrorType.NotFoundError);
-                }
+                return Result<AuthResponseDto>.Failure("UserNameOrGmail", "userName or email is wrong\"", null, ErrorType.NotFoundError);
             }
-            if (user.IsFirstTimeLogined)
-            {
-                user.IsFirstTimeLogined = false;
-                await _userManager.UpdateAsync(user);
-                var body = "<h1>Welcome!</h1><p>Thank you for joining us. We're excited to have you!</p>";
-                BackgroundJob.Enqueue(() => _emailService.SendEmailAsync(user.Email, "first time login", body, true));
-            }
-            var result = await _userManager.CheckPasswordAsync(user, request.Password);
+             await HandleFirstTimeLogin(user);
+             var result = await _userManager.CheckPasswordAsync(user, request.Password);
             if (!result)
             {
                 return Result<AuthResponseDto>.Failure("Password", "Password or email is wrong\"", null, ErrorType.ValidationError);
             }
-            if (user.IsBlocked && user.BlockedUntil.HasValue)
+          var IsUserBlockedResult=  await HandleUserBlockSituation(user);
+            if (!IsUserBlockedResult.IsSuccess)
             {
-                if (user.BlockedUntil.Value <= DateTime.UtcNow)
-                {
-                    user.IsBlocked = false;
-                    user.BlockedUntil = null;
-                    await _userManager.UpdateAsync(user);
-                }
-                else
-                {
+                return Result<AuthResponseDto>.Failure(IsUserBlockedResult.ErrorKey, IsUserBlockedResult.Message, IsUserBlockedResult.Errors, (ErrorType)IsUserBlockedResult.ErrorType);
+            }
+            var deleteUserRecoveryResult = await CheckAccountRecovery(user);
+            if (!deleteUserRecoveryResult.IsSuccess)
+            {
+                return Result<AuthResponseDto>.Failure(IsUserBlockedResult.ErrorKey, IsUserBlockedResult.Message, IsUserBlockedResult.Errors, (ErrorType)IsUserBlockedResult.ErrorType);
+            }
 
-                    return Result<AuthResponseDto>.Failure("UserNameOrGmail", $"you are blocked until {user.BlockedUntil?.ToString("dd MMM yyyy hh:mm")}", null, ErrorType.BusinessLogicError);
-                }
-            }
-            var deletedDate = user.DeletedTime;
-            if (deletedDate is not null)
-            {
-                var today = DateTime.Now;
-                var diffOfDates = today.Subtract((DateTime)deletedDate);
-                if (diffOfDates.TotalDays >= 7)
-                {
-                    return Result<AuthResponseDto>.Failure("Error Login", "you lost the chance of getting your account back becuase 7 days already passed", null, ErrorType.BusinessLogicError);
-                }
-            }
-           
+
             IList<string> roles = await _userManager.GetRolesAsync(user);
             if (user.IsReportedHighly)
             {
@@ -97,7 +71,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
             {
                 existingToken.Token = refreshTokenGenerated;
                 existingToken.Expires = DateTime.UtcNow.AddDays(7);
-               await existingToken.UpdateStatus();
+                await existingToken.UpdateStatus();
                 await _unitOfWork.RefreshTokenRepository.Update(existingToken);
 
             }
@@ -122,5 +96,57 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
                 Token = _tokenService.GetToken(SecretKey, Audience, Issuer, user, roles)
             });
         }
+        private async Task<AppUser?> FindUserAsync(string userNameOrEmail)
+        {
+            return await _userManager.Users
+                .Include(u => u.Student)
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == userNameOrEmail.ToLower() ||
+                                   u.UserName.ToLower() == userNameOrEmail.ToLower());
+        }
+        private async Task HandleFirstTimeLogin(AppUser user)
+        {
+            if (user.IsFirstTimeLogined)
+            {
+                user.IsFirstTimeLogined = false;
+                await _userManager.UpdateAsync(user);
+                var body = "<h1>Welcome!</h1><p>Thank you for joining us. We're excited to have you!</p>";
+                BackgroundJob.Enqueue(() => _emailService.SendEmailAsync(user.Email, "first time login", body, true));
+            }
+        }
+        private async Task<Result<AuthResponseDto>> HandleUserBlockSituation(AppUser user)
+        {
+            if (user.IsBlocked && user.BlockedUntil.HasValue)
+            {
+                if (user.BlockedUntil.Value <= DateTime.UtcNow)
+                {
+                    user.IsBlocked = false;
+                    user.BlockedUntil = null;
+                    await _userManager.UpdateAsync(user);
+                    return Result<AuthResponseDto>.Success(null);
+                }
+                else
+                {
+
+                    return Result<AuthResponseDto>.Failure("UserNameOrGmail", $"you are blocked until {user.BlockedUntil?.ToString("dd MMM yyyy hh:mm")}", null, ErrorType.BusinessLogicError);
+                }
+            }
+            return Result<AuthResponseDto>.Success(null);
+
+        }
+        private async Task<Result<string>> CheckAccountRecovery(AppUser user)
+        {
+            var deletedDate = user.DeletedTime;
+            if (deletedDate is not null)
+            {
+                var today = DateTime.Now;
+                var diffOfDates = today.Subtract((DateTime)deletedDate);
+                if (diffOfDates.TotalDays >= 7)
+                {
+                    return Result<string>.Failure("Error Login", "you lost the chance of getting your account back becuase 7 days already passed", null, ErrorType.BusinessLogicError);
+                }
+            }
+            return Result<string>.Success(null);
+        }
     }
+
 }
