@@ -1,15 +1,21 @@
 ﻿using EbuBridgeLmsSystem.Domain.Entities;
 using LearningManagementSystem.Core.Entities.Common;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using System.Security.AccessControl;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace EbuBridgeLmsSystem.Persistance.Data
 {
     public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public ApplicationDbContext(DbContextOptions options, IHttpContextAccessor httpContextAccessor) : base(options)
         {
+            _httpContextAccessor = httpContextAccessor;
         }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Address> addresses { get; set; }
@@ -36,6 +42,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<RefreshToken> refreshTokens { get; set; }
         public  DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -44,8 +51,22 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
+            var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "System";
+            var auditLogs = new List<AuditLog>();
             foreach (var entry in ChangeTracker.Entries<BaseEntity>())
             {
+                if (entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.State == EntityState.Deleted)
+                {
+                    var log = new AuditLog
+                    {
+                        TableName = entry.Entity.GetType().Name,
+                        Action = entry.State.ToString(),
+                        UserId = userId,
+                        Changes = JsonSerializer.Serialize(entry.CurrentValues.ToObject()) 
+                    };
+                    auditLogs.Add(log);
+                }
+                AuditLogs.AddRange(auditLogs);
                 if (entry.State == EntityState.Added)
                 {
                     entry.Property(s => s.CreatedTime).CurrentValue = DateTime.UtcNow;
