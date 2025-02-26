@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Interfaces;
+using EbuBridgeLmsSystem.Domain.Entities.Common;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using System;
@@ -25,7 +26,7 @@ namespace EbuBridgeLmsSystem.Application.Features.ProfileFeature.Queries.Profile
         {
             var currentUser = await _userResolver.GetCurrentUserAsync();
             if(currentUser == null)
-                return Result<UserGetDto>.Failure("User", "User  cannot be null",null, ErrorType.UnauthorizedError);
+                return Result<UserGetDto>.Failure(Error.Unauthorized,null, ErrorType.UnauthorizedError);
             var mappedUser = _mapper.Map<UserGetDto>(currentUser);
             return Result<UserGetDto>.Success(mappedUser);
 

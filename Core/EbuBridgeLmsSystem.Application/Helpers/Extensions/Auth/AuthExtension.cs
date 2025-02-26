@@ -2,6 +2,7 @@
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using Hangfire;
 using LearningManagementSystem.Core.Entities.Common;
@@ -22,13 +23,13 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth
             )
         {
             var existUser = await userManager.FindByNameAsync(registerDto.UserName);
-            if (existUser != null) return Result<AppUser>.Failure("UserName", "UserName is already Taken", null, ErrorType.BusinessLogicError);
+            if (existUser != null) return Result<AppUser>.Failure(Error.Custom("UserName", "UserName is already Taken"), null, ErrorType.BusinessLogicError);
             var existUserEmail = await userManager.FindByEmailAsync(registerDto.Email);
             if (existUserEmail != null)
-                return Result<AppUser>.Failure("Email", "Email is already taken", null, ErrorType.BusinessLogicError);
+                return Result<AppUser>.Failure(Error.Custom("Email", "Email is already taken"), null, ErrorType.BusinessLogicError);
             if (await userManager.Users.FirstOrDefaultAsync(s => s.PhoneNumber.ToLower() == registerDto.PhoneNumber.ToLower()) is not null)
             {
-                return Result<AppUser>.Failure("PhoneNumber", "PhoneNumber already exists", null, ErrorType.BusinessLogicError);
+                return Result<AppUser>.Failure(Error.Custom("PhoneNumber", "PhoneNumber already exists"), null, ErrorType.BusinessLogicError);
             }
 
             AppUser appUser = new AppUser();
@@ -52,7 +53,7 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth
                     errors.Add(keyValues.Key + " " + keyValues.Value);
                 }
 
-                var response = Result<AppUser>.Failure("User  errors found", null, errors, ErrorType.ValidationError);
+                var response = Result<AppUser>.Failure(Error.NotFound, errors, ErrorType.ValidationError);
                 return response;
             }
             var customerOptions = new CustomerCreateOptions
@@ -79,7 +80,7 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth
             }
             var sendVerificationCodeResult = await userManager.SendVerificationCode(new SendVerificationCodeDto { Email = appUser.Email }, emailService);
             if (!sendVerificationCodeResult.IsSuccess)
-              return  Result<AppUser>.Failure(sendVerificationCodeResult.ErrorKey, sendVerificationCodeResult.Message, sendVerificationCodeResult.Errors, (ErrorType)sendVerificationCodeResult.ErrorType);
+              return  Result<AppUser>.Failure(sendVerificationCodeResult.Error, sendVerificationCodeResult.Errors, (ErrorType)sendVerificationCodeResult.ErrorType);
             return Result<AppUser>.Success(appUser);
         }
         public static async Task<Result<string>> SendVerificationCode(this UserManager<AppUser> userManager,
@@ -87,7 +88,7 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth
             IEmailService emailService)
         {
             var user = await userManager.FindByEmailAsync(sendVerificationCodeDto.Email);
-            if (user is null) return Result<string>.Failure("user", "user is null", null, ErrorType.NotFoundError);
+            if (user is null) return Result<string>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
             var verificationCode = RandomNumberGenerator.GetInt32(100000, 999999).ToString();
             string salt;
             string hashedCode = verificationCode.GenerateHash(out salt);
@@ -105,7 +106,7 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth
             var user = await userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                return Result<AppUser>.Failure(null, "User not found.", null, ErrorType.NotFoundError);
+                return Result<AppUser>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
             }
             return Result<AppUser>.Success(user);
         }

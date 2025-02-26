@@ -1,4 +1,6 @@
-﻿using LearningManagementSystem.Core.Entities.Common;
+﻿
+using EbuBridgeLmsSystem.Domain.Entities.Common;
+using LearningManagementSystem.Core.Entities.Common;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
@@ -65,7 +67,7 @@ namespace EbuBridgeLmsSystem.Api
                        errors.Add(keyValues.Key + " " + keyValues.Value);
                    }
 
-                   var response = Result<string>.Failure("Validation errors found", null, errors, ErrorType.ValidationError);
+                   var response = Result<string>.Failure(Error.ValidationFailed, errors, ErrorType.ValidationError);
 
                    return new BadRequestObjectResult(response);
                };
