@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
-    public class Student:BaseEntity
+    public sealed class Student:BaseEntity
     { 
         public decimal? AvarageScore { get; set; }
         public string AppUserId { get; set; }

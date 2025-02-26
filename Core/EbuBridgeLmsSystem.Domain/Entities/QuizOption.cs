@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
-    public class QuizOption:BaseEntity
+    public sealed class QuizOption:BaseEntity
     {
         public string Text { get; set; }
         public  bool IsCorrect { get; set; }

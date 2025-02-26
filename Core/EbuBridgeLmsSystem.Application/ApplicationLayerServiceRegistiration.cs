@@ -6,7 +6,9 @@ using EbuBridgeLmsSystem.Application.Validators.AuthValidators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Hangfire;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Stripe;
@@ -44,6 +46,12 @@ namespace EbuBridgeLmsSystem.Application
                 cfg.RegisterServicesFromAssembly(typeof(CreateAppUserAsStudentHandler).Assembly);
             });
             serviceDescriptors.AddHostedService<UserPermanentDeleteBackgroundService>();
+            serviceDescriptors.AddResponseCompression(opt =>
+            {
+                opt.EnableForHttps = true;
+                opt.Providers.Add<BrotliCompressionProvider>();
+                opt.Providers.Add<GzipCompressionProvider>();
+            });
 
         }
     }

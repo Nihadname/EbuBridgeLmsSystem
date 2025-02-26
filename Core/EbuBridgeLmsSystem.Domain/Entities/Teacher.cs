@@ -3,7 +3,7 @@ using LearningManagementSystem.Core.Entities.Common;
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
-    public class Teacher:BaseEntity
+    public sealed class Teacher:BaseEntity
     {
         public string Description { get; set; }
         public int Experience { get; set; }

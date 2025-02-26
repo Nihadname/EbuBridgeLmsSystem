@@ -2,6 +2,7 @@
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Application.Settings;
 using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using Hangfire;
 using LearningManagementSystem.Core.Entities.Common;
@@ -36,32 +37,32 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
             var user = await FindUserAsync(request.UserNameOrGmail);
             if (user == null)
             {
-                return Result<AuthResponseDto>.Failure("UserNameOrGmail", "userName or email is wrong\"", null, ErrorType.NotFoundError);
+                return Result<AuthResponseDto>.Failure(Error.Custom("UserNameOrGmail", "userName or email is wrong\""), null, ErrorType.NotFoundError);
             }
              await HandleFirstTimeLogin(user);
              var result = await _userManager.CheckPasswordAsync(user, request.Password);
             if (!result)
             {
-                return Result<AuthResponseDto>.Failure("Password", "Password or email is wrong\"", null, ErrorType.ValidationError);
+                return Result<AuthResponseDto>.Failure(Error.Custom("Password", "Password or email is wrong\""), null, ErrorType.ValidationError);
             }
           var IsUserBlockedResult=  await HandleUserBlockSituation(user);
             if (!IsUserBlockedResult.IsSuccess)
             {
-                return Result<AuthResponseDto>.Failure(IsUserBlockedResult.ErrorKey, IsUserBlockedResult.Message, IsUserBlockedResult.Errors, (ErrorType)IsUserBlockedResult.ErrorType);
+                return Result<AuthResponseDto>.Failure(IsUserBlockedResult.Error, IsUserBlockedResult.Errors, (ErrorType)IsUserBlockedResult.ErrorType);
             }
-            var deleteUserRecoveryResult = await CheckAccountRecovery(user);
+            var deleteUserRecoveryResult = CheckAccountRecovery(user);
             if (!deleteUserRecoveryResult.IsSuccess)
             {
-                return Result<AuthResponseDto>.Failure(IsUserBlockedResult.ErrorKey, IsUserBlockedResult.Message, IsUserBlockedResult.Errors, (ErrorType)IsUserBlockedResult.ErrorType);
+                return Result<AuthResponseDto>.Failure(IsUserBlockedResult.Error, IsUserBlockedResult.Errors, (ErrorType)IsUserBlockedResult.ErrorType);
             }
 
 
             IList<string> roles = await _userManager.GetRolesAsync(user);
             if (user.IsReportedHighly)
             {
-                return Result<AuthResponseDto>.Failure("User", "You are reported too many times ,so account is locked now, we will contact with you", null, ErrorType.BusinessLogicError);
+                return Result<AuthResponseDto>.Failure(Error.Custom("User", "You are reported too many times ,so account is locked now, we will contact with you"), null, ErrorType.BusinessLogicError);
             }
-            if (!user.IsEmailVerificationCodeValid) return Result<AuthResponseDto>.Failure("User", "pls verify your account by getting code", null, ErrorType.BusinessLogicError);
+            if (!user.IsEmailVerificationCodeValid) return Result<AuthResponseDto>.Failure(Error.Custom("User", "pls verify your account by getting code"), null, ErrorType.BusinessLogicError);
             var Audience = _jwtSettings.Audience;
             var SecretKey = _jwtSettings.secretKey;
             var Issuer = _jwtSettings.Issuer;
@@ -96,7 +97,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
                 Token = _tokenService.GetToken(SecretKey, Audience, Issuer, user, roles)
             });
         }
-        private async Task<AppUser?> FindUserAsync(string userNameOrEmail)
+        private async Task<AppUser> FindUserAsync(string userNameOrEmail)
         {
             return await _userManager.Users
                 .Include(u => u.Student)
@@ -127,13 +128,13 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
                 else
                 {
 
-                    return Result<AuthResponseDto>.Failure("UserNameOrGmail", $"you are blocked until {user.BlockedUntil?.ToString("dd MMM yyyy hh:mm")}", null, ErrorType.BusinessLogicError);
+                    return Result<AuthResponseDto>.Failure(Error.Custom("UserNameOrGmail", $"you are blocked until {user.BlockedUntil?.ToString("dd MMM yyyy hh:mm")}"), null, ErrorType.BusinessLogicError);
                 }
             }
             return Result<AuthResponseDto>.Success(null);
 
         }
-        private async Task<Result<string>> CheckAccountRecovery(AppUser user)
+        private Result<string> CheckAccountRecovery(AppUser user)
         {
             var deletedDate = user.DeletedTime;
             if (deletedDate is not null)
@@ -142,7 +143,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
                 var diffOfDates = today.Subtract((DateTime)deletedDate);
                 if (diffOfDates.TotalDays >= 7)
                 {
-                    return Result<string>.Failure("Error Login", "you lost the chance of getting your account back becuase 7 days already passed", null, ErrorType.BusinessLogicError);
+                    return Result<string>.Failure(Error.Custom("Error Login", "you lost the chance of getting your account back becuase 7 days already passed"), null, ErrorType.BusinessLogicError);
                 }
             }
             return Result<string>.Success(null);

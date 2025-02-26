@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
-    public class Faculty:BaseEntity
+    public sealed class Faculty:BaseEntity
     {
         public string Name { get; set; }
         public List<TeacherFacultyDegree> TeacherFacultyDegrees { get; set; }

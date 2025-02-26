@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
-    public class RefreshToken:BaseEntity
+    public sealed class RefreshToken:BaseEntity
     {
         public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }

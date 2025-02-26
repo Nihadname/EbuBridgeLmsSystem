@@ -2,6 +2,7 @@
 using EbuBridgeLmsSystem.Application.Exceptions;
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.Common;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -28,12 +29,12 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Change
            var currentUser= await _userResolver.GetCurrentUserAsync();
             if (currentUser is null)
             {
-                return Result<Unit>.Failure("Id", "this user doesnt exist", null, ErrorType.UnauthorizedError);
+                return Result<Unit>.Failure(Error.Unauthorized, null, ErrorType.UnauthorizedError);
             }
             var isTheSamePasswordWithTheCurrentOne = await _userManager.CheckPasswordAsync(currentUser, request.NewPassword);
             if (isTheSamePasswordWithTheCurrentOne)
             {
-                return Result<Unit>.Failure("ChangePassword", "Password is the same with current one", null, ErrorType.BusinessLogicError);
+                return Result<Unit>.Failure(Error.Custom("ChangePassword", "Password is the same with current one"), null, ErrorType.BusinessLogicError);
             }
             var result = await _userManager.ChangePasswordAsync(currentUser, request.CurrentPassword, request.NewPassword);
             if (!result.Succeeded)
@@ -44,7 +45,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Change
                 {
                     errors.Add(keyValues.Key + " " + keyValues.Value);
                 }
-                return Result<Unit>.Failure("ChangePassword", null, errors, ErrorType.SystemError);
+                return Result<Unit>.Failure(Error.SystemError, errors, ErrorType.SystemError);
             }
             return Result<Unit>.Success(Unit.Value);
 

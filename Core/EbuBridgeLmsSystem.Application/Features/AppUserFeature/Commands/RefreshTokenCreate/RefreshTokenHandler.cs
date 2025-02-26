@@ -2,6 +2,7 @@
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Application.Settings;
 using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
@@ -39,16 +40,16 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Refres
                 var refreshToken = _httpContextAccessor.HttpContext?.Request.Cookies["refreshToken"];
 
                 if (string.IsNullOrEmpty(refreshToken))
-                    return Result<AuthRefreshTokenResponseDto>.Failure("RefreshToken", "Refresh token is missing", null, ErrorType.UnauthorizedError);
+                    return Result<AuthRefreshTokenResponseDto>.Failure(Error.ValidationFailed, null, ErrorType.UnauthorizedError);
                 var existedRefreshToken = await _unitOfWork.RefreshTokenRepository.GetEntity(s => s.Token == refreshToken && s.IsActive, includes: new Func<IQueryable<RefreshToken>, IQueryable<RefreshToken>>[]
             {
                 query => query.Include(s=>s.AppUser)
             });
                 if (existedRefreshToken == null)
-                    return Result<AuthRefreshTokenResponseDto>.Failure("token", "refresh token doesnt exist", null, ErrorType.NotFoundError);
+                    return Result<AuthRefreshTokenResponseDto>.Failure(Error.Custom("token", "refresh token doesnt exist"), null, ErrorType.NotFoundError);
                 var user = existedRefreshToken.AppUser;
                 if (user == null)
-                    return Result<AuthRefreshTokenResponseDto>.Failure("Id", "User does not exist", null, ErrorType.UnauthorizedError);
+                    return Result<AuthRefreshTokenResponseDto>.Failure(Error.Unauthorized, null, ErrorType.UnauthorizedError);
                 IList<string> roles = await _userManager.GetRolesAsync(user);
                 var Audience = _jwtSettings.Audience;
                 var SecretKey = _jwtSettings.secretKey;
@@ -76,7 +77,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Refres
             {
                 await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                 _logger.LogError(ex, "Error occurred during user registration");
-                return Result<AuthRefreshTokenResponseDto>.Failure("InternalServerError", "An error occurred during refresh token.", null, ErrorType.SystemError);
+                return Result<AuthRefreshTokenResponseDto>.Failure(Error.InternalServerError, null, ErrorType.SystemError);
 
             }
         }

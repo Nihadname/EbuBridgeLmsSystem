@@ -68,7 +68,7 @@ namespace EbuBridgeLmsSystem.Api.App.ClientSide
             var result = await _mediator.Send(mappedLoginCommand);
             return this.ToActionResult(result);
         }
-        [HttpGet("ForgetPassword")]
+        [HttpPost("ForgetPassword")]
         public async Task<IActionResult> ForgetPassword(ResetPasswordEmailDto resetPasswordEmailDto)
         {
             var forgetPasswordCommand=_mapper.Map<ForgetPasswordCommand>(resetPasswordEmailDto);

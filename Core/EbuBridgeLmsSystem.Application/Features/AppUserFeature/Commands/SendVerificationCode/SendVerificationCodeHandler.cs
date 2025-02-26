@@ -31,7 +31,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.SendVe
             var mappedSendVerificationCode=_mapper.Map<SendVerificationCodeDto>(request);
             var result=await _userManager.SendVerificationCode(mappedSendVerificationCode,_emailService);
             if (!result.IsSuccess)
-                return Result<Unit>.Failure(result.ErrorKey, result.Message, result.Errors, (ErrorType)result.ErrorType);
+                return Result<Unit>.Failure(result.Error, result.Errors, (ErrorType)result.ErrorType);
             return Result<Unit>.Success(Unit.Value);
            
         }

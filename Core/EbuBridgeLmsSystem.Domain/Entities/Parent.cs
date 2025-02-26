@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
-    public class Parent:BaseEntity
+    public sealed class Parent:BaseEntity
     {
         public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }

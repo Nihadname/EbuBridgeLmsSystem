@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
-    public class ReportOption:BaseEntity
+    public sealed class ReportOption:BaseEntity
     {
         public string Name { get; set; }
         public ICollection<Report> reports { get; set; }

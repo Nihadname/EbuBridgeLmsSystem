@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
-    public class QuizResult:BaseEntity
+    public sealed class QuizResult:BaseEntity
     {
         public Guid QuizId { get; set; } 
         public LessonQuiz Quiz { get; set; } 

@@ -1,5 +1,6 @@
 ﻿using EbuBridgeLmsSystem.Application.Helpers.Extensions;
 using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.Common;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -18,9 +19,9 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Verify
         public async Task<Result<string>> Handle(VerifyCodeCommand request, CancellationToken cancellationToken)
         {
             var existedUser = await _userManager.FindByEmailAsync(request.Email);
-            if (existedUser is null) return Result<string>.Failure("User", "User is null",null, ErrorType.NotFoundError);
+            if (existedUser is null) return Result<string>.Failure(Error.NotFound,null, ErrorType.NotFoundError);
             if (!IsVerificationCodeValid(request.Code, existedUser))
-                return Result<string>.Failure("Code", "Invalid or expired verification code.", null, ErrorType.BusinessLogicError);
+                return Result<string>.Failure(Error.Custom("Code", "Invalid or expired verification code."), null, ErrorType.BusinessLogicError);
            await UpdateUserVerificationStatusAsync(existedUser);
             return Result<string>.Success("Code verified successfully. You can now log in.");
         }

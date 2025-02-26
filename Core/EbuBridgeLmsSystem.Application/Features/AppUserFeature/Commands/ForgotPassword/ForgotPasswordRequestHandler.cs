@@ -2,6 +2,7 @@
 using EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth;
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.Common;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -26,10 +27,10 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Forgot
         {
             var authEmailGetDto=new AuthGetEmailDto {Email= request.Email };
             var userResult = await _userManager.GetUserByEmailAsync(request.Email);
-            if (!userResult.IsSuccess) return Result<Unit>.Failure(userResult.ErrorKey, userResult.Message, userResult.Errors, (ErrorType)userResult.ErrorType);
+            if (!userResult.IsSuccess) return Result<Unit>.Failure(userResult.Error, userResult.Errors, (ErrorType)userResult.ErrorType);
             var token = await _userManager.GeneratePasswordResetTokenAsync(userResult.Data);
             if (string.IsNullOrWhiteSpace(token))
-              return  Result<Unit>.Failure("Error", "Null result", null, ErrorType.SystemError);
+              return  Result<Unit>.Failure(Error.ValidationFailed, null, ErrorType.SystemError);
             request.Token = token;
             var httpRequest = _contextAccessor.HttpContext.Request;
             var baseUrl = $"{httpRequest.Scheme}://{httpRequest.Host}{httpRequest.PathBase}";
@@ -37,7 +38,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Forgot
             var authGetEmailBodyDto=new AuthGetEmailBodyDto { Token=token,ApiEndpoint=resetPasswordEndpoint };
            var bodyResult=  GetEmailBody(authGetEmailBodyDto);
           if(!bodyResult.IsSuccess)
-                return Result<Unit>.Failure(userResult.ErrorKey, userResult.Message, userResult.Errors, (ErrorType)userResult.ErrorType);
+                return Result<Unit>.Failure(userResult.Error, userResult.Errors, (ErrorType)userResult.ErrorType);
             await _emailService.SendEmailAsync(userResult.Data.Email, "Reset Password", bodyResult.Data, true);
             return Result<Unit>.Success(Unit.Value);
         }

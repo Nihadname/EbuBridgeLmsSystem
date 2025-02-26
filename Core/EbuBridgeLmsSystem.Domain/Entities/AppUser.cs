@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
-    public class AppUser:IdentityUser
+    public  class AppUser:IdentityUser
     {
         public bool IsDeleted { get; set; }
         public DateTime? DeletedTime { get; set; }

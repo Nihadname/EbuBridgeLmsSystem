@@ -1,5 +1,6 @@
 ﻿using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.Common;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -25,17 +26,16 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.UserSo
         {
             var currentUser = await _userResolver.GetCurrentUserAsync();
             if (currentUser is null)
-                return Result<Unit>.Failure("Error delete", "user not found", null, ErrorType.NotFoundError);
+                return Result<Unit>.Failure(Error.Unauthorized, null, ErrorType.NotFoundError);
             if(currentUser.IsDeleted is true)
-                return Result<Unit>.Failure("Error delete", "already deleted", null, ErrorType.NotFoundError);
+                return Result<Unit>.Failure(Error.Custom("Error delete", "already deleted"), null, ErrorType.NotFoundError);
             currentUser.IsDeleted=true;
             currentUser.DeletedTime = DateTime.UtcNow;
             var updateResult= await _userManager.UpdateAsync(currentUser);
             if (!updateResult.Succeeded)
             {
                 return Result<Unit>.Failure(
-                    "Deletion Failed",
-                    "Failed to update user status.",
+                    Error.SystemError,
                     null,
                     ErrorType.SystemError);
             }

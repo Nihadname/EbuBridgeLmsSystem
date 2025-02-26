@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Domain.Entities;
 
-public class RequestToRegister:BaseEntity
+public sealed class RequestToRegister:BaseEntity
 {
     public string FullName { get; set; }
     public int Age { get; private set; }

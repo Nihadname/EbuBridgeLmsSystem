@@ -1,5 +1,6 @@
 ﻿using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.Common;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -20,15 +21,15 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.GetUse
         {
             var currentUser = await _userResolver.GetCurrentUserAsync();
             if (currentUser is null)
-                return Result<Unit>.Failure("Error delete", "user not found", null, ErrorType.NotFoundError);
+                return Result<Unit>.Failure(Error.Unauthorized, null, ErrorType.NotFoundError);
             if (currentUser.IsDeleted is false)
-                return Result<Unit>.Failure("Error delete", "account is active", null, ErrorType.NotFoundError);
+                return Result<Unit>.Failure(Error.Custom("Error delete", "account is active"), null, ErrorType.BusinessLogicError);
             var deletedDate = currentUser.DeletedTime;
             var today = DateTime.Now;
             var diffOfDates = today.Subtract((DateTime)deletedDate);
             if (diffOfDates.TotalDays >= 7)
             {
-                return Result<Unit>.Failure("Error delete", "you lost the chance of getting your account back becuase 7 days already passed", null, ErrorType.BusinessLogicError);
+                return Result<Unit>.Failure(Error.Custom("Error delete", "you lost the chance of getting your account back becuase 7 days already passed"), null, ErrorType.BusinessLogicError);
             }
             currentUser.IsDeleted= false;
             currentUser.DeletedTime = null;
@@ -36,8 +37,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.GetUse
             if (!updateResult.Succeeded)
             {
                 return Result<Unit>.Failure(
-                    "Deletion Failed",
-                    "Failed to update user status.",
+                    Error.SystemError,
                     null,
                     ErrorType.SystemError);
             }

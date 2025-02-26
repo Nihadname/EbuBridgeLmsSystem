@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
-    public class LessonVideo:BaseEntity
+    public sealed class LessonVideo:BaseEntity
     {
         public string Title { get; set; }
         public string Url { get; set; }

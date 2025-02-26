@@ -1,5 +1,6 @@
 ﻿using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
@@ -31,15 +32,15 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Revoke
         {
             var refreshToken = _contextAccessor.HttpContext?.Request.Cookies["refreshToken"];
             if (string.IsNullOrEmpty(refreshToken))
-                return Result<Unit>.Failure("RefreshToken", "Refresh token is missing", null, ErrorType.UnauthorizedError);
+                return Result<Unit>.Failure(Error.Custom("RefreshToken", "Refresh token is missing"), null, ErrorType.UnauthorizedError);
             var currentUser= await _appUserResolver.GetCurrentUserAsync();
             if (currentUser == null)
-                return Result<Unit>.Failure("Id", "User  cannot be null",null, ErrorType.UnauthorizedError);
+                return Result<Unit>.Failure(Error.Unauthorized,null, ErrorType.UnauthorizedError);
             var existedRefreshToken=await _unitOfWork.RefreshTokenRepository.GetEntity(s=>s.Token==refreshToken&&s.IsActive);
             if (existedRefreshToken == null)
-                return Result<Unit>.Failure("token", "refresh token doesnt exist", null, ErrorType.NotFoundError);
+                return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
             if (existedRefreshToken.AppUser == null || existedRefreshToken.AppUser.Id != currentUser.Id)
-                return Result<Unit>.Failure("User", "User doesnt match or exists",null, ErrorType.NotFoundError);
+                return Result<Unit>.Failure(Error.Custom("User", "User doesnt match or exists"),null, ErrorType.NotFoundError);
             existedRefreshToken.Revoked = DateTime.UtcNow;
             existedRefreshToken.Expires = DateTime.UtcNow;
             await existedRefreshToken.UpdateStatus();

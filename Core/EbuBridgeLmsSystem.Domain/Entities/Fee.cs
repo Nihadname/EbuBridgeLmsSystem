@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
-    public class Fee:BaseEntity
+    public sealed class Fee:BaseEntity
     {
         public decimal Amount { get; set; }
         public DateTime DueDate { get; set; }

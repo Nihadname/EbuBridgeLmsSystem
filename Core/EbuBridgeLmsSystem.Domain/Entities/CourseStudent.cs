@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
-    public class CourseStudent:BaseEntity
+    public sealed class CourseStudent:BaseEntity
     {
         public Guid CourseId { get; set; }
         public Course Course { get; set; }
