@@ -4,18 +4,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class AddressConfiguration : IEntityTypeConfiguration<Address>
+    public sealed class CountryConfiguration : IEntityTypeConfiguration<Country>
     {
-        public void Configure(EntityTypeBuilder<Address> builder)
+        public void Configure(EntityTypeBuilder<Country> builder)
         {
             builder.Property(s => s.IsDeleted).HasDefaultValue(false);
             builder.Property(s => s.CreatedTime).HasDefaultValueSql("GETDATE()");
-            builder.HasIndex(s=>s.CreatedTime);
+            builder.HasIndex(s => s.CreatedTime);
             builder.Property(s => s.UpdatedTime).HasDefaultValueSql("GETDATE()");
-            builder.HasKey(e => e.Id);
-          
-            builder.Property(s => s.Street).HasMaxLength(90);
-            builder.Property(s => s.Region).HasMaxLength(90);
+            builder.HasIndex(s=>s.Name).IsUnique();
+            builder.HasMany(s=>s.Cities).WithOne(s=>s.Country).HasForeignKey(s=>s.CountryId);
         }
     }
 }

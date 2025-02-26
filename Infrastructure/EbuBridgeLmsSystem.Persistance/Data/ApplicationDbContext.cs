@@ -1,4 +1,5 @@
 ﻿using EbuBridgeLmsSystem.Domain.Entities;
+using LearningManagementSystem.Core.Entities.Common;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -33,10 +34,28 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<TeacherFacultyDegree> TeacherFacultyDegrees { get; set; }
         public DbSet<RefreshToken> refreshTokens { get; set; }
+        public  DbSet<Country> Countries { get; set; }
+        public DbSet<City> Cities { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            
             base.OnModelCreating(builder);
+        }
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            foreach (var entry in ChangeTracker.Entries<BaseEntity>())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Property(s => s.CreatedTime).CurrentValue = DateTime.UtcNow;
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    entry.Property(s => s.UpdatedTime).CurrentValue = DateTime.UtcNow;
+                }
+            }
+            return await base.SaveChangesAsync(cancellationToken);
         }
     }
 }
