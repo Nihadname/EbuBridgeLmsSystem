@@ -20,6 +20,8 @@ namespace EbuBridgeLmsSystem.Domain.Repositories
         public IAddressRepository AddressRepository { get; }
         public IFeeRepository FeeRepository { get; }
         public IRefreshTokenRepository RefreshTokenRepository { get; }  
+        public  ICountryRepository CountryRepository { get; }
+        public ICityRepository CityRepository { get; }
 
     }
 }

@@ -23,6 +23,8 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
         public IAddressRepository AddressRepository { get; private set; }
         public IFeeRepository FeeRepository { get; private set; }
         public IRefreshTokenRepository RefreshTokenRepository { get; private set; }
+        public ICountryRepository CountryRepository { get; private set; }
+        public ICityRepository CityRepository { get; private set; }
 
         public UnitOfWork(ApplicationDbContext applicationDbContext)
         {
@@ -37,6 +39,8 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
             AddressRepository = new AddressRepository(applicationDbContext);
             FeeRepository = new FeeRepository(applicationDbContext);
             RefreshTokenRepository= new RefreshTokenRepository(applicationDbContext);
+            CountryRepository = new CountryRepository(applicationDbContext);
+            CityRepository = new CityRepository(applicationDbContext);
             _applicationDbContext = applicationDbContext;
 
         }
