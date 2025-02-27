@@ -22,6 +22,7 @@ using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ResetPassw
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.SendVerificationCode;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.VerifyCode;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.CreateCountry;
+using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.UpdateCountry;
 using EbuBridgeLmsSystem.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
@@ -98,6 +99,8 @@ namespace EbuBridgeLmsSystem.Application.Profiles
             CreateMap<AddressCreateCommand,AddressCreateDto>().ReverseMap();
             CreateMap<CreateCountryCommand, Country>();
             CreateMap<CreateCountryCommand, CountryCreateDto>().ReverseMap();
+            CreateMap<UpdateCountryCommand, Country>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

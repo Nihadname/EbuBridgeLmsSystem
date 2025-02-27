@@ -3,6 +3,7 @@ using EbuBridgeLmsSystem.Api.Extensions;
 using EbuBridgeLmsSystem.Application.Dtos.Country;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.CreateCountry;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,9 +16,14 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-
+        public CountryController(IMediator mediator, IMapper mapper)
+        {
+            _mediator = mediator;
+            _mapper = mapper;
+        }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCountry(CountryCreateDto countryCreateDto)
         {
             var mappedCommand=_mapper.Map<CreateCountryCommand>(countryCreateDto);

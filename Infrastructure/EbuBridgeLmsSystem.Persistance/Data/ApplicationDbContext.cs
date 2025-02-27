@@ -4,6 +4,7 @@ using LearningManagementSystem.Core.Entities.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using System.Security.AccessControl;
 using System.Security.Claims;
@@ -13,12 +14,15 @@ namespace EbuBridgeLmsSystem.Persistance.Data
 {
     public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
-        private readonly IAuditLogProcessor _auditLogProcessor;
-        public ApplicationDbContext(DbContextOptions options,  IAuditLogProcessor auditLogProcessor) : base(options)
+        private readonly IServiceProvider _serviceProvider;
+
+        public ApplicationDbContext(DbContextOptions options, IServiceProvider serviceProvider) : base(options)
         {
             
-            _auditLogProcessor = auditLogProcessor;
+          _serviceProvider = serviceProvider;
         }
+        private IAuditLogProcessor AuditLogProcessor => _serviceProvider.GetRequiredService<IAuditLogProcessor>();
+
         public DbSet<Course> Courses { get; set; }
         public DbSet<Address> addresses { get; set; }
         public DbSet<Student> students { get; set; }
@@ -54,7 +58,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var entries = ChangeTracker.Entries<BaseEntity>();
-       await  _auditLogProcessor.HandleAuditLogs(entries);
+       await AuditLogProcessor.HandleAuditLogs(entries);
 
             foreach (var entry in entries)
             {
