@@ -28,12 +28,14 @@ namespace EbuBridgeLmsSystem.Persistance.Processors
             {
                 if (entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.State == EntityState.Deleted)
                 {
+                    if (entry.Entity is AuditLog) continue;
                     var log = new AuditLog
                     {
                         TableName = entry.Entity.GetType().Name,
                         Action = entry.State.ToString(),
                         UserId = userId,
-                        Changes = JsonSerializer.Serialize(entry.CurrentValues.ToObject())
+                        Changes = JsonSerializer.Serialize(entry.CurrentValues.ToObject()),
+                        ClientIpAddress = GetClientIp()
                     };
                     auditLogs.Add(log);
                 }
@@ -43,6 +45,19 @@ namespace EbuBridgeLmsSystem.Persistance.Processors
                 await _applicationDbContext.AuditLogs.AddRangeAsync(auditLogs);
             }
             
+        }
+        private string GetClientIp()
+        {
+            var context = _httpContextAccessor.HttpContext;
+            if (context == null) return "Unknown";
+
+            var forwardedFor = context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(forwardedFor))
+            {
+                return forwardedFor.Split(',')[0]; 
+            }
+
+            return context.Connection.RemoteIpAddress?.ToString();
         }
     }
 }
