@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Security.AccessControl;
 using System.Security.Claims;
 using System.Text.Json;
@@ -52,8 +54,19 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            
+            //.IgnoreQueryFilters() ne vaxtsa bu disable olmalidiki is deleted true ve false olanlari gotursun
             base.OnModelCreating(builder);
+            foreach (var entityType in builder.Model.GetEntityTypes())
+            {
+                if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType)) 
+                {
+                    var parameter = Expression.Parameter(entityType.ClrType, "e");
+                    var property = Expression.Property(parameter, nameof(BaseEntity.IsDeleted));
+                    var condition = Expression.Lambda(Expression.Equal(property, Expression.Constant(false)), parameter);
+
+                    builder.Entity(entityType.ClrType).HasQueryFilter(condition);
+                }
+            }
         }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -66,6 +79,12 @@ namespace EbuBridgeLmsSystem.Persistance.Data
                 if (entry.State == EntityState.Added)
                 {
                     entry.Property(s => s.CreatedTime).CurrentValue = DateTime.UtcNow;
+                }
+                if (entry.State == EntityState.Deleted)
+                {
+                    entry.State = EntityState.Modified;
+                    entry.Entity.IsDeleted = true;
+                    entry.Entity.DeletedTime = DateTime.UtcNow;
                 }
                 else if (entry.State == EntityState.Modified)
                 {
