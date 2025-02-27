@@ -32,6 +32,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities.Common
         // Server-Side Errors
         public static readonly Error ServiceUnavailable = new("ServiceUnavailable", "The service is temporarily unavailable. Please try again later.");
         public static readonly Error Timeout = new("Timeout", "The request took too long to process and timed out.");
+        public static readonly Error DuplicateConflict = new("DuplicateConflict", "A similar record already exists in the database.");
 
         // Customizable error creation for dynamic messages
         public static Error Custom(string code, string message) => new(code, message);

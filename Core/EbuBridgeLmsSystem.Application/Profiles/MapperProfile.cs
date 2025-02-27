@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EbuBridgeLmsSystem.Application.Dtos.Address;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
+using EbuBridgeLmsSystem.Application.Dtos.Country;
 using EbuBridgeLmsSystem.Application.Dtos.Course;
 using EbuBridgeLmsSystem.Application.Dtos.Fee;
 using EbuBridgeLmsSystem.Application.Dtos.Note;
@@ -20,6 +21,7 @@ using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ResetPassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.SendVerificationCode;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.VerifyCode;
+using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.CreateCountry;
 using EbuBridgeLmsSystem.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
@@ -94,6 +96,8 @@ namespace EbuBridgeLmsSystem.Application.Profiles
             CreateMap<ChangePasswordCommand,ChangePasswordDto>().ReverseMap();
             CreateMap<AddressCreateCommand, Address>();
             CreateMap<AddressCreateCommand,AddressCreateDto>().ReverseMap();
+            CreateMap<CreateCountryCommand, Country>();
+            CreateMap<CreateCountryCommand, CountryCreateDto>().ReverseMap();
         }
     }
 }

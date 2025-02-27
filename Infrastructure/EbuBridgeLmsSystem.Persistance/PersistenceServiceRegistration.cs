@@ -6,6 +6,7 @@ using EbuBridgeLmsSystem.Persistance.AuthHandler.HttpAuth;
 using EbuBridgeLmsSystem.Persistance.AuthHandler.Token;
 using EbuBridgeLmsSystem.Persistance.Data;
 using EbuBridgeLmsSystem.Persistance.Data.Implementations;
+using EbuBridgeLmsSystem.Persistance.Processors;
 using LearningManagementSystem.Core.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -76,6 +77,7 @@ namespace EbuBridgeLmsSystem.Persistance
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
+            services.AddScoped<IAuditLogProcessor,AuditLogProcessor>();
         }
     }
 }
