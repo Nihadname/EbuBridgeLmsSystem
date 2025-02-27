@@ -100,7 +100,9 @@ namespace EbuBridgeLmsSystem.Application.Profiles
             CreateMap<CreateCountryCommand, Country>();
             CreateMap<CreateCountryCommand, CountryCreateDto>().ReverseMap();
             CreateMap<UpdateCountryCommand, Country>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UpdateCountryCommand, CountryUpdateDto>().ReverseMap();
         }
     }
 }
