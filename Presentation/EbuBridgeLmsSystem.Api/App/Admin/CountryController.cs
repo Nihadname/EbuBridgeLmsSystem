@@ -49,7 +49,9 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
             var result = await _mediator.Send(mappedCommand);
             return this.ToActionResult(result);
         }
+
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async  Task<IActionResult> GetAll(string? cursor = null, string? searchQuery = null,  int limit = 4)
         {
             var getAllCountriesQuery = new GetAllCountriesQuery()

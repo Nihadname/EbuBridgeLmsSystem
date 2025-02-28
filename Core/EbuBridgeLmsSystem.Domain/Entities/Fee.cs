@@ -4,6 +4,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
 {
     public sealed class Fee:BaseEntity
     {
+       
         public decimal Amount { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime? PaidDate { get; set; }

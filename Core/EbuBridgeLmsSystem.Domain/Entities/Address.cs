@@ -4,6 +4,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
 {
     public sealed class Address:BaseEntity
     {
+
         public string Region { get; set; }
         public string Street { get; set; }
         public string AppUserId { get; set; }

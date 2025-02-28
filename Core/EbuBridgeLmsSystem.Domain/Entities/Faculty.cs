@@ -9,6 +9,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
 {
     public sealed class Faculty:BaseEntity
     {
+        
         public string Name { get; set; }
         public List<TeacherFacultyDegree> TeacherFacultyDegrees { get; set; }
 

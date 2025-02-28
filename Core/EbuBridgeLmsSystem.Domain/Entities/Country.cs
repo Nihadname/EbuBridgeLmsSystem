@@ -9,6 +9,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
 {
     public sealed class Country:BaseEntity
     {
+        
         public string Name { get; set; }
         public ICollection<City> Cities { get; set; }
     }

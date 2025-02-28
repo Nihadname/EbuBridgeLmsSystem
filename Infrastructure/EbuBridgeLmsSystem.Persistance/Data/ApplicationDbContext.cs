@@ -2,6 +2,7 @@
 using EbuBridgeLmsSystem.Persistance.Processors;
 using LearningManagementSystem.Core.Entities.Common;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -67,6 +68,11 @@ namespace EbuBridgeLmsSystem.Persistance.Data
                     builder.Entity(entityType.ClrType).HasQueryFilter(condition);
                 }
             }
+            builder.Ignore<IdentityUserClaim<Guid>>();
+            builder.Ignore<IdentityRoleClaim<Guid>>();
+            builder.Ignore<IdentityUserToken<Guid>>();
+            builder.Ignore<IdentityUserLogin<Guid>>();
+            builder.Ignore<IdentityUserRole<Guid>>();
         }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
