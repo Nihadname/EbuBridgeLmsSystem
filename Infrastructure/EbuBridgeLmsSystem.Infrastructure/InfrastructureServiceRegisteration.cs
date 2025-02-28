@@ -47,6 +47,7 @@ namespace EbuBridgeLmsSystem.Infrastructure
 
             services.AddTransient<IResend, ResendClient>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<ITokenService, TokenService>();
         }
     }
 }

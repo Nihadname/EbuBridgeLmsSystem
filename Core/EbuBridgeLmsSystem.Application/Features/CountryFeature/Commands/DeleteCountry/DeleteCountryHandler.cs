@@ -24,6 +24,8 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.Delete
             var existedCountry = await _unitOfWork.CountryRepository.GetEntity(s => s.Id == request.Id);
             if (existedCountry is null)
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
+            if(existedCountry.IsDeleted is true)
+                return Result<Unit>.Failure(Error.BadRequest, null, ErrorType.ValidationError);
             await _unitOfWork.CountryRepository.Delete(existedCountry);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             return Result<Unit>.Success(Unit.Value);

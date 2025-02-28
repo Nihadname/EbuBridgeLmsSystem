@@ -1,11 +1,14 @@
-﻿using EbuBridgeLmsSystem.Domain.Repositories;
+﻿using EbuBridgeLmsSystem.Domain.Entities.Common;
+using EbuBridgeLmsSystem.Domain.Repositories;
 using EbuBridgeLmsSystem.Persistance.Data;
+using EbuBridgeLmsSystem.Persistance.Extensions;
+using LearningManagementSystem.Core.Entities.Common;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace LearningManagementSystem.DataAccess.Data.Implementations
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly ApplicationDbContext _context;
         private readonly DbSet<T> _table;
@@ -205,6 +208,12 @@ namespace LearningManagementSystem.DataAccess.Data.Implementations
 
                 throw new Exception(ex.Message);
             }
+        }
+
+         public async Task<PaginatedResult<T>> GetPaginatedResultAsync(string cursor,int limit)
+        {
+            IQueryable<T> query = _table.AsQueryable();
+            return await query.PaginateCursorAsync(cursor, limit, x => x.Id);
         }
     }
 }

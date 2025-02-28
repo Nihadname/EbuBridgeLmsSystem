@@ -6,9 +6,9 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace EbuBridgeLmsSystem.Persistance.AuthHandler.Token
+namespace EbuBridgeLmsSystem.Infrastructure.Concretes
 {
-    public class TokenService:ITokenService
+    public class TokenService : ITokenService
     {
         public string GetToken(string SecretKey, string Audience, string Issuer, AppUser existUser, IList<string> roles)
         {

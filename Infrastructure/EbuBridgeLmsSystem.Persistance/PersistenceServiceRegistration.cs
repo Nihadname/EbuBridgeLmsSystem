@@ -58,7 +58,7 @@ namespace EbuBridgeLmsSystem.Persistance
                ClockSkew = TimeSpan.Zero
            };
        });
-            services.AddScoped<ITokenService,TokenService>();
+            
             services.AddScoped<IAppUserResolver,AppUserResolver>();
             //services.AddScoped<IAuthService,AuthService>();
             services.AddScoped<IAddressRepository, AddressRepository>();
