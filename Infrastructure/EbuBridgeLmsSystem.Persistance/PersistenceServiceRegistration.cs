@@ -3,7 +3,7 @@ using EbuBridgeLmsSystem.Application.Settings;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using EbuBridgeLmsSystem.Persistance.AuthHandler.HttpAuth;
-using EbuBridgeLmsSystem.Persistance.AuthHandler.Token;
+
 using EbuBridgeLmsSystem.Persistance.Data;
 using EbuBridgeLmsSystem.Persistance.Data.Implementations;
 using EbuBridgeLmsSystem.Persistance.Processors;

@@ -4,6 +4,7 @@ using EbuBridgeLmsSystem.Application.Dtos.Country;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.CreateCountry;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.DeleteCountry;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.UpdateCountry;
+using EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllCountries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -46,6 +47,18 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
         {
             var mappedCommand = _mapper.Map<DeleteCountryCommand>(countryDeleteDto);
             var result = await _mediator.Send(mappedCommand);
+            return this.ToActionResult(result);
+        }
+        [HttpGet]
+        public async  Task<IActionResult> GetAll(string? cursor = null, string? searchQuery = null,  int limit = 4)
+        {
+            var getAllCountriesQuery = new GetAllCountriesQuery()
+            {
+                Cursor = cursor,
+                searchQuery = searchQuery,
+                Limit = limit
+            };
+            var result = await _mediator.Send(getAllCountriesQuery);
             return this.ToActionResult(result);
         }
         

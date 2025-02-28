@@ -22,8 +22,4 @@
     <ProjectReference Include="..\..\Core\EbuBridgeLmsSystem.Application\EbuBridgeLmsSystem.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
-
 </Project>
