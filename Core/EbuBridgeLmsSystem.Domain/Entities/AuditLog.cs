@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
-    public class AuditLog:BaseEntity
+    public sealed class AuditLog:BaseEntity
     {
 
         public string TableName { get; set; } 

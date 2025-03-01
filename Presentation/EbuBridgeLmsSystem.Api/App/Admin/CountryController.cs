@@ -6,12 +6,9 @@ using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.DeleteCoun
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.UpdateCountry;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllCountries;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetByIdCountry;
-using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace EbuBridgeLmsSystem.Api.App.Admin
 {
