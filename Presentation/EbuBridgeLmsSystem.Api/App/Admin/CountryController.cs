@@ -5,10 +5,13 @@ using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.CreateCoun
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.DeleteCountry;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.UpdateCountry;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllCountries;
+using EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetByIdCountry;
+using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace EbuBridgeLmsSystem.Api.App.Admin
 {
@@ -63,6 +66,21 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
             var result = await _mediator.Send(getAllCountriesQuery);
             return this.ToActionResult(result);
         }
-        
+        [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            if(id == Guid.Empty)
+            {
+                return this.BadRequest();
+            }
+            var getByIdCountryQuery = new GetByIdCountryQuery()
+            {
+                Id = id
+            };
+            var result = await _mediator.Send(getByIdCountryQuery);
+            return this.ToActionResult(result);
+        }
+
     }
 }

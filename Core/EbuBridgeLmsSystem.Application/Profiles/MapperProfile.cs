@@ -21,6 +21,7 @@ using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ResetPassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.SendVerificationCode;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.VerifyCode;
+using EbuBridgeLmsSystem.Application.Features.CountryFeature.CommanCommands;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.CreateCountry;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.DeleteCountry;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.UpdateCountry;
@@ -105,6 +106,9 @@ namespace EbuBridgeLmsSystem.Application.Profiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<UpdateCountryCommand, CountryUpdateDto>().ReverseMap();
             CreateMap<DeleteCountryCommand, CountryDeleteDto>().ReverseMap();
+            CreateMap<City, CitiesinCountryListItemCommand>();
+            CreateMap<Country, CountryReturnCommand>()
+                .ForMember(s => s.citiesinCountryListItemCommands, map => map.MapFrom(d => d.Cities));
         }
     }
 }

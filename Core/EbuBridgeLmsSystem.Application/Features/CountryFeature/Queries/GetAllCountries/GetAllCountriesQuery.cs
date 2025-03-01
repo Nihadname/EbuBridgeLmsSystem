@@ -1,4 +1,4 @@
-﻿using EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.CommanCommands;
+﻿using EbuBridgeLmsSystem.Application.Features.CountryFeature.CommanCommands;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;

@@ -1,26 +1,23 @@
-﻿using EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.CommanCommands;
+﻿using AutoMapper;
+using EbuBridgeLmsSystem.Application.Features.CountryFeature.CommanCommands;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllCountries
 {
     public class GetAllCountriesHandler : IRequestHandler<GetAllCountriesQuery, Result<PaginatedResult<CountryListItemCommand>>>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public GetAllCountriesHandler(IUnitOfWork unitOfWork)
+        public GetAllCountriesHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<Result<PaginatedResult<CountryListItemCommand>>> Handle(GetAllCountriesQuery request, CancellationToken cancellationToken)
@@ -42,6 +39,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllC
                     Id = country.Id,
                     Name = country.Name,
                     IsDeleted = country.IsDeleted,
+                    citiesinCountryListItemCommands=_mapper.Map<List<CitiesinCountryListItemCommand>>(country.Cities),
                 }).ToList(),
                 NextCursor = paginationResult.NextCursor
             };

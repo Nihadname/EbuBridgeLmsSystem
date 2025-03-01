@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ResetPassword
 {
-    public record ResetPasswordHandleCommand:IRequest<Result<Unit>>
+    public sealed record ResetPasswordHandleCommand:IRequest<Result<Unit>>
     {
         public ResetPasswordTokenAndEmailDto ResetPasswordTokenAndEmailDto { get; init; }
         public ResetPasswordDto resetPasswordDto { get; init; }
