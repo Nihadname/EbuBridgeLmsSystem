@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EbuBridgeLmsSystem.Application.Dtos.Address;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
+using EbuBridgeLmsSystem.Application.Dtos.City;
 using EbuBridgeLmsSystem.Application.Dtos.Country;
 using EbuBridgeLmsSystem.Application.Dtos.Course;
 using EbuBridgeLmsSystem.Application.Dtos.Fee;
@@ -111,6 +112,7 @@ namespace EbuBridgeLmsSystem.Application.Profiles
             CreateMap<Country, CountryReturnCommand>()
                 .ForMember(s => s.citiesinCountryListItemCommands, map => map.MapFrom(d => d.Cities));
             CreateMap<CreateCityCommand,City>();
+        
         }
     }
 }

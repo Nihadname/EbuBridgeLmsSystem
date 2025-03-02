@@ -24,6 +24,7 @@
   <ItemGroup>
     <Folder Include="Features\AddressFeature\Queries\" />
     <Folder Include="Features\AppUserFeature\Queries\" />
+    <Folder Include="Features\CityFeature\Queries\" />
   </ItemGroup>
 
 </Project>

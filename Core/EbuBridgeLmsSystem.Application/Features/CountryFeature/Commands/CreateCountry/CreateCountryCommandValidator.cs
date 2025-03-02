@@ -11,7 +11,9 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.Create
     {
         public CreateCountryCommandValidator()
         {
-            RuleFor(s=>s.Name).NotEmpty();
+           
+            RuleFor(s => s.Name).NotEmpty();
+           
         }
     }
 }
