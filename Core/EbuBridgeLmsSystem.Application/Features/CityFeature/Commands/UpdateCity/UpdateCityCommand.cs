@@ -5,7 +5,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.UpdateCit
 {
     public sealed record UpdateCityCommand:IRequest<Result<Unit>>
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; init; }
         public string Name { get; init; }
         public Guid? CountryId { get; init; }
     }
