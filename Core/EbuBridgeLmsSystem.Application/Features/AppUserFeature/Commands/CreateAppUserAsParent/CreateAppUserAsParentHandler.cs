@@ -8,6 +8,7 @@ using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Enums;
 using EbuBridgeLmsSystem.Domain.Repositories;
+using FluentValidation;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -27,12 +28,14 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
         private readonly IEmailService _emailService;
         private readonly ILogger<CreateAppUserAsParentHandler> _logger;
         private readonly IMapper _mapper;
-        public CreateAppUserAsParentHandler(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, IEmailService emailService, IMapper mapper)
+        private readonly IValidator<RegisterDto> _validator;
+        public CreateAppUserAsParentHandler(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, IEmailService emailService, IMapper mapper, IValidator<RegisterDto> validator)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _emailService = emailService;
             _mapper = mapper;
+            _validator = validator;
         }
 
         public async Task<Result<UserGetDto>> Handle(CreateAppUserAsParentCommand request, CancellationToken cancellationToken)
@@ -40,6 +43,11 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
+                var validationResult = await _validator.ValidateAsync(request.RegisterDto, cancellationToken);
+                if (!validationResult.IsValid)
+                {
+                    return Result<UserGetDto>.Failure(null, validationResult.Errors.Select(e => e.ErrorMessage).ToList(), ErrorType.ValidationError);
+                }
                 var appUserResult = await _userManager.CreateUser(request.RegisterDto, _unitOfWork, _emailService);
                 if(!appUserResult.IsSuccess)
                     return Result<UserGetDto>.Failure(appUserResult.Error, appUserResult.Errors, (ErrorType)appUserResult.ErrorType);

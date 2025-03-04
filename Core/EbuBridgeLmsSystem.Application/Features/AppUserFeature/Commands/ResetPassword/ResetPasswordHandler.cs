@@ -1,30 +1,49 @@
 ﻿using EbuBridgeLmsSystem.Application.Dtos.Auth;
-using EbuBridgeLmsSystem.Application.Exceptions;
 using EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth;
+using EbuBridgeLmsSystem.Application.Validators.AuthValidators;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
+using FluentValidation;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ResetPassword
 {
     public class ResetPasswordHandler : IRequestHandler<ResetPasswordHandleCommand, Result<Unit>>
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly IValidator<ResetPasswordTokenAndEmailDto> _resetPasswordTokenAndEmailDtoValidator;
+        private readonly IValidator<ResetPasswordDto> _resetPasswordDtoValidator;
 
-        public ResetPasswordHandler(UserManager<AppUser> userManager)
+        public ResetPasswordHandler(UserManager<AppUser> userManager, IValidator<ResetPasswordTokenAndEmailDto> resetPasswordTokenAndEmailDtovalidator, IValidator<ResetPasswordDto> resetPasswordDtoValidator)
         {
             _userManager = userManager;
+            _resetPasswordTokenAndEmailDtoValidator = resetPasswordTokenAndEmailDtovalidator;
+            _resetPasswordDtoValidator = resetPasswordDtoValidator;
         }
 
         public async Task<Result<Unit>> Handle(ResetPasswordHandleCommand request, CancellationToken cancellationToken)
         {
+            var resetPasswordTokenAndEmailDtoValidator = await _resetPasswordTokenAndEmailDtoValidator.ValidateAsync(request.ResetPasswordTokenAndEmailDto, cancellationToken);
+            var resetPasswordDtoValidator = await _resetPasswordDtoValidator.ValidateAsync(request.resetPasswordDto, cancellationToken);
+            List<FluentValidation.Results.ValidationResult> validations = new();
+            validations.Add(resetPasswordTokenAndEmailDtoValidator);
+            validations.Add(resetPasswordDtoValidator);
+            if (validations.Any(s => s.IsValid == false))
+            {
+                var errors = new List<string>();
+                foreach (var validationResult in validations)
+                {
+                    var errorsInValidation = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                    foreach (var error in errorsInValidation)
+                    {
+                        errors.Add(error);
+                    }
+
+                }
+                return Result<Unit>.Failure(null, errors, ErrorType.ValidationError);
+            }
             var isExpiredResult = await CheckExperySutiationOfToken(request.ResetPasswordTokenAndEmailDto);
             if (!isExpiredResult.IsSuccess)
                 return Result<Unit>.Failure(isExpiredResult.Error, isExpiredResult.Errors, (ErrorType)isExpiredResult.ErrorType);

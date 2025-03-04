@@ -4,7 +4,7 @@ namespace EbuBridgeLmsSystem.Application.Dtos.Teacher
 {
     public sealed record TeacherRegistrationDto
     {
-        public RegisterDto Register { get; set; }
-        public TeacherCreateDto Teacher { get; set; }
+        public required RegisterDto RegisterDto { get; init; }
+        public required TeacherCreateDto TeacherCreateDto { get; init; }
     }
 }

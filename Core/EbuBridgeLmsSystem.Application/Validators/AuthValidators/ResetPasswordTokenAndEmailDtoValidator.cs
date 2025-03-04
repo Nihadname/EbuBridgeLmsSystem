@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace EbuBridgeLmsSystem.Application.Validators.AuthValidators
 {
-    internal class ResetPasswordTokenAndEmailDtoValidator : AbstractValidator<ResetPasswordTokenAndEmailDto>
+    public class ResetPasswordTokenAndEmailDtoValidator : AbstractValidator<ResetPasswordTokenAndEmailDto>
     {
         public ResetPasswordTokenAndEmailDtoValidator()
         {
