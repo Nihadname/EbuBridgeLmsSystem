@@ -42,7 +42,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.MapAuthEndpoints(baseAdminUrl);
+app.MapAuthAdminEndpoints(baseAdminUrl);
+app.MapCityAdminEndPoints(baseAdminUrl);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseHangfireDashboard();
