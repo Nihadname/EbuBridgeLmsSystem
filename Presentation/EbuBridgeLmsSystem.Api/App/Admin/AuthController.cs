@@ -30,14 +30,14 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
             _mediator = mediator;
             _mapper = mapper;
         }
-        [HttpPost("RegisterForStudent")]
-        [Authorize(Roles ="Admin")]
-        public async Task<IActionResult> RegisterForStudent(StudentRegistrationDto studentRegistrationDto)
-        {
-            var mappedRegisterDto=_mapper.Map<CreateAppUserAsStudentCommand>(studentRegistrationDto);
-            var result = await _mediator.Send(mappedRegisterDto);
-           return this.ToActionResult(result);
-        }
+        //[HttpPost("RegisterForStudent")]
+        //[Authorize(Roles ="Admin")]
+        //public async Task<IActionResult> RegisterForStudent(StudentRegistrationDto studentRegistrationDto)
+        //{
+        //    var mappedRegisterDto=_mapper.Map<CreateAppUserAsStudentCommand>(studentRegistrationDto);
+        //    var result = await _mediator.Send(mappedRegisterDto);
+        //   return this.ToActionResult(result);
+        //}
         [HttpPost("RegisterForTeacher")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterForTeacher(TeacherRegistrationDto teacherRegistrationDto)

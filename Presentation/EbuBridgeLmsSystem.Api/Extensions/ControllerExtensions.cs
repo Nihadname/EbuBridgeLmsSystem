@@ -23,5 +23,20 @@ namespace EbuBridgeLmsSystem.Api.Extensions
             }
             return controller.Ok(result);
         }
+        public static IResult ToApiResult<T>(this Result<T> result)
+        {
+            if (!result.IsSuccess)
+            {
+                return result.ErrorType switch
+                {
+                    ErrorType.NotFoundError => Results.NotFound(result),
+                    ErrorType.ValidationError => Results.BadRequest(result),
+                    ErrorType.UnauthorizedError => Results.Unauthorized(),
+                    _ => Results.InternalServerError(result)
+                };
+            }
+            return Results.Ok(result);
+        }
+
     }
 }

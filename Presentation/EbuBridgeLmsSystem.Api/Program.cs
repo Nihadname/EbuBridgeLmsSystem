@@ -1,5 +1,6 @@
 using EbuBridgeLmsSystem.Api;
 using EbuBridgeLmsSystem.Api.Middlewares;
+using EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin;
 using EbuBridgeLmsSystem.Application;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Infrastructure;
@@ -22,6 +23,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var config = builder.Configuration;
+var baseAdminUrl = config["ApiSettings:BaseAdminUrl"];
+var clientSideUrl=config["ApiSettings:ClientSideUrl"];
 builder.Services.Register(config);
 builder.Services.AddPersistenceServices(config);
 builder.Services.AddInfrastructureServices(config);
@@ -39,6 +42,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.MapAuthEndpoints(baseAdminUrl);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseHangfireDashboard();
