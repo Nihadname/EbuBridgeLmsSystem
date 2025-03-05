@@ -6,11 +6,8 @@ using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 
 namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCities
 {
@@ -18,14 +15,22 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCiti
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-
-        public GetAllCitiesHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IDistributedCache _cache;
+        public GetAllCitiesHandler(IUnitOfWork unitOfWork, IMapper mapper, IDistributedCache cache)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _cache = cache;
         }
         public async Task<Result<PaginatedResult<CityListItemQuery>>> Handle(GetAllCitiesQuery request, CancellationToken cancellationToken)
         {
+            string cacheKey = $"cities_{request.Cursor}_{request.Limit}_{request.searchQuery?.ToLower()}";
+            var cachedData = await _cache.GetStringAsync(cacheKey);
+            if (!string.IsNullOrWhiteSpace(cachedData))
+            {
+                var cachedResult = JsonSerializer.Deserialize<PaginatedResult<CityListItemQuery>>(cachedData);
+                return Result<PaginatedResult<CityListItemQuery>>.Success(cachedResult);
+            }
             var cityQuery = await _unitOfWork.CityRepository.GetQuery(null, true, true, includes: new Func<IQueryable<City>, IQueryable<City>>[] {
                  query => query
             .Include(p => p.Country) }
@@ -48,6 +53,11 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCiti
                 }).ToList(),
                 NextCursor = paginationResult.NextCursor
             };
+            var cacheOptions = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+            };
+            await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(mappedResult), cacheOptions);
             return Result<PaginatedResult<CityListItemQuery>>.Success(mappedResult);
         }
     }
