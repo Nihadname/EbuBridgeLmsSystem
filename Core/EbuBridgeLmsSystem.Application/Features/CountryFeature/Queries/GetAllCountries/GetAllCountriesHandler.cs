@@ -31,7 +31,9 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllC
                 countryQuery = countryQuery.Where(s => s.Name.ToLower().Contains(request.searchQuery));
             }
             countryQuery = countryQuery.OrderByDescending(s => s.CreatedTime);
-            var paginationResult = await _unitOfWork.CountryRepository.GetPaginatedResultAsync(request.Cursor, request.Limit);
+            var paginationResult = await _unitOfWork.CountryRepository.GetPaginatedResultAsync(request.Cursor, request.Limit, includes: new Func<IQueryable<Country>, IQueryable<Country>>[] {
+                 query => query
+            .Include(p => p.Cities) });
             var mappedResult = new PaginatedResult<CountryListItemCommand>
             {
                 Data = paginationResult.Data.Select(country => new CountryListItemCommand

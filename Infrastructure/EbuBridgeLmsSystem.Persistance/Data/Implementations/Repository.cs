@@ -204,10 +204,10 @@ namespace LearningManagementSystem.DataAccess.Data.Implementations
             }
         }
 
-         public async Task<PaginatedResult<T>> GetPaginatedResultAsync(string cursor,int limit)
+         public async Task<PaginatedResult<T>> GetPaginatedResultAsync(string cursor,int limit,params Func<IQueryable<T>, IQueryable<T>>[] includes)
         {
             IQueryable<T> query = _table.AsQueryable();
-            return await query.PaginateCursorAsync(cursor, limit, x => x.Id);
+            return await query.PaginateCursorAsync(cursor, limit, x => x.Id,includes);
         }
     }
 }

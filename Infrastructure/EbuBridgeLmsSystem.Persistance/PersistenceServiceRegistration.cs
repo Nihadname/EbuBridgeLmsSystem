@@ -26,6 +26,11 @@ namespace EbuBridgeLmsSystem.Persistance
                 options.UseSqlServer(configuration.GetConnectionString("AppConnectionString"),
                 b => b.MigrationsAssembly("EbuBridgeLmsSystem.Persistance"))
             );
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = configuration.GetConnectionString("Redis");
+                options.InstanceName = "MyApp_";
+            });
             services.AddIdentity<AppUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 8;

@@ -35,7 +35,9 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCiti
                 cityQuery = cityQuery.Where(s => s.Name.ToLower().Contains(request.searchQuery));
             }
             cityQuery = cityQuery.OrderByDescending(s => s.CreatedTime);
-            var paginationResult = await _unitOfWork.CityRepository.GetPaginatedResultAsync(request.Cursor, request.Limit);
+            var paginationResult = await _unitOfWork.CityRepository.GetPaginatedResultAsync(request.Cursor, request.Limit, includes: new Func<IQueryable<City>, IQueryable<City>>[] {
+                 query => query
+            .Include(p => p.Country) });
             var mappedResult = new PaginatedResult<CityListItemQuery>
             {
                 Data = paginationResult.Data.Select(city => new CityListItemQuery

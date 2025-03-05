@@ -15,9 +15,19 @@ namespace EbuBridgeLmsSystem.Persistance.Extensions
         this IQueryable<T> query,
         string cursor,
         int limit,
-        Expression<Func<T, TKey>> keySelector)
+        Expression<Func<T, TKey>> keySelector,
+        Func<IQueryable<T>, IQueryable<T>>[] includes
+        )
         where TKey : IComparable
         {
+            if (includes != null && includes.Length > 0)
+            {
+                foreach (var include in includes)
+                {
+                    query = include(query);
+                }
+            }
+
             // Ensure a deterministic order by sorting with the provided key selector.
             query = query.OrderBy(keySelector);
 

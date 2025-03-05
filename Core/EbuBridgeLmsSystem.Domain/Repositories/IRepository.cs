@@ -15,6 +15,6 @@ namespace EbuBridgeLmsSystem.Domain.Repositories
         Task<IQueryable<T>> GetQuery(
        Expression<Func<T, bool>> predicate = null, bool AsnoTracking = false, bool AsSplitQuery = false,
        params Func<IQueryable<T>, IQueryable<T>>[] includes);
-        Task<PaginatedResult<T>> GetPaginatedResultAsync(string cursor, int limit);
+        Task<PaginatedResult<T>> GetPaginatedResultAsync(string cursor, int limit, params Func<IQueryable<T>, IQueryable<T>>[] includes);
     }
 }

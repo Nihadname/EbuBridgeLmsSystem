@@ -115,7 +115,7 @@ namespace EbuBridgeLmsSystem.Application.Profiles
                 .ForMember(s => s.citiesinCountryListItemCommands, map => map.MapFrom(d => d.Cities));
             CreateMap<CreateCityCommand,City>();
             CreateMap<UpdateCityCommand, CityUpdateDto>().ReverseMap();
-            CreateMap<City, CountryInCityListItemQuery>();
+            CreateMap<Country, CountryInCityListItemQuery>();
                      
         }
     }

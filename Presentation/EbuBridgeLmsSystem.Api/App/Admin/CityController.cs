@@ -4,6 +4,7 @@ using EbuBridgeLmsSystem.Application.Dtos.City;
 using EbuBridgeLmsSystem.Application.Dtos.Country;
 using EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.CreateCity;
 using EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.UpdateCity;
+using EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCities;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.UpdateCountry;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -37,6 +38,18 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
         {
             var mappedCommand = _mapper.Map<UpdateCityCommand>(cityUpdateDto);
             var result = await _mediator.Send(mappedCommand);
+            return this.ToActionResult(result);
+        }
+        [HttpGet("GetAllWithPaganation")]
+        public async Task<IActionResult> GetAll(string? cursor = null, string? searchQuery = null, int limit = 4)
+        {
+            var cityGetAllQuery = new GetAllCitiesQuery()
+            {
+                Cursor = cursor,
+                searchQuery = searchQuery,
+                Limit = limit
+            };
+            var result = await _mediator.Send(cityGetAllQuery);
             return this.ToActionResult(result);
         }
     }
