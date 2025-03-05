@@ -1,6 +1,6 @@
 ﻿namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.CommanCommands
 {
-    public sealed record CountryListItemCommand
+    public sealed record CountryListItemQuery
     {
         public Guid Id { get; init; }
         public string Name { get; init; }

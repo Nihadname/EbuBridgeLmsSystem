@@ -5,7 +5,7 @@ using MediatR;
 
 namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllCountries
 {
-    public record GetAllCountriesQuery:IRequest<Result<PaginatedResult<CountryListItemCommand>>>
+    public record GetAllCountriesQuery:IRequest<Result<PaginatedResult<CountryListItemQuery>>>
     {
         public string Cursor { get; init; }
         public int Limit { get; init; }

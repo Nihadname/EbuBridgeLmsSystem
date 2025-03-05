@@ -4,7 +4,7 @@ using MediatR;
 
 namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetByIdCountry
 {
-    public sealed record GetByIdCountryQuery:IRequest<Result<CountryReturnCommand>>
+    public sealed record GetByIdCountryQuery:IRequest<Result<CountryReturnQuery>>
     {
         public Guid Id { get; init; }
     }

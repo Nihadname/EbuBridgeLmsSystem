@@ -1,19 +1,18 @@
 ﻿using AutoMapper;
 using EbuBridgeLmsSystem.Api.Extensions;
 using EbuBridgeLmsSystem.Application.Dtos.City;
-using EbuBridgeLmsSystem.Application.Dtos.Country;
 using EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.CreateCity;
 using EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.UpdateCity;
 using EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCities;
-using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.UpdateCountry;
 using MediatR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetByIdCity;
 
 namespace EbuBridgeLmsSystem.Api.App.Admin
 {
-    [Route("api/[controller]")]
-    [ApiController]
+    [Area("Admin")]
+    [Route("api/[area]/[controller]")]
     public class CityController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -24,23 +23,27 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
             _mapper = mapper;
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCity(CreateCityDto createCityDto)
         {
-            var CreateCityCommand=new CreateCityCommand() { 
-                Name= createCityDto.Name,
-                CountryId=createCityDto.CountryId,
-            };  
-            var result=await  _mediator.Send(CreateCityCommand);
-            return this.ToActionResult(result); 
+            var CreateCityCommand = new CreateCityCommand()
+            {
+                Name = createCityDto.Name,
+                CountryId = createCityDto.CountryId,
+            };
+            var result = await _mediator.Send(CreateCityCommand);
+            return this.ToActionResult(result);
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateCity(CityUpdateDto  cityUpdateDto)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateCity(CityUpdateDto cityUpdateDto)
         {
             var mappedCommand = _mapper.Map<UpdateCityCommand>(cityUpdateDto);
             var result = await _mediator.Send(mappedCommand);
             return this.ToActionResult(result);
         }
         [HttpGet("GetAllWithPaganation")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll(string? cursor = null, string? searchQuery = null, int limit = 4)
         {
             var cityGetAllQuery = new GetAllCitiesQuery()
@@ -50,6 +53,21 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
                 Limit = limit
             };
             var result = await _mediator.Send(cityGetAllQuery);
+            return this.ToActionResult(result);
+        }
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async  Task<IActionResult> Get(Guid id)
+        {
+            if (id == Guid.Empty)
+            {
+                return this.BadRequest();
+            }
+            var cityGetByIdQuery = new GetByIdCityQuery()
+            {
+                Id = id
+            };
+            var result = await _mediator.Send(cityGetByIdQuery);
             return this.ToActionResult(result);
         }
     }

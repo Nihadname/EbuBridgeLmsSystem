@@ -11,7 +11,7 @@ using System.Text.Json;
 
 namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllCountries
 {
-    public class GetAllCountriesHandler : IRequestHandler<GetAllCountriesQuery, Result<PaginatedResult<CountryListItemCommand>>>
+    public class GetAllCountriesHandler : IRequestHandler<GetAllCountriesQuery, Result<PaginatedResult<CountryListItemQuery>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -23,14 +23,14 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllC
             _cache = cache;
         }
 
-        public async Task<Result<PaginatedResult<CountryListItemCommand>>> Handle(GetAllCountriesQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PaginatedResult<CountryListItemQuery>>> Handle(GetAllCountriesQuery request, CancellationToken cancellationToken)
         {
             string cacheKey = $"countries_{request.Cursor}_{request.Limit}_{request.searchQuery?.ToLower()}";
             var cachedData = await _cache.GetStringAsync(cacheKey);
             if (!string.IsNullOrEmpty(cachedData))
             {
-                var cachedResult = JsonSerializer.Deserialize<PaginatedResult<CountryListItemCommand>>(cachedData);
-                return Result<PaginatedResult<CountryListItemCommand>>.Success(cachedResult);
+                var cachedResult = JsonSerializer.Deserialize<PaginatedResult<CountryListItemQuery>>(cachedData);
+                return Result<PaginatedResult<CountryListItemQuery>>.Success(cachedResult);
             }
             var countryQuery =await _unitOfWork.CountryRepository.GetQuery(null,true,true, includes: new Func<IQueryable<Country>, IQueryable<Country>>[] {
                  query => query
@@ -44,9 +44,9 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllC
             var paginationResult = await _unitOfWork.CountryRepository.GetPaginatedResultAsync(request.Cursor, request.Limit, includes: new Func<IQueryable<Country>, IQueryable<Country>>[] {
                  query => query
             .Include(p => p.Cities) });
-            var mappedResult = new PaginatedResult<CountryListItemCommand>
+            var mappedResult = new PaginatedResult<CountryListItemQuery>
             {
-                Data = paginationResult.Data.Select(country => new CountryListItemCommand
+                Data = paginationResult.Data.Select(country => new CountryListItemQuery
                 {
                     Id = country.Id,
                     Name = country.Name,
@@ -60,7 +60,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllC
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10) 
             };
             await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(mappedResult), cacheOptions);
-            return Result<PaginatedResult<CountryListItemCommand>>.Success(mappedResult);
+            return Result<PaginatedResult<CountryListItemQuery>>.Success(mappedResult);
             
         }
     }

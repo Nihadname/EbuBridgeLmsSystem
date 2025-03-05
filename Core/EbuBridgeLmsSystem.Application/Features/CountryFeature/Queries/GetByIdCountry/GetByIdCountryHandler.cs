@@ -7,7 +7,7 @@ using MediatR;
 
 namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetByIdCountry
 {
-    public class GetByIdCountryHandler : IRequestHandler<GetByIdCountryQuery, Result<CountryReturnCommand>>
+    public class GetByIdCountryHandler : IRequestHandler<GetByIdCountryQuery, Result<CountryReturnQuery>>
     {
         private  readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -17,13 +17,13 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetById
             _mapper = mapper;
         }
 
-        public async Task<Result<CountryReturnCommand>> Handle(GetByIdCountryQuery request, CancellationToken cancellationToken)
+        public async Task<Result<CountryReturnQuery>> Handle(GetByIdCountryQuery request, CancellationToken cancellationToken)
         {
             var existedCountry=await _unitOfWork.CountryRepository.GetEntity(s=>s.Id==request.Id);
             if (existedCountry == null)
-                return Result<CountryReturnCommand>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
-            var mappedCountry=_mapper.Map<CountryReturnCommand>(existedCountry);
-            return Result<CountryReturnCommand>.Success(mappedCountry);
+                return Result<CountryReturnQuery>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
+            var mappedCountry=_mapper.Map<CountryReturnQuery>(existedCountry);
+            return Result<CountryReturnQuery>.Success(mappedCountry);
         }
     }
 }

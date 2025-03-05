@@ -25,6 +25,7 @@ using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.VerifyCode
 using EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.CreateCity;
 using EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.UpdateCity;
 using EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCities;
+using EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetByIdCity;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.CommanCommands;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.CreateCountry;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.DeleteCountry;
@@ -111,11 +112,13 @@ namespace EbuBridgeLmsSystem.Application.Profiles
             CreateMap<UpdateCountryCommand, CountryUpdateDto>().ReverseMap();
             CreateMap<DeleteCountryCommand, CountryDeleteDto>().ReverseMap();
             CreateMap<City, CitiesinCountryListItemCommand>();
-            CreateMap<Country, CountryReturnCommand>()
+            CreateMap<Country, CountryReturnQuery>()
                 .ForMember(s => s.citiesinCountryListItemCommands, map => map.MapFrom(d => d.Cities));
             CreateMap<CreateCityCommand,City>();
             CreateMap<UpdateCityCommand, CityUpdateDto>().ReverseMap();
             CreateMap<Country, CountryInCityListItemQuery>();
+            CreateMap<City, CityReturnQuery>()
+                .ForMember(s => s.countryInCityListItemQuery, map => map.MapFrom(d => d.Country)); ;
                      
         }
     }
