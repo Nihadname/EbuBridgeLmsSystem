@@ -2,7 +2,9 @@
 using EbuBridgeLmsSystem.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace EbuBridgeLmsSystem.Persistance.AuthHandler.HttpAuth
 {
@@ -25,13 +27,21 @@ namespace EbuBridgeLmsSystem.Persistance.AuthHandler.HttpAuth
 
         public bool IsAuthenticated => _contextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
 
-        public async Task<AppUser> GetCurrentUserAsync()
+        public async Task<AppUser> GetCurrentUserAsync(params Func<IQueryable<AppUser>, IQueryable<AppUser>>[] includes)
         {
             if (!IsAuthenticated)
                 return null;
             if (string.IsNullOrEmpty(UserId))
                 return null;
-            var currentUserInTheSystem=await _userManager.FindByIdAsync(UserId);
+            var userQuery =  _userManager.Users.AsQueryable();
+            if (includes != null && includes.Length > 0)
+            {
+                foreach (var include in includes)
+                {
+                    userQuery = include(userQuery);
+                }
+            }
+            var currentUserInTheSystem=await userQuery.FirstOrDefaultAsync(s=>s.Id==UserId);    
             if (currentUserInTheSystem != null)
                 return currentUserInTheSystem;
             return null;

@@ -13,7 +13,7 @@ namespace EbuBridgeLmsSystem.Application.Interfaces
         string UserName { get; }
         bool IsAuthenticated { get; }
 
-        Task<AppUser> GetCurrentUserAsync();
+        Task<AppUser> GetCurrentUserAsync(params Func<IQueryable<AppUser>, IQueryable<AppUser>>[] includes);
 
     }
 }

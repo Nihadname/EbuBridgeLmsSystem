@@ -11,8 +11,8 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Addres
     {
         public AddressCreateCommandValidator()
         {
-            RuleFor(s => s.Country).MaximumLength(160).MinimumLength(1).NotEmpty();
-            RuleFor(s => s.City).MaximumLength(250).MinimumLength(1).NotEmpty();
+
+            RuleFor(s => s.CityId).Must(x => x != Guid.Empty).NotEmpty().NotNull();
             RuleFor(s => s.Region).MaximumLength(250).MinimumLength(1).NotEmpty();
             RuleFor(s => s.Street).MaximumLength(250).MinimumLength(1).NotEmpty();
         }
