@@ -5,6 +5,7 @@ using EbuBridgeLmsSystem.Persistance.Extensions;
 using LearningManagementSystem.Core.Entities.Common;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace LearningManagementSystem.DataAccess.Data.Implementations
 {
@@ -45,7 +46,7 @@ namespace LearningManagementSystem.DataAccess.Data.Implementations
             }
         }
 
-        public async Task<List<T>> GetAll(Expression<Func<T, bool>> predicate = null, bool AsnoTracking=false,bool AsSplitQuery=false, int skip = 0, int take = 0, params Func<IQueryable<T>, IQueryable<T>>[] includes)
+        public async Task<List<T>> GetAll(Expression<Func<T, bool>> predicate = null, bool AsnoTracking=false,bool AsSplitQuery=false, int skip = 0, int take = 0,bool isIgnoredDeleteBehaviour=false, params Func<IQueryable<T>, IQueryable<T>>[] includes)
         {
             try
             {
@@ -85,6 +86,10 @@ namespace LearningManagementSystem.DataAccess.Data.Implementations
                 {
                     query = query.AsSplitQuery();
                 }
+                if(!isIgnoredDeleteBehaviour is true)
+                {
+                    query = query.IgnoreQueryFilters();
+                }
                 return await query.ToListAsync();
             }
             catch (Exception ex)
@@ -94,7 +99,7 @@ namespace LearningManagementSystem.DataAccess.Data.Implementations
             }
         }
 
-        public async Task<T> GetEntity(Expression<Func<T, bool>> predicate = null, bool AsnoTracking = false, bool AsSplitQuery = false, int skip = 0, int take = 0, params Func<IQueryable<T>, IQueryable<T>>[] includes)
+        public async Task<T> GetEntity(Expression<Func<T, bool>> predicate = null, bool AsnoTracking = false, bool AsSplitQuery = false, int skip = 0, int take = 0, bool isIgnoredDeleteBehaviour = false, params Func<IQueryable<T>, IQueryable<T>>[] includes)
         {
             try
             {
@@ -132,6 +137,10 @@ namespace LearningManagementSystem.DataAccess.Data.Implementations
                 {
                     query = query.AsSplitQuery();
                 }
+                if (!isIgnoredDeleteBehaviour is true)
+                {
+                    query = query.IgnoreQueryFilters();
+                }
                 return await query.FirstOrDefaultAsync();
             }
             catch (Exception ex)
@@ -142,6 +151,7 @@ namespace LearningManagementSystem.DataAccess.Data.Implementations
 
         public Task<IQueryable<T>> GetQuery(
       Expression<Func<T, bool>> predicate = null, bool AsnoTracking = false, bool AsSplitQuery = false,
+      bool isIgnoredDeleteBehaviour = false,
       params Func<IQueryable<T>, IQueryable<T>>[] includes)
         {
             try
@@ -168,6 +178,10 @@ namespace LearningManagementSystem.DataAccess.Data.Implementations
                 {
                     query = query.AsSplitQuery();
                 }
+                if (!isIgnoredDeleteBehaviour is true)
+                {
+                    query = query.IgnoreQueryFilters();
+                }
                 return Task.FromResult(query);
             }
             catch (Exception ex)
@@ -177,11 +191,20 @@ namespace LearningManagementSystem.DataAccess.Data.Implementations
             }
         }
 
-        public async Task<bool> isExists(Expression<Func<T, bool>> predicate = null)
+        public async Task<bool> isExists(Expression<Func<T, bool>> predicate = null,bool AsNoTracking=false, bool isIgnoredDeleteBehaviour = false)
         {
             try
             {
-                return predicate is null ? false : await _table.AnyAsync(predicate);
+                IQueryable<T> query = _table;
+                if(AsNoTracking is true)
+                {
+                    query = query.AsNoTracking();
+                }
+                if (!isIgnoredDeleteBehaviour is true)
+                {
+                    query = query.IgnoreQueryFilters();
+                }
+                return predicate is null ? false : await query.AnyAsync(predicate);
             }
             catch (Exception ex)
             {

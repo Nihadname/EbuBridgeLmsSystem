@@ -19,9 +19,17 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.CreateCit
 
         public async Task<Result<Unit>> Handle(CreateCityCommand request, CancellationToken cancellationToken)
         {
-            var isCityExist = await _unitOfWork.CityRepository.isExists(s => s.Name.ToLower() == request.Name.ToLower());
-            if (isCityExist)
+            var existedCity= await _unitOfWork.CityRepository.GetEntity(s => s.Name.ToLower() == request.Name.ToLower(),AsnoTracking:true,isIgnoredDeleteBehaviour:true);
+            if (existedCity is not null)
+            {
+                if (existedCity.IsDeleted)
+                {
+                    existedCity.IsDeleted = false;
+                    await _unitOfWork.SaveChangesAsync(cancellationToken);
+                    return Result<Unit>.Success(Unit.Value);
+                }
                 return Result<Unit>.Failure(Error.DuplicateConflict, null, ErrorType.ValidationError);
+            }
             var isExistedCountry=await _unitOfWork.CountryRepository.isExists(s=>s.Id==request.CountryId);
             if (!isExistedCountry)
                 return Result<Unit>.Failure(Error.Custom("country","invalid id"), null, ErrorType.ValidationError);

@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
-using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -17,16 +15,14 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Addres
     public class AddressCreateHandler : IRequestHandler<AddressCreateCommand, Result<Unit>>
     {
         private readonly   IAppUserResolver _userResolver;
-        private readonly UserManager<AppUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<AddressCreateHandler> _logger;
-        public AddressCreateHandler(IAppUserResolver userResolver, UserManager<AppUser> userManager, IConfiguration configuration, HttpClient httpClient, IMapper mapper, IUnitOfWork unitOfWork, ILogger<AddressCreateHandler> logger)
+        public AddressCreateHandler(IAppUserResolver userResolver, IConfiguration configuration, HttpClient httpClient, IMapper mapper, IUnitOfWork unitOfWork, ILogger<AddressCreateHandler> logger)
         {
             _userResolver = userResolver;
-            _userManager = userManager;
             _configuration = configuration;
             _httpClient = httpClient;
             _mapper = mapper;
@@ -49,9 +45,12 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Addres
                 {
                     await _unitOfWork.AddressRepository.Delete(currentUserInSystem.Address);
                 }
-                var isExistedCity = await _unitOfWork.CityRepository.isExists(s => s.Id == request.CityId);
+                var isExistedCountry = await _unitOfWork.CountryRepository.isExists(s => s.Id == request.CountryId);
+                if(!isExistedCountry)
+                    return Result<Unit>.Failure(Error.Custom("location", "country doesnt exist in the database or either your value is invalid"), null, ErrorType.NotFoundError);
+                var isExistedCity = await _unitOfWork.CityRepository.isExists(s => s.Id == request.CityId&&s.CountryId==request.CountryId);
                 if (!isExistedCity)
-                    return Result<Unit>.Failure(Error.Custom("location", "city doesnt exist in the database or either your value is invalid"), null, ErrorType.NotFoundError);
+                    return Result<Unit>.Failure(Error.Custom("location", "city doesnt exist in the database or either your value is invalid or city is in diffrent  country"), null, ErrorType.NotFoundError);
                 var isLocationExist = await IsLocationExist(request);
                 if (!isLocationExist)
                     return Result<Unit>.Failure(Error.Custom("location", "location doesnt exist in the map"), null, ErrorType.NotFoundError);

@@ -11,6 +11,8 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public AppUser  AppUser { get; set; }
         public Guid CityId { get; set; }
         public City City { get; set; }
+        public  Guid CountryId { get; set; }
+        public Country Country { get; set; }
 
     }
 }

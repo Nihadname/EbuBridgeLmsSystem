@@ -21,13 +21,21 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.UpdateCit
             var existedCity=await _unitOfWork.CityRepository.GetEntity(s=>s.Id==request.Id,true);
             if (existedCity is null)
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
-            
+            bool hasChanges = false;
             if (!string.IsNullOrWhiteSpace(request.Name))
             {
-                var isExistedCityName = await _unitOfWork.CityRepository.isExists(s => s.Name.ToLower() == request.Name.ToLower());
-                if (isExistedCityName)
-                return Result<Unit>.Failure(Error.Custom("City Name", "it already exists"), null, ErrorType.BusinessLogicError);
+                 var existedCityWithThisName = await _unitOfWork.CityRepository.GetEntity(
+                      s => s.Name.Equals(request.Name, StringComparison.OrdinalIgnoreCase)&& s.Id!=existedCity.Id, AsnoTracking: true, isIgnoredDeleteBehaviour: true);
+                if (existedCityWithThisName is not null)
+                {
+                    if (existedCityWithThisName.IsDeleted)
+                    {
+                        return Result<Unit>.Failure(Error.Custom("City Name", "This city was previously deleted. Consider renaming the existing record instead of restoring."), null, ErrorType.BusinessLogicError);
+                    }
+                    return Result<Unit>.Failure(Error.Custom("City Name", "it already exists"), null, ErrorType.BusinessLogicError);
+                }
                 existedCity.Name=request.Name;
+                hasChanges = true;
             }
             if (request.CountryId.HasValue && request.CountryId.Value != Guid.Empty)
             {
@@ -37,10 +45,14 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.UpdateCit
                     return Result<Unit>.Failure(Error.Custom("country", "invalid id"), null, ErrorType.NotFoundError);
                 }
                 existedCity.CountryId = (Guid)request.CountryId;
+                hasChanges =true;   
             }
-            
-            await _unitOfWork.CityRepository.Update(existedCity);
-            await _unitOfWork.SaveChangesAsync();
+
+            if (hasChanges)
+            {
+                await _unitOfWork.CityRepository.Update(existedCity);
+                await _unitOfWork.SaveChangesAsync();
+            }
             return Result<Unit>.Success(Unit.Value);
         }
     }
