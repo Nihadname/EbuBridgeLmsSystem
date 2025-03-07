@@ -21,7 +21,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.Update
             var existedCountry=await _unitOfWork.CountryRepository.GetEntity(s=>s.Id==request.Id);
             if (existedCountry is null)
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
-            var isCountryExist = await _unitOfWork.CountryRepository.isExists(s => s.Name.ToLower() == request.Name.ToLower(),AsNoTracking:true,isIgnoredDeleteBehaviour:true);
+            var isCountryExist = await _unitOfWork.CountryRepository.isExists(s => s.Name.Equals(request.Name,StringComparison.OrdinalIgnoreCase)&&s.Id!=existedCountry.Id,AsNoTracking:true,isIgnoredDeleteBehaviour:true);
             if (isCountryExist)
                 return Result<Unit>.Failure(Error.DuplicateConflict, null, ErrorType.ValidationError);
             _mapper.Map(request, existedCountry);
