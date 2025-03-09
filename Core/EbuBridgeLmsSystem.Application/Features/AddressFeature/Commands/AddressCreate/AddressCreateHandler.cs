@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EbuBridgeLmsSystem.Application.Helpers.Methods;
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
@@ -51,7 +52,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Addres
                 var isExistedCity = await _unitOfWork.CityRepository.isExists(s => s.Id == request.CityId&&s.CountryId==request.CountryId);
                 if (!isExistedCity)
                     return Result<Unit>.Failure(Error.Custom("location", "city doesnt exist in the database or either your value is invalid or city is in diffrent  country"), null, ErrorType.NotFoundError);
-                var isLocationExist = await IsLocationExist(request);
+                var isLocationExist = await AddressHelper.IsLocationExist(request);
                 if (!isLocationExist)
                     return Result<Unit>.Failure(Error.Custom("location", "location doesnt exist in the map"), null, ErrorType.NotFoundError);
                 request.AppUserId = currentUserInSystem.Id;
@@ -68,47 +69,6 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Addres
                 return Result<Unit>.Failure(Error.InternalServerError, null, ErrorType.SystemError);
             }
         }
-        private async Task<bool> IsLocationExist(AddressCreateCommand addressCreateDto)
-        {
-            var apiKey = _configuration.GetSection("MapApiKey").Value;
-            var CityLocation=await _unitOfWork.CityRepository.GetEntity(s=>s.Id==addressCreateDto.CityId, includes: new Func<IQueryable<City>, IQueryable<City>>[] {
-                 query => query
-            .Include(p => p.Country) });
-            if (CityLocation == null || CityLocation.Country == null)
-                return false;
-            var url = $"https://us1.locationiq.com/v1/search?key={apiKey}&q={CityLocation.Country.Name}%20{addressCreateDto.Region}%20{CityLocation.Name}%20{addressCreateDto.Street}&format=json";
-
-            try
-            {
-                var response = await _httpClient.GetAsync(url);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    return false;
-                }
-
-                var content = await response.Content.ReadAsStringAsync();
-
-                var locations = JsonDocument.Parse(content).RootElement;
-
-                if (locations.ValueKind == JsonValueKind.Array && locations.GetArrayLength() > 0)
-                {
-                    foreach (var location in locations.EnumerateArray())
-                    {
-                        if (location.TryGetProperty("place_id", out _) &&
-                            location.TryGetProperty("lat", out _) &&
-                            location.TryGetProperty("lon", out _))
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-            return false;
-        }
+       
     }
 }

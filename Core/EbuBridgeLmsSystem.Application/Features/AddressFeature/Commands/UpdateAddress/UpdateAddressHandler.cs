@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.AddressCreate;
 using EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.UpdateAdress;
+using EbuBridgeLmsSystem.Application.Helpers.Methods;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
@@ -52,6 +53,9 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Update
                 existedAddress.Street = request.Street;
                 hasChanges = true;
             }
+            var isLocationExist = await AddressHelper.IsLocationExist(request);
+            if (!isLocationExist)
+                return Result<Unit>.Failure(Error.Custom("location", "location doesnt exist in the map"), null, ErrorType.NotFoundError);
             if (!hasChanges)
             {
                 return Result<Unit>.Success(Unit.Value); 

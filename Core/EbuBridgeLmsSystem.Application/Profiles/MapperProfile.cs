@@ -13,6 +13,7 @@ using EbuBridgeLmsSystem.Application.Dtos.RequstToRegister;
 using EbuBridgeLmsSystem.Application.Dtos.Student;
 using EbuBridgeLmsSystem.Application.Dtos.Teacher;
 using EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.AddressCreate;
+using EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.UpdateAdress;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ChangePassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsParent;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsStudent;
@@ -119,7 +120,7 @@ namespace EbuBridgeLmsSystem.Application.Profiles
             CreateMap<Country, CountryInCityListItemQuery>();
             CreateMap<City, CityReturnQuery>()
                 .ForMember(s => s.countryInCityListItemQuery, map => map.MapFrom(d => d.Country)); ;
-                     
+            CreateMap<UpdateAddressCommand, UpdateAddressDto>().ReverseMap();
         }
     }
 }
