@@ -10,5 +10,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities.Common
     {
         public List<T> Data { get; set; }
         public string NextCursor { get; set; }
+
+        
     }
 }

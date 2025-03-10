@@ -14,6 +14,7 @@ using EbuBridgeLmsSystem.Application.Dtos.Student;
 using EbuBridgeLmsSystem.Application.Dtos.Teacher;
 using EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.AddressCreate;
 using EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.UpdateAdress;
+using EbuBridgeLmsSystem.Application.Features.AddressFeature.Queries.GetAllAddresses;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ChangePassword;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsParent;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsStudent;
@@ -84,7 +85,6 @@ namespace EbuBridgeLmsSystem.Application.Profiles
             CreateMap<Course, CourseListItemDto>();
             CreateMap<AddressCreateDto, Address>();
             CreateMap<AppUserInAdress, AppUser>();
-            CreateMap<Address, AddressReturnDto>();
             CreateMap<Lesson, LessonInCourseReturnDto>();
             CreateMap<Course, CourseReturnDto>()
                 .ForMember(s => s.Lessons, map => map.MapFrom(d => d.lessons));
@@ -92,7 +92,6 @@ namespace EbuBridgeLmsSystem.Application.Profiles
             CreateMap< AppUser, AppUserInFee>();
             CreateMap<Fee, FeeListItemDto>();
             CreateMap<Fee, FeeReturnDto>();
-            CreateMap<Address, AddressListItemDto>();
             CreateMap<StudentCreateDto, Student>();
             CreateMap<CreateAppUserAsStudentCommand, StudentRegistrationDto>().ReverseMap();
             CreateMap<CreateAppUserAsTeacherCommand,TeacherRegistrationDto>().ReverseMap();
@@ -119,8 +118,9 @@ namespace EbuBridgeLmsSystem.Application.Profiles
             CreateMap<UpdateCityCommand, CityUpdateDto>().ReverseMap();
             CreateMap<Country, CountryInCityListItemQuery>();
             CreateMap<City, CityReturnQuery>()
-                .ForMember(s => s.countryInCityListItemQuery, map => map.MapFrom(d => d.Country)); ;
+                .ForMember(s => s.countryInCityListItemQuery, map => map.MapFrom(d => d.Country)); 
             CreateMap<UpdateAddressCommand, UpdateAddressDto>().ReverseMap();
+
         }
     }
 }

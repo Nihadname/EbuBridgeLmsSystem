@@ -6,7 +6,6 @@ using EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.DeleteAddr
 using EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.UpdateAdress;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EbuBridgeLmsSystem.Api.App.ClientSide
@@ -35,6 +34,10 @@ namespace EbuBridgeLmsSystem.Api.App.ClientSide
         [Authorize]
         public async Task<IActionResult> UpdateAddress(UpdateAddressDto updateAddressDto)
         {
+            if (updateAddressDto == null)
+            {
+                return BadRequest("Invalid request data.");
+            }
             var mappedAddressCommand = _mapper.Map<UpdateAddressCommand>(updateAddressDto);
             var result = await _mediator.Send(mappedAddressCommand);
             return this.ToActionResult(result);

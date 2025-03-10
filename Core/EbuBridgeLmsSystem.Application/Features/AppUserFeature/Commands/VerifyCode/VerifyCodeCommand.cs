@@ -7,5 +7,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Verify
     {
         public string Email { get; set; }
         public string Code { get; set; }
+        public string ClientIp { get; set; }
+        public string DeviceId { get; set; }
     }
 }

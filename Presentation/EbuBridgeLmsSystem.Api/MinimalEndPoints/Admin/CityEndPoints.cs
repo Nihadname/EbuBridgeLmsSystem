@@ -11,7 +11,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
     {
         public static void MapCityAdminEndPoints(this IEndpointRouteBuilder app, string baseUrl)
         {
-            app.MapDelete($"{baseUrl}/City/Delete", [Authorize] async ([FromBody] CityDeleteDto cityDeleteDto, IMediator _mediator) =>
+            app.MapDelete($"{baseUrl}/City/Delete", [Authorize(Roles ="Admin")] async ([FromBody] CityDeleteDto cityDeleteDto, IMediator _mediator) =>
             {
                
                 var cityDeleteCommand = new DeleteCityCommand()
