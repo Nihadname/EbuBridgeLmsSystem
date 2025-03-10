@@ -73,7 +73,8 @@ namespace EbuBridgeLmsSystem.Persistance.SeedDatas
             { "TeymurDevv@gmail.com", "12345@Tt" },
             { "TeymurDevv2@gmail.com", "12345@Tt" },
             { "Nadir810@gmail.com", "12345@Nn" },
-            { "Nadir811@gmail.com", "12345@Nn" }
+            { "Nadir811@gmail.com", "12345@Nn" },
+             {"nihadsatexam@gmail.com","12345@Tt" }
         };
             foreach (var (email, password) in users)
             {

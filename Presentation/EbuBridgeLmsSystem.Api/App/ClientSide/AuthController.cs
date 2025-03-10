@@ -45,7 +45,7 @@ namespace EbuBridgeLmsSystem.Api.App.ClientSide
             var result = await _mediator.Send(refreshTokenCommand);
             return this.ToActionResult(result);
         }
-        [HttpGet("SendVerificationCode")]
+        [HttpPost("SendVerificationCode")]
 
         public async Task<IActionResult> SendVerificationCode(SendVerificationCodeDto sendVerificationCodeDto)
         {
