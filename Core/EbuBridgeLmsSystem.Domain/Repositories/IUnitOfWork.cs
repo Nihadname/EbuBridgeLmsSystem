@@ -22,6 +22,7 @@ namespace EbuBridgeLmsSystem.Domain.Repositories
         public IRefreshTokenRepository RefreshTokenRepository { get; }  
         public  ICountryRepository CountryRepository { get; }
         public ICityRepository CityRepository { get; }
+        public IAuditLogRepository AuditLogRepository { get; }
 
     }
 }
