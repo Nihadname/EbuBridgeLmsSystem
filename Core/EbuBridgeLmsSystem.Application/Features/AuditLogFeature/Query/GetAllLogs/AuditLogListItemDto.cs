@@ -1,12 +1,13 @@
 ﻿namespace EbuBridgeLmsSystem.Application.Features.AuditLogFeature.Query.GetAllLogs
 {
-    public class AuditLogListItemDto
+    public sealed record AuditLogListItemDto
     {
-        public string TableName { get; set; }
-        public string Action { get; set; }
-        public string UserId { get; set; }
-        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
-        public string Changes { get; set; }
-        public string ClientIpAddress { get; set; }
+        public string TableName { get; init; }
+        public string Action { get; init; }
+        public string UserId { get; init; }
+        public string UserName { get; init; }
+        public DateTime Timestamp { get; init; } = DateTime.UtcNow;
+        public string Changes { get; init; }
+        public string ClientIpAddress { get; init; }
     }
 }

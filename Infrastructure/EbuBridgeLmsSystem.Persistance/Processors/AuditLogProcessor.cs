@@ -1,4 +1,5 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities;
+﻿using EbuBridgeLmsSystem.Application.Interfaces;
+using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Persistance.Data;
 using LearningManagementSystem.Core.Entities.Common;
 using Microsoft.AspNetCore.Http;
@@ -12,17 +13,22 @@ namespace EbuBridgeLmsSystem.Persistance.Processors
 {
     public class AuditLogProcessor : IAuditLogProcessor
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAppUserResolver _userResolver;
         private readonly ApplicationDbContext _applicationDbContext;
-        public AuditLogProcessor(IHttpContextAccessor httpContextAccessor, ApplicationDbContext applicationDbContext)
+        private readonly IHttpContextAccessor _contextAccessor;
+        public AuditLogProcessor(ApplicationDbContext applicationDbContext, IAppUserResolver userResolver, IHttpContextAccessor contextAccessor)
         {
-            _httpContextAccessor = httpContextAccessor;
+
             _applicationDbContext = applicationDbContext;
+            _userResolver = userResolver;
+            _contextAccessor = contextAccessor;
         }
 
         public async Task HandleAuditLogs(IEnumerable<EntityEntry<BaseEntity>> entries)
         {
-            var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "System";
+            var currentUserInSystem = await _userResolver.GetCurrentUserAsync();
+            var userId = currentUserInSystem.Id?? "System";
+
             var auditLogs = new List<AuditLog>();
             foreach (var entry in entries)
             {
@@ -34,6 +40,7 @@ namespace EbuBridgeLmsSystem.Persistance.Processors
                         TableName = entry.Entity.GetType().Name,
                         Action = entry.State.ToString(),
                         UserId = userId,
+                        UserName=currentUserInSystem.UserName,
                         Changes = JsonSerializer.Serialize(entry.CurrentValues.ToObject()),
                         ClientIpAddress = GetClientIp()
                     };
@@ -48,7 +55,7 @@ namespace EbuBridgeLmsSystem.Persistance.Processors
         }
         private string GetClientIp()
         {
-            var context = _httpContextAccessor.HttpContext;
+            var context = _contextAccessor.HttpContext;
             if (context == null) return "Unknown";
 
             var forwardedFor = context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
