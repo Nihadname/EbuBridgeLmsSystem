@@ -19,7 +19,8 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth
         public static async Task<Result<AppUser>> CreateUser(this UserManager<AppUser> userManager,
             RegisterDto registerDto,
             IUnitOfWork unitOfWork,
-            IEmailService emailService
+            IEmailService emailService,
+            IBackgroundJobClient backgroundJobClient
             )
         {
             var existUser = await userManager.FindByNameAsync(registerDto.UserName);
@@ -75,17 +76,18 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth
                 body = body.Replace("{{UserName}}", appUser.UserName).Replace("{{Password}}", registerDto.Password)
                     .Replace("{{Email}}", appUser.Email);
 
-                BackgroundJob.Enqueue(() => emailService.SendEmailAsync(appUser.Email, "Account details", body, true));
+                backgroundJobClient.Enqueue(() => emailService.SendEmailAsync(appUser.Email, "Account details", body, true));
 
             }
-            var sendVerificationCodeResult = await userManager.SendVerificationCode(new SendVerificationCodeDto { Email = appUser.Email }, emailService);
+            var sendVerificationCodeResult = await userManager.SendVerificationCode(new SendVerificationCodeDto { Email = appUser.Email }, emailService,backgroundJobClient);
             if (!sendVerificationCodeResult.IsSuccess)
               return  Result<AppUser>.Failure(sendVerificationCodeResult.Error, sendVerificationCodeResult.Errors, (ErrorType)sendVerificationCodeResult.ErrorType);
             return Result<AppUser>.Success(appUser);
         }
         public static async Task<Result<string>> SendVerificationCode(this UserManager<AppUser> userManager,
             SendVerificationCodeDto sendVerificationCodeDto,
-            IEmailService emailService)
+            IEmailService emailService,
+             IBackgroundJobClient backgroundJobClient)
         {
             var user = await userManager.FindByEmailAsync(sendVerificationCodeDto.Email);
             if (user is null) return Result<string>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
@@ -98,7 +100,7 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth
             user.IsEmailVerificationCodeValid = false;
             await userManager.UpdateAsync(user);
             var body = $"<h1>Welcome!</h1><p>Thank you for joining us. We're excited to have you!, this is your verfication code {verificationCode} </p>";
-            BackgroundJob.Enqueue(() => emailService.SendEmailAsync(user.Email, "verfication code", body, true));
+            backgroundJobClient.Enqueue(() => emailService.SendEmailAsync(user.Email, "verfication code", body, true));
             return Result<string>.Success("Verification code sent");
         }
         public static async Task<Result<AppUser>> GetUserByEmailAsync(this UserManager<AppUser> userManager,string email)

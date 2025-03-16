@@ -4,6 +4,7 @@ using EbuBridgeLmsSystem.Persistance.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250316133415_NewEntityLanguage")]
+    partial class NewEntityLanguage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -372,8 +375,8 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<Guid>("LanguageId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Language")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(110)
@@ -399,9 +402,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedTime");
-
-                    b.HasIndex("LanguageId")
-                        .IsUnique();
 
                     b.ToTable("Courses");
                 });
@@ -1554,17 +1554,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Course", b =>
-                {
-                    b.HasOne("EbuBridgeLmsSystem.Domain.Entities.Language", "Language")
-                        .WithOne("Course")
-                        .HasForeignKey("EbuBridgeLmsSystem.Domain.Entities.Course", "LanguageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Language");
-                });
-
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.CourseStudent", b =>
                 {
                     b.HasOne("EbuBridgeLmsSystem.Domain.Entities.Course", "Course")
@@ -1908,11 +1897,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Faculty", b =>
                 {
                     b.Navigation("TeacherFacultyDegrees");
-                });
-
-            modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Language", b =>
-                {
-                    b.Navigation("Course");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Lesson", b =>

@@ -9,6 +9,7 @@ using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Enums;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using FluentValidation;
+using Hangfire;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -29,13 +30,15 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
         private readonly ILogger<CreateAppUserAsParentHandler> _logger;
         private readonly IMapper _mapper;
         private readonly IValidator<RegisterDto> _validator;
-        public CreateAppUserAsParentHandler(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, IEmailService emailService, IMapper mapper, IValidator<RegisterDto> validator)
+        private readonly IBackgroundJobClient _backgroundJobClient;
+        public CreateAppUserAsParentHandler(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, IEmailService emailService, IMapper mapper, IValidator<RegisterDto> validator, IBackgroundJobClient backgroundJobClient)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _emailService = emailService;
             _mapper = mapper;
             _validator = validator;
+            _backgroundJobClient = backgroundJobClient;
         }
 
         public async Task<Result<UserGetDto>> Handle(CreateAppUserAsParentCommand request, CancellationToken cancellationToken)
@@ -48,7 +51,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
                 {
                     return Result<UserGetDto>.Failure(null, validationResult.Errors.Select(e => e.ErrorMessage).ToList(), ErrorType.ValidationError);
                 }
-                var appUserResult = await _userManager.CreateUser(request.RegisterDto, _unitOfWork, _emailService);
+                var appUserResult = await _userManager.CreateUser(request.RegisterDto, _unitOfWork, _emailService, _backgroundJobClient);
                 if(!appUserResult.IsSuccess)
                     return Result<UserGetDto>.Failure(appUserResult.Error, appUserResult.Errors, (ErrorType)appUserResult.ErrorType);
                 await _userManager.AddToRoleAsync(appUserResult.Data, RolesEnum.Parent.ToString());

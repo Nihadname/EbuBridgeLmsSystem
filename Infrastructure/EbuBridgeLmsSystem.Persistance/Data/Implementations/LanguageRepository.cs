@@ -4,9 +4,9 @@ using LearningManagementSystem.DataAccess.Data.Implementations;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
 {
-    public class AuditLogRepository : Repository<AuditLog>, IAuditLogRepository
+    public class LanguageRepository : Repository<Language>, ILanguageRepository
     {
-        public AuditLogRepository(ApplicationDbContext context) : base(context)
+        public LanguageRepository(ApplicationDbContext context) : base(context)
         {
         }
     }

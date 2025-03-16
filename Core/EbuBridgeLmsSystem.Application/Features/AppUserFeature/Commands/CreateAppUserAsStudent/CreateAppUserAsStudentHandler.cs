@@ -7,6 +7,7 @@ using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Enums;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using FluentValidation;
+using Hangfire;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -23,8 +24,8 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
         private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<CreateAppUserAsStudentHandler> _logger;
         private readonly IValidator<RegisterDto> _validator;
-
-        public CreateAppUserAsStudentHandler(IMapper mapper, UserManager<AppUser> userManager, IEmailService emailService, IUnitOfWork unitOfWork, ILogger<CreateAppUserAsStudentHandler> logger, IValidator<RegisterDto> validator)
+        private readonly IBackgroundJobClient _backgroundJobClient;
+        public CreateAppUserAsStudentHandler(IMapper mapper, UserManager<AppUser> userManager, IEmailService emailService, IUnitOfWork unitOfWork, ILogger<CreateAppUserAsStudentHandler> logger, IValidator<RegisterDto> validator, IBackgroundJobClient backgroundJobClient)
         {
             _mapper = mapper;
             _userManager = userManager;
@@ -32,6 +33,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
             _unitOfWork = unitOfWork;
             _logger = logger;
             _validator = validator;
+            _backgroundJobClient = backgroundJobClient;
         }
 
         async Task<Result<UserGetDto>> IRequestHandler<CreateAppUserAsStudentCommand, Result<UserGetDto>>.Handle(CreateAppUserAsStudentCommand request, CancellationToken cancellationToken)
@@ -45,7 +47,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
                     return Result<UserGetDto>.Failure(null, validationResult.Errors.Select(e => e.ErrorMessage).ToList(),ErrorType.ValidationError);
                 }
 
-                var appUserResult = await _userManager.CreateUser(request.RegisterDto, _unitOfWork, _emailService);
+                var appUserResult = await _userManager.CreateUser(request.RegisterDto, _unitOfWork, _emailService, _backgroundJobClient);
                 if (!appUserResult.IsSuccess)
                     return Result<UserGetDto>.Failure(appUserResult.Error, appUserResult.Errors, (ErrorType)appUserResult.ErrorType);
                 await _userManager.AddToRoleAsync(appUserResult.Data, RolesEnum.Student.ToString());

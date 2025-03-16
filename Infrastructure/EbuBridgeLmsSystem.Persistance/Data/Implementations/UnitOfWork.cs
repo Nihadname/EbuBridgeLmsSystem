@@ -26,6 +26,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
         public ICountryRepository CountryRepository { get; private set; }
         public ICityRepository CityRepository { get; private set; }
         public IAuditLogRepository AuditLogRepository { get; private set; }
+        public ILanguageRepository LanguageRepository { get; private set; }
 
         public UnitOfWork(ApplicationDbContext applicationDbContext)
         {

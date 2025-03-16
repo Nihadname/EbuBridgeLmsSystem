@@ -11,12 +11,13 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public DifficultyLevel difficultyLevel { get; set; }
         public ICollection<Lesson> lessons { get; set; }
         public TimeSpan Duration { get; set; }
-        public string Language { get; set; }
         public string Requirements { get; set; }
         public decimal Price { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public ICollection<CourseStudent> courseStudents { get; set; }
+        public Guid LanguageId { get; set; }
+        public Language Language { get; set; }
     }
     public enum DifficultyLevel
     {

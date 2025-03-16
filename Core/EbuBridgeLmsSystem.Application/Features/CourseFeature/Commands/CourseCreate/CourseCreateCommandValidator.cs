@@ -11,8 +11,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
             RuleFor(s => s.difficultyLevel).NotNull()
                 .IsInEnum().WithMessage("Payment status is invalid.");
             RuleFor(s => s.Duration).NotNull();
-            RuleFor(s => s.Language).NotNull()
-                .IsInEnum().WithMessage("Language is invalid.");
+            RuleFor(s => s.LanguageId).Must(x => x != Guid.Empty).NotEmpty().NotNull();
             RuleFor(s => s.Requirements).NotEmpty();
             RuleFor(x => x.Price)
             .GreaterThan(0).WithMessage("Salary must be a positive number.").NotEmpty();

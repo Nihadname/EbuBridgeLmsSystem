@@ -13,7 +13,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
         public string Description { get; init; }
         public DifficultyLevel difficultyLevel { get; init; }
         public TimeSpan Duration { get; init; }
-        public Language Language { get; init; }
+        public Guid LanguageId {  get; init; } 
         public string Requirements { get; init; }
         public decimal Price { get; init; }
         public DateTime? StartDate { get; init; }

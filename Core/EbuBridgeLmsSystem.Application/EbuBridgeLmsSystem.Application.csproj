@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Features\AppUserFeature\Queries\" />
+    <Folder Include="Features\CourseFeature\Queries\" />
   </ItemGroup>
 
 </Project>

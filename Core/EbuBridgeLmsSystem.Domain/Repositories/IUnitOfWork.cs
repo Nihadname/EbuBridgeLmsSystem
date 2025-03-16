@@ -23,6 +23,7 @@ namespace EbuBridgeLmsSystem.Domain.Repositories
         public  ICountryRepository CountryRepository { get; }
         public ICityRepository CityRepository { get; }
         public IAuditLogRepository AuditLogRepository { get; }
+        public ILanguageRepository LanguageRepository { get; }
 
     }
 }
