@@ -1,8 +1,10 @@
 ﻿using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Persistance.Data;
 using LearningManagementSystem.Core.Entities.Common;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Security.Claims;
@@ -13,22 +15,21 @@ namespace EbuBridgeLmsSystem.Persistance.Processors
 {
     public class AuditLogProcessor : IAuditLogProcessor
     {
-        private readonly IAppUserResolver _userResolver;
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IHttpContextAccessor _contextAccessor;
-        public AuditLogProcessor(ApplicationDbContext applicationDbContext, IAppUserResolver userResolver, IHttpContextAccessor contextAccessor)
+        private readonly UserManager<AppUser> _userManager;
+        public AuditLogProcessor(ApplicationDbContext applicationDbContext, IHttpContextAccessor contextAccessor, UserManager<AppUser> userManager)
         {
 
             _applicationDbContext = applicationDbContext;
-            _userResolver = userResolver;
             _contextAccessor = contextAccessor;
+            _userManager = userManager;
         }
 
         public async Task HandleAuditLogs(IEnumerable<EntityEntry<BaseEntity>> entries)
         {
-            var currentUserInSystem = await _userResolver.GetCurrentUserAsync();
-            var userId = currentUserInSystem.Id?? "System";
-
+            var userId = _contextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "System";
+            var userName = _contextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value is not null ? (await _userManager.FindByIdAsync(userId)).UserName : "System";
             var auditLogs = new List<AuditLog>();
             foreach (var entry in entries)
             {
@@ -40,7 +41,7 @@ namespace EbuBridgeLmsSystem.Persistance.Processors
                         TableName = entry.Entity.GetType().Name,
                         Action = entry.State.ToString(),
                         UserId = userId,
-                        UserName=currentUserInSystem.UserName,
+                        UserName= userName,
                         Changes = JsonSerializer.Serialize(entry.CurrentValues.ToObject()),
                         ClientIpAddress = GetClientIp()
                     };

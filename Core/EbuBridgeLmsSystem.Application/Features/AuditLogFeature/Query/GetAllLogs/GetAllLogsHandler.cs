@@ -1,13 +1,9 @@
-﻿using EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCities;
-using EbuBridgeLmsSystem.Domain.Entities;
-using EbuBridgeLmsSystem.Domain.Entities.Common;
+﻿using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
@@ -17,14 +13,12 @@ namespace EbuBridgeLmsSystem.Application.Features.AuditLogFeature.Query.GetAllLo
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDistributedCache _cache;
-        private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<GetAllLogsHandler> _logger;
-        public GetAllLogsHandler(IDistributedCache cache, IUnitOfWork unitOfWork, ILogger<GetAllLogsHandler> logger, UserManager<AppUser> userManager)
+        public GetAllLogsHandler(IDistributedCache cache, IUnitOfWork unitOfWork, ILogger<GetAllLogsHandler> logger)
         {
             _cache = cache;
             _unitOfWork = unitOfWork;
             _logger = logger;
-            _userManager = userManager;
         }
 
         public async Task<Result<PaginatedResult<AuditLogListItemDto>>> Handle(GetAllLogsQuery request, CancellationToken cancellationToken)

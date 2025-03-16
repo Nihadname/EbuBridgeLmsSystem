@@ -1,17 +1,12 @@
 ﻿using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Persistance.Processors;
 using LearningManagementSystem.Core.Entities.Common;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Reflection.Emit;
-using System.Security.AccessControl;
-using System.Security.Claims;
-using System.Text.Json;
 
 namespace EbuBridgeLmsSystem.Persistance.Data
 {
@@ -52,6 +47,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public  DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<Language> languages { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

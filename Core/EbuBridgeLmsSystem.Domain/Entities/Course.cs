@@ -24,4 +24,5 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         MidLevel,
         Advanced
     }
+
 }
