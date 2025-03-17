@@ -8,19 +8,15 @@ namespace EbuBridgeLmsSystem.Application.Dtos.Course
         public IFormFile formFile { get; init; }
         public string Name { get; init; }
         public string Description { get; init; }
-        public DifficultyLevel difficultyLevel { get; set; }
-        public TimeSpan Duration { get; set; }
-        public Language Language { get; set; }
-        public string Requirements { get; set; }
-        public decimal Price { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public DifficultyLevel difficultyLevel { get; init; }
+        public int DurationHours { get; init; }
+        public Guid LanguageId { get; init; }
+        public string Requirements { get; init; }
+        public decimal Price { get; init; }
+        public DateTime? StartDate { get; init; }
+        public DateTime? EndDate { get; init; }
 
 
     }
-    public  enum Language
-    {
-        English,
-        Azerbaijani
-    }
+  
 }

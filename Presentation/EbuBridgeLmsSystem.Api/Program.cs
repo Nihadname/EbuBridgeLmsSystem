@@ -42,6 +42,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.MapAuthAdminEndpoints(baseAdminUrl);
+app.MapCourseAdminEndPointsthis(baseAdminUrl);
 app.MapCityAdminEndPoints(baseAdminUrl);
 app.UseHttpsRedirection();
 app.UseStaticFiles();

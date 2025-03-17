@@ -9,6 +9,7 @@ using Hangfire;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseCreate
@@ -16,15 +17,13 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
     public class CourseCreateHandler : IRequestHandler<CourseCreateCommand, Result<Unit>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IPhotoOrVideoService _photoOrVideoService;
-        private readonly IBackgroundJobClient _backgroundJobClient;
+
         private readonly ILogger<CourseCreateHandler> _logger;
-        public CourseCreateHandler(IUnitOfWork unitOfWork, IPhotoOrVideoService photoOrVideoService, ILogger<CourseCreateHandler> logger, IBackgroundJobClient backgroundJobClient)
+        public CourseCreateHandler(IUnitOfWork unitOfWork, ILogger<CourseCreateHandler> logger)
         {
             _unitOfWork = unitOfWork;
-            _photoOrVideoService = photoOrVideoService;
             _logger = logger;
-            _backgroundJobClient = backgroundJobClient;
+
         }
 
         public async Task<Result<Unit>> Handle(CourseCreateCommand request, CancellationToken cancellationToken)
@@ -32,7 +31,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
-                var isDuplicateNameCourse = await _unitOfWork.CourseRepository.GetEntity(s => s.Name.Equals(request.Name, StringComparison.OrdinalIgnoreCase), AsnoTracking: true, isIgnoredDeleteBehaviour: true);
+                var isDuplicateNameCourse = await _unitOfWork.CourseRepository.GetEntity(c => EF.Functions.Like(c.Name, $"%{request.Name}%"), AsnoTracking: true, isIgnoredDeleteBehaviour: true);
                 if (isDuplicateNameCourse is not null)
                 {
                     if (isDuplicateNameCourse.IsDeleted)
@@ -58,7 +57,8 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
                     Description = request.Description,
                     difficultyLevel = request.difficultyLevel,
                     LanguageId = request.LanguageId,
-                    Duration = request.Duration,
+                    DurationInHours =request.DurationHours,
+                    Requirements = request.Requirements,
                     Price = request.Price,
                     ImageUrl = null,
                     StartDate = request.StartDate ?? null,
@@ -66,7 +66,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
                 };
                 await _unitOfWork.CourseRepository.Create(newCourse);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
-                var temporaryImage =  request.formFile.Save();
+                var temporaryImage =  request.formFile.Save(newCourse.Id);
                 var newCourseImageOutBox = new CourseImageOutBox()
                 {
                     CourseId=newCourse.Id,
@@ -74,6 +74,8 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
                     CreatedTime = DateTime.UtcNow,
                     TemporaryImagePath = temporaryImage,
                 };
+               await _unitOfWork.CourseImageOutBoxRepository.Create(newCourseImageOutBox);
+                await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
                 //_backgroundJobClient.Enqueue(() => UploadImageToCloud(newCourse.Id, request.formFile));
                 return Result<Unit>.Success(Unit.Value);

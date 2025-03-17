@@ -1,19 +1,19 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EbuBridgeLmsSystem.Application.Exceptions;
+using Microsoft.AspNetCore.Http;
 
 namespace EbuBridgeLmsSystem.Application.Helpers.Extensions
 {
     public static class ImageExtension
     {
-        public static string Save(this IFormFile file)
+        public static string Save(this IFormFile file,Guid? courseId)
         {
-            
+            bool isValidGuid = courseId.HasValue && courseId != Guid.Empty;
+            if (!isValidGuid)
+            {
+                throw new CustomException(400, "course is invalid");
+            }
 
-            string newFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            string newFileName = courseId + Path.GetExtension(file.FileName);
             string directoryPath = Path.Combine("wwwroot", "img");
 
             // Ensure directory exists

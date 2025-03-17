@@ -27,6 +27,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
         public ICityRepository CityRepository { get; private set; }
         public IAuditLogRepository AuditLogRepository { get; private set; }
         public ILanguageRepository LanguageRepository { get; private set; }
+        public ICourseImageOutBoxRepository CourseImageOutBoxRepository { get; private set; }
 
         public UnitOfWork(ApplicationDbContext applicationDbContext)
         {
@@ -44,6 +45,9 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
             CountryRepository = new CountryRepository(applicationDbContext);
             CityRepository = new CityRepository(applicationDbContext);
             AuditLogRepository = new AuditLogRepository(applicationDbContext);
+            LanguageRepository = new LanguageRepository(applicationDbContext);
+            CourseImageOutBoxRepository = new CourseImageOutBoxRepository(applicationDbContext);
+
             _applicationDbContext = applicationDbContext;
 
         }

@@ -10,7 +10,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
             RuleFor(s => s.Description).MaximumLength(250).MinimumLength(3).NotEmpty();
             RuleFor(s => s.difficultyLevel).NotNull()
                 .IsInEnum().WithMessage("Payment status is invalid.");
-            RuleFor(s => s.Duration).NotNull();
+            RuleFor(s => s.DurationHours).NotNull();
             RuleFor(s => s.LanguageId).Must(x => x != Guid.Empty).NotEmpty().NotNull();
             RuleFor(s => s.Requirements).NotEmpty();
             RuleFor(x => x.Price)
@@ -27,7 +27,6 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
             RuleFor(x => x)
            .Must(x => !x.StartDate.HasValue || !x.EndDate.HasValue || x.StartDate <= x.EndDate)
            .WithMessage("StartDate must be earlier than or equal to EndDate.");
-            RuleFor(s => s.Duration).NotNull();
             RuleFor(s => s).Custom((c, context) =>
             {
                 long maxSizeInBytes = 15 * 1024 * 1024;

@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <Folder Include="MinimalEndPoints\ClientSide\" />
+    <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
 </Project>

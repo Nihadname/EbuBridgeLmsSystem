@@ -10,7 +10,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public string Description { get; set; }
         public DifficultyLevel difficultyLevel { get; set; }
         public ICollection<Lesson> lessons { get; set; }
-        public TimeSpan Duration { get; set; }
+        public int DurationInHours { get; set; }
         public string Requirements { get; set; }
         public decimal Price { get; set; }
         public DateTime? StartDate { get; set; }

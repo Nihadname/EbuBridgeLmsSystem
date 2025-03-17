@@ -4,6 +4,7 @@ using EbuBridgeLmsSystem.Persistance.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250317203425_NewpRopForCourse")]
+    partial class NewpRopForCourse
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,7 +78,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("CreatedTime");
 
-                    b.ToTable("addresses", (string)null);
+                    b.ToTable("addresses");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.AppUser", b =>
@@ -260,7 +263,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AuditLogs", (string)null);
+                    b.ToTable("AuditLogs");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.City", b =>
@@ -303,7 +306,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
-                    b.ToTable("Cities", (string)null);
+                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Country", b =>
@@ -341,7 +344,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
-                    b.ToTable("Countries", (string)null);
+                    b.ToTable("Countries");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Course", b =>
@@ -406,7 +409,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.HasIndex("LanguageId")
                         .IsUnique();
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.CourseImageOutBox", b =>
@@ -441,7 +444,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("courseImageOutBoxes", (string)null);
+                    b.ToTable("courseImageOutBoxes");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.CourseStudent", b =>
@@ -477,7 +480,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("courseStudents", (string)null);
+                    b.ToTable("courseStudents");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Degree", b =>
@@ -508,7 +511,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Degrees", (string)null);
+                    b.ToTable("Degrees");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Faculty", b =>
@@ -536,7 +539,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Faculties", (string)null);
+                    b.ToTable("Faculties");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Fee", b =>
@@ -607,7 +610,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("fees", (string)null);
+                    b.ToTable("fees");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Language", b =>
@@ -633,7 +636,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("languages", (string)null);
+                    b.ToTable("languages");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Lesson", b =>
@@ -696,7 +699,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("lessons", (string)null);
+                    b.ToTable("lessons");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LessonMaterial", b =>
@@ -739,7 +742,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("lessonsMaterial", (string)null);
+                    b.ToTable("lessonsMaterial");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LessonQuiz", b =>
@@ -783,7 +786,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("lessonQuizzes", (string)null);
+                    b.ToTable("lessonQuizzes");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LessonStudent", b =>
@@ -824,7 +827,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("lessonsStudents", (string)null);
+                    b.ToTable("lessonsStudents");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LessonVideo", b =>
@@ -867,7 +870,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("lessonsVideo", (string)null);
+                    b.ToTable("lessonsVideo");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Note", b =>
@@ -909,7 +912,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("CreatedTime");
 
-                    b.ToTable("notes", (string)null);
+                    b.ToTable("notes");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Parent", b =>
@@ -941,7 +944,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("CreatedTime");
 
-                    b.ToTable("parents", (string)null);
+                    b.ToTable("parents");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.QuizOption", b =>
@@ -975,7 +978,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("QuizQuestionId");
 
-                    b.ToTable("quizOptions", (string)null);
+                    b.ToTable("quizOptions");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.QuizQuestion", b =>
@@ -1012,7 +1015,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("LessonQuizId");
 
-                    b.ToTable("quizQuestions", (string)null);
+                    b.ToTable("quizQuestions");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.QuizResult", b =>
@@ -1070,7 +1073,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("LessonStudentLessonId", "LessonStudentStudentId");
 
-                    b.ToTable("quizResults", (string)null);
+                    b.ToTable("quizResults");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.RefreshToken", b =>
@@ -1116,7 +1119,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                         .IsUnique()
                         .HasFilter("[AppUserId] IS NOT NULL");
 
-                    b.ToTable("refreshTokens", (string)null);
+                    b.ToTable("refreshTokens");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Report", b =>
@@ -1170,7 +1173,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("ReportedAppUserId");
 
-                    b.ToTable("reports", (string)null);
+                    b.ToTable("reports");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.ReportOption", b =>
@@ -1204,7 +1207,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("CreatedTime");
 
-                    b.ToTable("reportOptions", (string)null);
+                    b.ToTable("reportOptions");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.RequestToRegister", b =>
@@ -1273,7 +1276,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("CreatedTime");
 
-                    b.ToTable("requestToRegister", (string)null);
+                    b.ToTable("requestToRegister");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Student", b =>
@@ -1322,7 +1325,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("students", (string)null);
+                    b.ToTable("students");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Teacher", b =>
@@ -1384,7 +1387,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("CreatedTime");
 
-                    b.ToTable("teachers", (string)null);
+                    b.ToTable("teachers");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.TeacherFacultyDegree", b =>
@@ -1419,7 +1422,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasIndex("FacultyId");
 
-                    b.ToTable("TeacherFacultyDegrees", (string)null);
+                    b.ToTable("TeacherFacultyDegrees");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
