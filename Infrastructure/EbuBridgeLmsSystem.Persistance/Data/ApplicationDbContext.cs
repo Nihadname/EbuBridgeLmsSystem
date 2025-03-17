@@ -48,6 +48,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<City> Cities { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<Language> languages { get; set; }
+        public DbSet<CourseImageOutBox> courseImageOutBoxes { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

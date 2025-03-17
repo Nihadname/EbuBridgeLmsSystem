@@ -1,19 +1,15 @@
-﻿using EbuBridgeLmsSystem.Application.Dtos.Course;
-using EbuBridgeLmsSystem.Application.Exceptions;
+﻿using EbuBridgeLmsSystem.Application.Exceptions;
+using EbuBridgeLmsSystem.Application.Helpers.Extensions;
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
+using EbuBridgeLmsSystem.Domain.Enums;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using Hangfire;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseCreate
 {
@@ -23,11 +19,12 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
         private readonly IPhotoOrVideoService _photoOrVideoService;
         private readonly IBackgroundJobClient _backgroundJobClient;
         private readonly ILogger<CourseCreateHandler> _logger;
-        public CourseCreateHandler(IUnitOfWork unitOfWork, IPhotoOrVideoService photoOrVideoService, ILogger<CourseCreateHandler> logger)
+        public CourseCreateHandler(IUnitOfWork unitOfWork, IPhotoOrVideoService photoOrVideoService, ILogger<CourseCreateHandler> logger, IBackgroundJobClient backgroundJobClient)
         {
             _unitOfWork = unitOfWork;
             _photoOrVideoService = photoOrVideoService;
             _logger = logger;
+            _backgroundJobClient = backgroundJobClient;
         }
 
         public async Task<Result<Unit>> Handle(CourseCreateCommand request, CancellationToken cancellationToken)
@@ -69,8 +66,16 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
                 };
                 await _unitOfWork.CourseRepository.Create(newCourse);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
+                var temporaryImage =  request.formFile.Save();
+                var newCourseImageOutBox = new CourseImageOutBox()
+                {
+                    CourseId=newCourse.Id,
+                    OutboxProccess= OutboxProccess.Pending,
+                    CreatedTime = DateTime.UtcNow,
+                    TemporaryImagePath = temporaryImage,
+                };
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
-                _backgroundJobClient.Enqueue(() => UploadImageToCloud(newCourse.Id, request.formFile));
+                //_backgroundJobClient.Enqueue(() => UploadImageToCloud(newCourse.Id, request.formFile));
                 return Result<Unit>.Success(Unit.Value);
             }
             catch (Exception ex)
@@ -81,23 +86,23 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
             }
         }
 
-        [AutomaticRetry(Attempts = 3)]
-        public async Task UploadImageToCloud(Guid id, IFormFile imageFile)
-        {
-            try
-            {
-                var imageUrl = await _photoOrVideoService.UploadMediaAsync(imageFile, false);
-                var existedCourse=await _unitOfWork.CourseRepository.GetEntity(s=>s.Id == id,AsnoTracking:true);
-                if (existedCourse is null)
-                    throw new CustomException(404, "course  is null");
-                existedCourse.ImageUrl = imageUrl;
-                await _unitOfWork.CourseRepository.Update(existedCourse);
-                await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error uploading course image");
-            }
-        }
+        //[AutomaticRetry(Attempts = 3)]
+        //public async Task UploadImageToCloud(Guid id, IFormFile imageFile)
+        //{
+        //    try
+        //    {
+        //        var imageUrl = await _photoOrVideoService.UploadMediaAsync(imageFile, false);
+        //        var existedCourse=await _unitOfWork.CourseRepository.GetEntity(s=>s.Id == id,AsnoTracking:true);
+        //        if (existedCourse is null)
+        //            throw new CustomException(404, "course  is null");
+        //        existedCourse.ImageUrl = imageUrl;
+        //        await _unitOfWork.CourseRepository.Update(existedCourse);
+        //        await _unitOfWork.SaveChangesAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Error uploading course image");
+        //    }
+        //}
     }
 }

@@ -8,7 +8,6 @@ using EbuBridgeLmsSystem.Persistance;
 using EbuBridgeLmsSystem.Persistance.Data;
 using EbuBridgeLmsSystem.Persistance.SeedDatas;
 using Hangfire;
-using MicroElements.OpenApi.FluentValidation;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

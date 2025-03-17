@@ -55,6 +55,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public string Salt { get; set; }
         public DateTime? ExpiredDate { get; set; }
         public string CustomerId { get; set; }
+        public bool IsSubscribed { get; set; }
 
        
     }
