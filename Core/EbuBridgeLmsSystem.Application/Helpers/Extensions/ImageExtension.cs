@@ -38,5 +38,23 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions
                 File.Delete(path);
             }
         }
+        public static string GetImageFileNameFromCourseId(Guid courseId)
+        {
+            string directoryPath = Path.Combine("wwwroot", "img"); 
+            string courseIdFileName = courseId.ToString() + Path.GetExtension("image.png"); // Assume image extension (could be dynamic)
+
+            string filePath = Path.Combine(directoryPath, courseIdFileName);
+
+            
+            if (File.Exists(filePath))
+            {
+                return courseIdFileName; 
+            }
+            else
+            {
+                throw new CustomException(404, "Image for the given courseId not found.");
+            }
+        }
+
     }
 }

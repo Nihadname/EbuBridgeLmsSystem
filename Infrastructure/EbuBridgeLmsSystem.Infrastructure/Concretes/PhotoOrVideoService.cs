@@ -100,7 +100,33 @@ namespace EbuBridgeLmsSystem.Infrastructure.Concretes
                 return result.SecureUrl.ToString();
             }
         }
+        public  string UploadMediaAsyncWithUrl(string url)
+        {
+            if (!File.Exists(url))
+            {
+                throw new FileNotFoundException("Image not found at specified path.");
+            }
+            using (var fs = new FileStream(url, FileMode.Open))
+            {
+                var uploadParams = new ImageUploadParams
+                {
+                    File = new FileDescription(Path.GetFileName(url), fs)
+                };
 
+                
+                var uploadResult = _cloudinary.Upload(uploadParams);
+
+                if (uploadResult.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                   
+                    return uploadResult.SecureUrl.ToString();
+                }
+                else
+                {
+                    throw new Exception("Error uploading image to Cloudinary.");
+                }
+            }
+        }
         private async Task<string> ExtractPublicIdFromUrl(string url)
         {
             try

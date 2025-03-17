@@ -28,7 +28,7 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
             {
                 try
                 {
-                    using (var scope = _serviceScopeFactory.CreateScope())  
+                    using (var scope = _serviceScopeFactory.CreateScope())
                     {
                         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
                         await DeleteAllSoftDeletedUsers(userManager, stoppingToken);
@@ -53,15 +53,16 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
                     _logger.LogError(ex, "An error occurred Deleting User .");
                 }
             }
-           
+
         }
         public override async Task StopAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("Deleting User is stopping.");
             await base.StopAsync(stoppingToken);
         }
-        private async Task DeleteAllSoftDeletedUsers(UserManager<AppUser> userManager,CancellationToken stoppingToken) { 
-           var allSoftDeletedUsers=await userManager.Users.Where(s=>s.IsDeleted==true&&s.DeletedTime!=null).ToListAsync();
+        private async Task DeleteAllSoftDeletedUsers(UserManager<AppUser> userManager, CancellationToken stoppingToken)
+        {
+            var allSoftDeletedUsers = await userManager.Users.Where(s => s.IsDeleted == true && s.DeletedTime != null).ToListAsync();
             var span = CollectionsMarshal.AsSpan(allSoftDeletedUsers);
             foreach (var user in allSoftDeletedUsers)
             {

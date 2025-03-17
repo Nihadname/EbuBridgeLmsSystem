@@ -8,5 +8,6 @@ namespace EbuBridgeLmsSystem.Application.Interfaces
     {
         Task<string> UploadMediaAsync(IFormFile file, bool isVideo = false);
         Task<string> DeleteMediaAsync(string mediaUrl, FileResourceType resourceType);
+        public string UploadMediaAsyncWithUrl(string url);
     }
 }
