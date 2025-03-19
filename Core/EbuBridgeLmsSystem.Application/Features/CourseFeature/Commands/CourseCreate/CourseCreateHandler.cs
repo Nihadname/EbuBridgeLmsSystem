@@ -1,16 +1,11 @@
-﻿using EbuBridgeLmsSystem.Application.Dtos.Auth;
-using EbuBridgeLmsSystem.Application.Exceptions;
-using EbuBridgeLmsSystem.Application.Helpers.Extensions;
-using EbuBridgeLmsSystem.Application.Interfaces;
+﻿using EbuBridgeLmsSystem.Application.Helpers.Extensions;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Enums;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using FluentValidation;
-using Hangfire;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

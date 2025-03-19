@@ -10,7 +10,7 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
 {
     public class UserPermanentDeleteBackgroundService : BackgroundService
     {
-        private readonly IServiceScopeFactory _serviceScopeFactory;
+         private readonly IServiceScopeFactory _serviceScopeFactory;
 
         private readonly ILogger<UserPermanentDeleteBackgroundService> _logger;
         public UserPermanentDeleteBackgroundService(ILogger<UserPermanentDeleteBackgroundService> logger, IServiceScopeFactory serviceScopeFactory)

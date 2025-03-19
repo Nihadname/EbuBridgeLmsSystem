@@ -39,7 +39,9 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
                                var result= imageService.UploadMediaAsyncWithUrl(fileName);
                                 if (result is not null)
                                 {
-                                    
+                                    existedCourseWithId.ImageUrl=result;
+                                    await unitOfWork.CourseRepository.Update(existedCourseWithId);
+                                    await unitOfWork.SaveChangesAsync();
                                     pendingOutBox.OutboxProccess = Domain.Enums.OutboxProccess.Completed;
                                     await unitOfWork.CourseImageOutBoxRepository.Update(pendingOutBox);
                                     await unitOfWork.SaveChangesAsync(stoppingToken);

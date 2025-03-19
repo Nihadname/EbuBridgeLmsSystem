@@ -2,9 +2,11 @@
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Dtos.Course;
 using EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseCreate;
+using EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.DeleteCourse;
 using FluentValidation;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
@@ -13,7 +15,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
     {
         public static void MapCourseAdminEndPointsthis (this IEndpointRouteBuilder app, string baseUrl)
         {
-            app.MapPost($"{baseUrl}/Course", async ([FromForm] CourseCreateDto courseCreateDto,IMediator mediator, IValidator<CourseCreateDto> _validator) =>
+            app.MapPost($"{baseUrl}/Course", [Authorize(Roles = "Admin")] async ([FromForm] CourseCreateDto courseCreateDto,IMediator mediator, IValidator<CourseCreateDto> _validator) =>
             {
                 var validationResult = await _validator.ValidateAsync(courseCreateDto);
                
@@ -39,7 +41,17 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
                 return result.ToApiResult();
 
             }).WithTags("Course").DisableAntiforgery();
+            app.MapDelete($"{baseUrl}/Course/Delete", [Authorize(Roles = "Admin")] async([FromForm] CourseDeleteDto courseDeleteDto, IMediator mediator) =>
+            {
+                var courseDeleteCommand = new DeleteCourseCommand()
+                {
+                    Id = courseDeleteDto.Id,
+                };
+                var result=await mediator.Send(courseDeleteCommand);
+                return result.ToApiResult();
+            });
+            
 
-        }
+                }
     }
 }
