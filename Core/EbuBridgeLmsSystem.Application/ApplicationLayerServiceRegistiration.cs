@@ -46,6 +46,7 @@ namespace EbuBridgeLmsSystem.Application
                 cfg.RegisterServicesFromAssembly(typeof(CreateAppUserAsStudentHandler).Assembly);
             });
             serviceDescriptors.AddHostedService<UserPermanentDeleteBackgroundService>();
+            serviceDescriptors.AddHostedService<CourseImageUploadBackgroundService>();
             serviceDescriptors.AddResponseCompression(opt =>
             {
                 opt.EnableForHttps = true;

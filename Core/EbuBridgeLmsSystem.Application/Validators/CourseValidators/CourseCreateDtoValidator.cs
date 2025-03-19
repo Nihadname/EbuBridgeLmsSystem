@@ -8,6 +8,7 @@ namespace EbuBridgeLmsSystem.Application.Validators.CourseValidators
         public CourseCreateDtoValidator()
         {
 
+
             RuleFor(s => s.Name).MaximumLength(160).MinimumLength(2).NotEmpty();
             RuleFor(s => s.Description).MaximumLength(250).MinimumLength(3).NotEmpty();
             RuleFor(s => s.difficultyLevel).NotNull()
@@ -18,17 +19,17 @@ namespace EbuBridgeLmsSystem.Application.Validators.CourseValidators
             RuleFor(x => x.Price)
             .GreaterThan(0).WithMessage("Salary must be a positive number.").NotEmpty();
             RuleFor(x => x.StartDate)
-          .GreaterThanOrEqualTo(DateTime.UtcNow)
-          .WithMessage("StartDate must be in the future.")
-          .When(x => x.StartDate.HasValue);
-            RuleFor(x => x.EndDate)
-                .GreaterThanOrEqualTo(DateTime.UtcNow)
-                .WithMessage("StartDate must be in the future.")
-                .When(x => x.StartDate.HasValue);
+               .NotNull()
+         .GreaterThanOrEqualTo(DateTime.UtcNow)
+         .WithMessage("StartDate must be in the future.");
 
+            RuleFor(x => x.EndDate)
+                 .NotNull()
+                .GreaterThanOrEqualTo(DateTime.UtcNow)
+                .WithMessage("StartDate must be in the future.");
             RuleFor(x => x)
-           .Must(x => !x.StartDate.HasValue || !x.EndDate.HasValue || x.StartDate <= x.EndDate)
-           .WithMessage("StartDate must be earlier than or equal to EndDate.");
+           .Must(x => x.StartDate <= x.EndDate);
+            RuleFor(x => x.formFile).NotNull();
             RuleFor(s => s).Custom((c, context) =>
             {
                 long maxSizeInBytes = 15 * 1024 * 1024;

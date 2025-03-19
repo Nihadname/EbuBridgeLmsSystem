@@ -4,11 +4,6 @@ using EbuBridgeLmsSystem.Domain.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.BackgroundServices
 {
@@ -46,12 +41,14 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
                                 {
                                     
                                     pendingOutBox.OutboxProccess = Domain.Enums.OutboxProccess.Completed;
+                                    await unitOfWork.CourseImageOutBoxRepository.Update(pendingOutBox);
                                     await unitOfWork.SaveChangesAsync(stoppingToken);
                                    fileName.DeleteFile();
                                 }
                                 else
                                 {
                                     pendingOutBox.OutboxProccess=Domain.Enums.OutboxProccess.Failed;
+                                    await unitOfWork.CourseImageOutBoxRepository.Update(pendingOutBox);
                                     await unitOfWork.SaveChangesAsync(stoppingToken);   
                                     _logger.LogError($"Failed to upload image for course {existedCourseWithId.Id}");
                                 }
@@ -65,7 +62,7 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
                         _logger.LogError($"Error processing outbox for course: {ex.Message}", ex);
                     }
                 }
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
             }
             }
           

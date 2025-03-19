@@ -1,10 +1,12 @@
-﻿using EbuBridgeLmsSystem.Application.Exceptions;
+﻿using EbuBridgeLmsSystem.Application.Dtos.Auth;
+using EbuBridgeLmsSystem.Application.Exceptions;
 using EbuBridgeLmsSystem.Application.Helpers.Extensions;
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Enums;
 using EbuBridgeLmsSystem.Domain.Repositories;
+using FluentValidation;
 using Hangfire;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
@@ -19,18 +21,25 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
         private readonly IUnitOfWork _unitOfWork;
 
         private readonly ILogger<CourseCreateHandler> _logger;
-        public CourseCreateHandler(IUnitOfWork unitOfWork, ILogger<CourseCreateHandler> logger)
+        private readonly IValidator<CourseCreateCommand> _validator;
+        public CourseCreateHandler(IUnitOfWork unitOfWork, ILogger<CourseCreateHandler> logger, IValidator<CourseCreateCommand> validator)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
-
+            _validator = validator;
         }
 
         public async Task<Result<Unit>> Handle(CourseCreateCommand request, CancellationToken cancellationToken)
         {
+
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
+                var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+                if (!validationResult.IsValid)
+                {
+                    return Result<Unit>.Failure(null, validationResult.Errors.Select(e => e.ErrorMessage).ToList(), ErrorType.ValidationError);
+                }
                 var isDuplicateNameCourse = await _unitOfWork.CourseRepository.GetEntity(c => EF.Functions.Like(c.Name, $"%{request.Name}%"), AsnoTracking: true, isIgnoredDeleteBehaviour: true);
                 if (isDuplicateNameCourse is not null)
                 {

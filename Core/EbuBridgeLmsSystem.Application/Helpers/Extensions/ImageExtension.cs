@@ -41,14 +41,14 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions
         public static string GetImageFileNameFromCourseId(Guid courseId)
         {
             string directoryPath = Path.Combine("wwwroot", "img"); 
-            string courseIdFileName = courseId.ToString() + Path.GetExtension("image.png"); // Assume image extension (could be dynamic)
+            string courseIdFileName = courseId.ToString() + Path.GetExtension("image.png");
 
             string filePath = Path.Combine(directoryPath, courseIdFileName);
 
             
             if (File.Exists(filePath))
             {
-                return courseIdFileName; 
+                return filePath; 
             }
             else
             {
