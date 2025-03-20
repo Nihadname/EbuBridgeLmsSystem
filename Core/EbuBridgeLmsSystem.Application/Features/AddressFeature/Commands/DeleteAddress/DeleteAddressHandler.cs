@@ -16,7 +16,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Delete
 
         public async Task<Result<Unit>> Handle(DeleteAddressCommand request, CancellationToken cancellationToken)
         {
-            var existedAddress = await _unitOfWork.AddressRepository.GetEntity(s => s.Id == request.Id);
+            var existedAddress = await _unitOfWork.AddressRepository.GetEntity(s => s.Id == request.Id && !s.IsDeleted);
             if (existedAddress is null)
             {
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);

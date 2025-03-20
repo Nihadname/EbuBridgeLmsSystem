@@ -36,7 +36,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Revoke
             var currentUser= await _appUserResolver.GetCurrentUserAsync();
             if (currentUser == null)
                 return Result<Unit>.Failure(Error.Unauthorized,null, ErrorType.UnauthorizedError);
-            var existedRefreshToken=await _unitOfWork.RefreshTokenRepository.GetEntity(s=>s.Token==refreshToken&&s.IsActive);
+            var existedRefreshToken=await _unitOfWork.RefreshTokenRepository.GetEntity(s=>s.Token==refreshToken&&s.IsActive&&!s.IsDeleted);
             if (existedRefreshToken == null)
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
             if (existedRefreshToken.AppUser == null || existedRefreshToken.AppUser.Id != currentUser.Id)

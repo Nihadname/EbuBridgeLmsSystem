@@ -35,7 +35,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
                 {
                     return Result<Unit>.Failure(null, validationResult.Errors.Select(e => e.ErrorMessage).ToList(), ErrorType.ValidationError);
                 }
-                var isDuplicateNameCourse = await _unitOfWork.CourseRepository.GetEntity(c => EF.Functions.Like(c.Name, $"%{request.Name}%"), AsnoTracking: true, isIgnoredDeleteBehaviour: true);
+                var isDuplicateNameCourse = await _unitOfWork.CourseRepository.GetEntity(c => EF.Functions.Like(c.Name, $"%{request.Name}%"), AsnoTracking: true);
                 if (isDuplicateNameCourse is not null)
                 {
                     if (isDuplicateNameCourse.IsDeleted)

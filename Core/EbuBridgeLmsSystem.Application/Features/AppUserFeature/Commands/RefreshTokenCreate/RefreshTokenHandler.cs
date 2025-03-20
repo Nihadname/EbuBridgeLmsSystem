@@ -41,7 +41,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Refres
 
                 if (string.IsNullOrEmpty(refreshToken))
                     return Result<AuthRefreshTokenResponseDto>.Failure(Error.ValidationFailed, null, ErrorType.UnauthorizedError);
-                var existedRefreshToken = await _unitOfWork.RefreshTokenRepository.GetEntity(s => s.Token == refreshToken && s.IsActive, includes: new Func<IQueryable<RefreshToken>, IQueryable<RefreshToken>>[]
+                var existedRefreshToken = await _unitOfWork.RefreshTokenRepository.GetEntity(s => s.Token == refreshToken && s.IsActive&&!s.IsDeleted, includes: new Func<IQueryable<RefreshToken>, IQueryable<RefreshToken>>[]
             {
                 query => query.Include(s=>s.AppUser)
             });

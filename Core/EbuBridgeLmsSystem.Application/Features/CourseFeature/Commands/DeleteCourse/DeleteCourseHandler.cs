@@ -16,7 +16,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.DeleteC
 
         public async Task<Result<Unit>> Handle(DeleteCourseCommand request, CancellationToken cancellationToken)
         {
-            var existedCourse = await _unitOfWork.CourseRepository.GetEntity(s=>s.Id==request.Id,AsnoTracking:true);
+            var existedCourse = await _unitOfWork.CourseRepository.GetEntity(s=>s.Id==request.Id&&!s.IsDeleted,AsnoTracking:true);
             if(existedCourse is null)
                 return Result<Unit>.Failure(Error.NotFound,null,ErrorType.NotFoundError);
             await _unitOfWork.CourseRepository.Delete(existedCourse);

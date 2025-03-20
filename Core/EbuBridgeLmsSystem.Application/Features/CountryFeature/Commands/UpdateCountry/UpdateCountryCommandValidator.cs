@@ -7,7 +7,8 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.Update
         public UpdateCountryCommandValidator()
         {
             RuleFor(s => s.Name).NotEmpty();
-            RuleFor(s=>s.Id).NotEmpty();
+            RuleFor(s => s.Id).Must(x => x != Guid.Empty).NotNull()
+        .NotEmpty();
         }
     }
 }

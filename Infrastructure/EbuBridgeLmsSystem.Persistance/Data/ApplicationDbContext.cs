@@ -54,17 +54,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             //.IgnoreQueryFilters() ne vaxtsa bu disable olmalidiki is deleted true ve false olanlari gotursun
             base.OnModelCreating(builder);
-            foreach (var entityType in builder.Model.GetEntityTypes())
-            {
-                if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType)) 
-                {
-                    var parameter = Expression.Parameter(entityType.ClrType, "e");
-                    var property = Expression.Property(parameter, nameof(BaseEntity.IsDeleted));
-                    var condition = Expression.Lambda(Expression.Equal(property, Expression.Constant(false)), parameter);
-
-                    builder.Entity(entityType.ClrType).HasQueryFilter(condition);
-                }
-            }
             builder.Ignore<IdentityUserClaim<Guid>>();
             builder.Ignore<IdentityRoleClaim<Guid>>();
             builder.Ignore<IdentityUserToken<Guid>>();

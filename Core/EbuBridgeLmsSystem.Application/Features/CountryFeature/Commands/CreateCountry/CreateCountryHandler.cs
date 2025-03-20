@@ -20,7 +20,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.Create
 
         public async Task<Result<Unit>> Handle(CreateCountryCommand request, CancellationToken cancellationToken)
         {
-            var existedCountry = await _unitOfWork.CountryRepository.GetEntity(s => s.Name.ToLower() == request.Name.ToLower(),AsnoTracking:true,isIgnoredDeleteBehaviour:true);
+            var existedCountry = await _unitOfWork.CountryRepository.GetEntity(s => s.Name.ToLower() == request.Name.ToLower(),AsnoTracking:true);
             if (existedCountry is not null)
             {
                 if (existedCountry.IsDeleted)

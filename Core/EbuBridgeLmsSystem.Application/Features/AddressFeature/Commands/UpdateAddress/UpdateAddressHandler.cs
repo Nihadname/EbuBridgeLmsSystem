@@ -26,7 +26,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Update
 
         public async Task<Result<Unit>> Handle(UpdateAddressCommand request, CancellationToken cancellationToken)
         {
-            var existedAddress=await _unitOfWork.AddressRepository.GetEntity(s=>s.Id==request.Id,AsnoTracking:true);
+            var existedAddress=await _unitOfWork.AddressRepository.GetEntity(s=>s.Id==request.Id&&!s.IsDeleted,AsnoTracking:true);
             if (existedAddress is null)
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
             bool hasChanges = false;
@@ -71,11 +71,11 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Update
             {
                 return Result<Unit>.Failure(Error.Custom(null, "CityId is required when CountryId is provided."), null, ErrorType.BusinessLogicError);
             }
-            if (hasCountry && !await _unitOfWork.CountryRepository.isExists(s => s.Id == request.CountryId))
+            if (hasCountry && !await _unitOfWork.CountryRepository.isExists(s => s.Id == request.CountryId && !s.IsDeleted))
             {
                 return Result<Unit>.Failure(Error.Custom("location", "country doesnt exist in the database or either your value is invalid or city is in diffrent  country"), null, ErrorType.NotFoundError);
             }
-            if (hasCity && !await _unitOfWork.CityRepository.isExists(s => s.Id == request.CityId.Value && s.CountryId == (hasCountry ? request.CountryId.Value : existingAddress.CountryId)))
+            if (hasCity && !await _unitOfWork.CityRepository.isExists(s => s.Id == request.CityId.Value && s.CountryId == (hasCountry ? request.CountryId.Value : existingAddress.CountryId) && !s.IsDeleted))
             {
                 return Result<Unit>.Failure(Error.Custom("location", "city doesnt exist in the database or either your value is invalid or city is in diffrent  country"), null, ErrorType.NotFoundError);
             }

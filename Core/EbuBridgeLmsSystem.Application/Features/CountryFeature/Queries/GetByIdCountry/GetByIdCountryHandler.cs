@@ -19,7 +19,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetById
 
         public async Task<Result<CountryReturnQuery>> Handle(GetByIdCountryQuery request, CancellationToken cancellationToken)
         {
-            var existedCountry=await _unitOfWork.CountryRepository.GetEntity(s=>s.Id==request.Id);
+            var existedCountry=await _unitOfWork.CountryRepository.GetEntity(s=>s.Id==request.Id&!s.IsDeleted);
             if (existedCountry == null)
                 return Result<CountryReturnQuery>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
             var mappedCountry=_mapper.Map<CountryReturnQuery>(existedCountry);

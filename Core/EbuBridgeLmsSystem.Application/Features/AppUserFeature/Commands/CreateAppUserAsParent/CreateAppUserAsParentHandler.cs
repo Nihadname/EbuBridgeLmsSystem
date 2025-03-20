@@ -64,7 +64,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
                     {
                         if (await _unitOfWork.StudentRepository.isExists(s => s.Id == student) is not false)
                         {
-                            var ExistedStudent = await _unitOfWork.StudentRepository.GetEntity(s => s.Id == student);
+                            var ExistedStudent = await _unitOfWork.StudentRepository.GetEntity(s => s.Id == student && !s.IsDeleted);
                             Students.Add(ExistedStudent);
                         }
                         else

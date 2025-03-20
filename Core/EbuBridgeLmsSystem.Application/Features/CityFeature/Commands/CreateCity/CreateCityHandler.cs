@@ -19,7 +19,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.CreateCit
 
         public async Task<Result<Unit>> Handle(CreateCityCommand request, CancellationToken cancellationToken)
         {
-            var existedCity= await _unitOfWork.CityRepository.GetEntity(s => s.Name.ToLower() == request.Name.ToLower(),AsnoTracking:true,isIgnoredDeleteBehaviour:true);
+            var existedCity= await _unitOfWork.CityRepository.GetEntity(s => s.Name.ToLower() == request.Name.ToLower(),AsnoTracking:true);
             if (existedCity is not null)
             {
                 if (existedCity.IsDeleted)
@@ -30,7 +30,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.CreateCit
                 }
                 return Result<Unit>.Failure(Error.DuplicateConflict, null, ErrorType.ValidationError);
             }
-            var isExistedCountry=await _unitOfWork.CountryRepository.isExists(s=>s.Id==request.CountryId);
+            var isExistedCountry=await _unitOfWork.CountryRepository.isExists(s=>s.Id==request.CountryId&&!s.IsDeleted);
             if (!isExistedCountry)
                 return Result<Unit>.Failure(Error.Custom("country","invalid id"), null, ErrorType.ValidationError);
             var mappedCity = _mapper.Map<City>(request);

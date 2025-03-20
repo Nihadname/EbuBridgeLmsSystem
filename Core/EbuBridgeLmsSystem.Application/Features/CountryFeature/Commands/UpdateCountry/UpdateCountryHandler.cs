@@ -3,6 +3,7 @@ using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.UpdateCountry
 {
@@ -18,11 +19,11 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.Update
 
         public async Task<Result<Unit>> Handle(UpdateCountryCommand request, CancellationToken cancellationToken)
         {
-            var existedCountry=await _unitOfWork.CountryRepository.GetEntity(s=>s.Id==request.Id);
+            var existedCountry=await _unitOfWork.CountryRepository.GetEntity(s=>s.Id==request.Id&!s.IsDeleted);
             if (existedCountry is null)
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
-            var isCountryExist = await _unitOfWork.CountryRepository.isExists(s => s.Name.Equals(request.Name,StringComparison.OrdinalIgnoreCase)&&s.Id!=existedCountry.Id,AsNoTracking:true,isIgnoredDeleteBehaviour:true);
-            if (isCountryExist)
+            var existedCountryWithThisName = await _unitOfWork.CountryRepository.GetEntity(s => EF.Functions.Like(s.Name, $"%{request.Name}%") && s.Id!=existedCountry.Id,AsnoTracking:true);
+            if (existedCountryWithThisName is not null)
                 return Result<Unit>.Failure(Error.DuplicateConflict, null, ErrorType.ValidationError);
             _mapper.Map(request, existedCountry);
            await  _unitOfWork.SaveChangesAsync(cancellationToken);

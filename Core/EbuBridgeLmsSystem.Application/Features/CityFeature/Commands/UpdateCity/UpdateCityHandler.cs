@@ -9,23 +9,22 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.UpdateCit
     public class UpdateCityHandler : IRequestHandler<UpdateCityCommand, Result<Unit>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-        public UpdateCityHandler(IUnitOfWork unitOfWork, IMapper mapper)
+      
+        public UpdateCityHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
 
         public async Task<Result<Unit>> Handle(UpdateCityCommand request, CancellationToken cancellationToken)
         {
-            var existedCity=await _unitOfWork.CityRepository.GetEntity(s=>s.Id==request.Id,true);
+            var existedCity=await _unitOfWork.CityRepository.GetEntity(s=>s.Id==request.Id&&!s.IsDeleted,true);
             if (existedCity is null)
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
             bool hasChanges = false;
             if (!string.IsNullOrWhiteSpace(request.Name))
             {
                  var existedCityWithThisName = await _unitOfWork.CityRepository.GetEntity(
-                      s => s.Name.Equals(request.Name, StringComparison.OrdinalIgnoreCase)&& s.Id!=existedCity.Id, AsnoTracking: true, isIgnoredDeleteBehaviour: true);
+                      s => s.Name.Equals(request.Name, StringComparison.OrdinalIgnoreCase)&& s.Id!=existedCity.Id, AsnoTracking: true);
                 if (existedCityWithThisName is not null)
                 {
                     if (existedCityWithThisName.IsDeleted)
@@ -39,7 +38,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.UpdateCit
             }
             if (request.CountryId.HasValue && request.CountryId.Value != Guid.Empty)
             {
-                var isExistedCountry = await _unitOfWork.CountryRepository.isExists(s => s.Id == request.CountryId);
+                var isExistedCountry = await _unitOfWork.CountryRepository.isExists(s => s.Id == request.CountryId && !s.IsDeleted);
                 if (!isExistedCountry)
                 {
                     return Result<Unit>.Failure(Error.Custom("country", "invalid id"), null, ErrorType.NotFoundError);

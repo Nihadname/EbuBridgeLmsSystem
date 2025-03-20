@@ -16,7 +16,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.DeleteCit
 
         public async Task<Result<Unit>> Handle(DeleteCityCommand request, CancellationToken cancellationToken)
         {
-            var existedCity=await _unitOfWork.CityRepository.GetEntity(s=>s.Id==request.Id);
+            var existedCity=await _unitOfWork.CityRepository.GetEntity(s=>s.Id==request.Id&&!s.IsDeleted);
             if(existedCity is null)
             {
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);

@@ -41,7 +41,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AuditLogFeature.Query.GetAllLo
                             (string.IsNullOrWhiteSpace(action) ||
                              EF.Functions.Like(s.Action, $"%{action}%")) &&
                             (string.IsNullOrWhiteSpace(userId) ||
-                             EF.Functions.Like(s.UserId, $"%{userId}%")), true);
+                             EF.Functions.Like(s.UserId, $"%{userId}%"))&&!s.IsDeleted, true);
             
             auditLogQuery = auditLogQuery.OrderByDescending(s => s.CreatedTime);
             var paginationResult = await _unitOfWork.AuditLogRepository.GetPaginatedResultAsync(request.Cursor, request.Limit);

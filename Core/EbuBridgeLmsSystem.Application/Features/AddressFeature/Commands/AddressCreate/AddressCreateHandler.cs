@@ -46,10 +46,10 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Addres
                 {
                     await _unitOfWork.AddressRepository.Delete(currentUserInSystem.Address);
                 }
-                var isExistedCountry = await _unitOfWork.CountryRepository.isExists(s => s.Id == request.CountryId);
+                var isExistedCountry = await _unitOfWork.CountryRepository.isExists(s => s.Id == request.CountryId && !s.IsDeleted);
                 if(!isExistedCountry)
                     return Result<Unit>.Failure(Error.Custom("location", "country doesnt exist in the database or either your value is invalid"), null, ErrorType.NotFoundError);
-                var isExistedCity = await _unitOfWork.CityRepository.isExists(s => s.Id == request.CityId&&s.CountryId==request.CountryId);
+                var isExistedCity = await _unitOfWork.CityRepository.isExists(s => s.Id == request.CityId&&s.CountryId==request.CountryId&&!s.IsDeleted);
                 if (!isExistedCity)
                     return Result<Unit>.Failure(Error.Custom("location", "city doesnt exist in the database or either your value is invalid or city is in diffrent  country"), null, ErrorType.NotFoundError);
                 var isLocationExist = await AddressHelper.IsLocationExist(request);

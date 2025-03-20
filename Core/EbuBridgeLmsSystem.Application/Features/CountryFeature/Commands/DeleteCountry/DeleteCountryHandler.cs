@@ -21,7 +21,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.Delete
 
         public async Task<Result<Unit>> Handle(DeleteCountryCommand request, CancellationToken cancellationToken)
         {
-            var existedCountry = await _unitOfWork.CountryRepository.GetEntity(s => s.Id == request.Id);
+            var existedCountry = await _unitOfWork.CountryRepository.GetEntity(s => s.Id == request.Id&!s.IsDeleted);
             if (existedCountry is null)
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
             if(existedCountry.IsDeleted is true)

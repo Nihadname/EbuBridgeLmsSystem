@@ -67,7 +67,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
             var SecretKey = _jwtSettings.secretKey;
             var Issuer = _jwtSettings.Issuer;
             var refreshTokenGenerated = _tokenService.GenerateRefreshToken();
-            var existingToken = await _unitOfWork.RefreshTokenRepository.GetEntity(s => s.AppUserId == user.Id);
+            var existingToken = await _unitOfWork.RefreshTokenRepository.GetEntity(s => s.AppUserId == user.Id&&!s.IsDeleted);
             if (existingToken != null)
             {
                 existingToken.Token = refreshTokenGenerated;

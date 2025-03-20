@@ -32,7 +32,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Queries.GetAllA
                 var cachedResult = JsonSerializer.Deserialize<PaginatedResult<AddressListItemQuery>>(cachedData);
                 return Result<PaginatedResult<AddressListItemQuery>>.Success(cachedResult);
             }
-            var addressQuery = await _unitOfWork.AddressRepository.GetQuery(null, true, includes: new Func<IQueryable<Address>, IQueryable<Address>>[] {
+            var addressQuery = await _unitOfWork.AddressRepository.GetQuery(s=>!s.IsDeleted, true, includes: new Func<IQueryable<Address>, IQueryable<Address>>[] {
                  query => query
             .Include(p => p.Country).Include(s=>s.City).Include(s=>s.AppUser) });
             if (!string.IsNullOrWhiteSpace(request.searchQuery))
