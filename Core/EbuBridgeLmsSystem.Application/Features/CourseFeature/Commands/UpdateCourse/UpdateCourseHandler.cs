@@ -16,26 +16,24 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.UpdateC
         {
             var existingCourseResult=await GetExistingCourse(request.CourseId);
             if (!existingCourseResult.IsSuccess)
-                return Result<Unit>.Failure(existingCourseResult.Error, existingCourseResult.Errors, (ErrorType)existingCourseResult.ErrorType);
-            bool hasChanges=false;
+                return Result<Unit>.FailureResult<Course, Unit>(existingCourseResult);
+            bool hasChanges =false;
             var checkNameChangeResult = await UpdateCourseName(request.Name, existingCourseResult.Data);
             if (!checkNameChangeResult.IsSuccess)
-                return Result<Unit>.Failure(checkNameChangeResult.Error, checkNameChangeResult.Errors, (ErrorType)checkNameChangeResult.ErrorType);
-          var checkCourseDetailsResult = UpdateCourseDetails(request.Description, request.Requirements, existingCourseResult.Data);
-            await UpdateCourseImage(request,existingCourseResult.Data);
+                return Result<Unit>.FailureResult<bool, Unit>(checkNameChangeResult);
             var checkIfDifficultyLevelChangedResult = UpdateCourseDifficultyLevel(request, existingCourseResult.Data);
             if (!checkIfDifficultyLevelChangedResult.IsSuccess)
-                return Result<Unit>.Failure(checkIfDifficultyLevelChangedResult.Error, checkIfDifficultyLevelChangedResult.Errors, (ErrorType)checkIfDifficultyLevelChangedResult.ErrorType);
+               return Result<Unit>.FailureResult<bool,Unit>(checkIfDifficultyLevelChangedResult);
             var checkIfCourseLanguageChangedResult= await UpdateCourseLanguage(request, existingCourseResult.Data);
                if(!checkIfCourseLanguageChangedResult.IsSuccess)
-                return Result<Unit>.Failure(checkIfCourseLanguageChangedResult.Error, checkIfCourseLanguageChangedResult.Errors, (ErrorType)checkIfCourseLanguageChangedResult.ErrorType);
+                return Result<Unit>.FailureResult<bool, Unit>(checkIfCourseLanguageChangedResult);
             var IsDurationChanged=UpdateCourseDuration(request, existingCourseResult.Data);
             var isPriceChanged = UpdateCoursePrice(request, existingCourseResult.Data);
             var isDatesChanged= UpdateCourseDates(request, existingCourseResult.Data);
-
-
+            var isCourseDetailsResult = UpdateCourseDetails(request.Description, request.Requirements, existingCourseResult.Data);
+            await UpdateCourseImage(request, existingCourseResult.Data);
             hasChanges |= checkNameChangeResult.Data;
-            hasChanges |= checkCourseDetailsResult;
+            hasChanges |= isCourseDetailsResult;
             hasChanges |= checkIfCourseLanguageChangedResult.Data;
             hasChanges |= checkIfDifficultyLevelChangedResult.Data;
             hasChanges |= isPriceChanged;
@@ -153,6 +151,11 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.UpdateC
             }
 
             return hasChanges;
+        }
+        private Result<T> Failure<T>(Result<T> result)
+        {
+         return   Result<T>.Failure(result.Error, result.Errors, (ErrorType)result.ErrorType);
+
         }
     }
 }
