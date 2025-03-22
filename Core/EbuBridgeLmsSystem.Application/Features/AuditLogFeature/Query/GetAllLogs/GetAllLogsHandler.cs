@@ -56,7 +56,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AuditLogFeature.Query.GetAllLo
                     Timestamp = auditLog.Timestamp,
                     Changes = auditLog.Changes,
                     ClientIpAddress = auditLog.ClientIpAddress
-                }).ToList(),
+                }).AsEnumerable(),
                 NextCursor = paginationResult.NextCursor
             };
                 var cacheOptions = new DistributedCacheEntryOptions

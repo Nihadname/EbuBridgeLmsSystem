@@ -52,7 +52,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllC
                     Name = country.Name,
                     IsDeleted = country.IsDeleted,
                     citiesinCountryListItemCommands=_mapper.Map<List<CitiesinCountryListItemCommand>>(country.Cities),
-                }).ToList(),
+                }).AsEnumerable(),
                 NextCursor = paginationResult.NextCursor
             };
             var cacheOptions = new DistributedCacheEntryOptions

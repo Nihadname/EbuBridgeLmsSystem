@@ -56,7 +56,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Queries.GetAllA
                     Region = Address.Region,
                     Street = Address.Street,
                     AppUserInAdress = _mapper.Map<AppUserInAdress>(Address.AppUser)
-                }).ToList(),
+                }).AsEnumerable(),
                 NextCursor = paginationResult.NextCursor
             };
             var cacheOptions = new DistributedCacheEntryOptions

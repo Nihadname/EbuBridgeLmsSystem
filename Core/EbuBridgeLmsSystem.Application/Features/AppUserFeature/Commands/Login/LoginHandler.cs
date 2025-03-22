@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Stripe.Forwarding;
 
 namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
 {
@@ -22,7 +23,8 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
         private readonly ITokenService _tokenService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _contextAccessor;
-        public LoginHandler(IOptions<JwtSettings> jwtSettings, UserManager<AppUser> userManager, IEmailService emailService, ITokenService tokenService, IUnitOfWork unitOfWork, IHttpContextAccessor contextAccessor)
+        private readonly SignInManager<AppUser> _signInManager;
+        public LoginHandler(IOptions<JwtSettings> jwtSettings, UserManager<AppUser> userManager, IEmailService emailService, ITokenService tokenService, IUnitOfWork unitOfWork, IHttpContextAccessor contextAccessor, SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
             _emailService = emailService;
@@ -30,6 +32,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
             _tokenService = tokenService;
             _unitOfWork = unitOfWork;
             _contextAccessor = contextAccessor;
+            _signInManager = signInManager;
         }
 
         public async Task<Result<AuthResponseDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -147,6 +150,20 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
                 }
             }
             return Result<string>.Success(null);
+        }
+        private async Task<Result<bool>> CheckLockOutStatus(AppUser user,string password)
+        {
+            SignInResult signInResult = await _signInManager.CheckPasswordSignInAsync(user, password, true);
+
+            if (signInResult.IsLockedOut)
+            {
+                TimeSpan? timeSpan = user.LockoutEnd - DateTime.UtcNow;
+                if (timeSpan is not null)
+                    return Result<bool>.Failure(Error.Custom(null,$"Şifrenizi 5 defa yanlış girdiğiniz için kullanıcı {Math.Ceiling(timeSpan.Value.TotalMinutes)} dakika süreyle bloke edilmiştir"),null,ErrorType.BusinessLogicError);
+                else
+                    return Result<bool>.Failure(Error.Custom(null, $"Şifrenizi 5 defa yanlış girdiğiniz için kullanıcı {Math.Ceiling(timeSpan.Value.TotalMinutes)} dakika süreyle bloke edilmiştir"), null, ErrorType.BusinessLogicError);
+            }
+            return Result<bool>.Success(true);
         }
     }
 

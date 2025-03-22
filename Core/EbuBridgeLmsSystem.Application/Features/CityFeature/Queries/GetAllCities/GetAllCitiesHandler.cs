@@ -49,7 +49,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCiti
                     Id = city.Id,
                     Name = city.Name,
                     countryInCityListItemQuery=_mapper.Map<CountryInCityListItemQuery>(city.Country)
-                }).ToList(),
+                }).AsEnumerable(),
                 NextCursor = paginationResult.NextCursor
             };
             var cacheOptions = new DistributedCacheEntryOptions

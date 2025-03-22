@@ -152,10 +152,5 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.UpdateC
 
             return hasChanges;
         }
-        private Result<T> Failure<T>(Result<T> result)
-        {
-         return   Result<T>.Failure(result.Error, result.Errors, (ErrorType)result.ErrorType);
-
-        }
     }
 }

@@ -1,10 +1,5 @@
 ﻿using EbuBridgeLmsSystem.Domain.Entities.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace LearningManagementSystem.Core.Entities.Common
 {

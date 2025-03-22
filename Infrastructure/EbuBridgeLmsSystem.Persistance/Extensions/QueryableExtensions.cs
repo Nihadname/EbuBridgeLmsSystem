@@ -69,7 +69,7 @@ namespace EbuBridgeLmsSystem.Persistance.Extensions
 
             return new PaginatedResult<T>
             {
-                Data = items,
+                Data = (IEnumerable<T>)items,
                 NextCursor = nextCursor
             };
         }
