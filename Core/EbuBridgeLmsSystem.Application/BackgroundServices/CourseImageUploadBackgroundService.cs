@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EbuBridgeLmsSystem.Application.BackgroundServices
 {
-    public class CourseImageUploadBackgroundService : BackgroundService
+    public sealed class CourseImageUploadBackgroundService : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<CourseImageUploadBackgroundService> _logger;

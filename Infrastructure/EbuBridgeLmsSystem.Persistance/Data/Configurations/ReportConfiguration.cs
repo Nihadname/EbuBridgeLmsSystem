@@ -8,6 +8,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Report> builder)
         {
+
             builder.Property(s => s.IsDeleted).HasDefaultValue(false);
             builder.Property(s => s.IsVerified).HasDefaultValue(false);
             builder.Property(s => s.CreatedTime).HasDefaultValueSql("GETDATE()");

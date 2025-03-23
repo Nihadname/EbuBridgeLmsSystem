@@ -10,6 +10,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public Student Student { get; set; }
         public bool Attended { get; set; }
         public ICollection<QuizResult> QuizResults { get; set; }
+        public ICollection<LessonUnitAttendance> lessonUnitAttendances { get; set; }
 
     }
 }

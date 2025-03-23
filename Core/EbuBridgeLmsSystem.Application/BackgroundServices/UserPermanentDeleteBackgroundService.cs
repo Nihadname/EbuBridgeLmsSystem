@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace EbuBridgeLmsSystem.Application.BackgroundServices
 {
-    public class UserPermanentDeleteBackgroundService : BackgroundService
+    public sealed class UserPermanentDeleteBackgroundService : BackgroundService
     {
          private readonly IServiceScopeFactory _serviceScopeFactory;
 

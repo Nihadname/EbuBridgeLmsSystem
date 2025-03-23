@@ -2,7 +2,7 @@
 
 namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllCountries
 {
-    public class GetAllCountriesQueryValidator : AbstractValidator<GetAllCountriesQuery>
+    public sealed class GetAllCountriesQueryValidator : AbstractValidator<GetAllCountriesQuery>
     {
         public GetAllCountriesQueryValidator()
         {

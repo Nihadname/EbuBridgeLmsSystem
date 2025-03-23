@@ -1,7 +1,4 @@
-﻿using EbuBridgeLmsSystem.Application.Features.AuditLogFeature.Query.GetAllLogs;
-using EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCities;
-using EbuBridgeLmsSystem.Application.Features.CountryFeature.CommanCommands;
-using EbuBridgeLmsSystem.Domain.Entities;
+﻿using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
@@ -9,12 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCourse.GetAllCourseQuery
 {
@@ -22,12 +14,10 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCo
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDistributedCache _cache;
-        private readonly ILogger<GetAllCourseHandler> _logger;
-        public GetAllCourseHandler(IUnitOfWork unitOfWork, IDistributedCache cache, ILogger<GetAllCourseHandler> logger)
+        public GetAllCourseHandler(IUnitOfWork unitOfWork, IDistributedCache cache)
         {
             _unitOfWork = unitOfWork;
             _cache = cache;
-            _logger = logger;
         }
 
         public async Task<Result<PaginatedResult<CourseListItemDto>>> Handle(GetAllCourseRequestQuery request, CancellationToken cancellationToken)

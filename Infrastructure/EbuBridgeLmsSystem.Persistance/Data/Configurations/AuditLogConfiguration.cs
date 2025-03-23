@@ -13,6 +13,10 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<AuditLog> builder)
         {
+            builder.Property(s => s.IsDeleted).HasDefaultValue(false);
+            builder.Property(s => s.CreatedTime).HasDefaultValueSql("GETDATE()");
+            builder.HasIndex(s => s.CreatedTime);
+            builder.Property(s => s.UpdatedTime).HasDefaultValueSql("GETDATE()");
             builder.HasIndex(s => s.TableName);
             builder.HasIndex(s => s.Action);
             builder.HasIndex(s=>s.UserId);

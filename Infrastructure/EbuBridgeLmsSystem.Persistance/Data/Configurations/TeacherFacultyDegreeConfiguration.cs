@@ -13,6 +13,10 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<TeacherFacultyDegree> builder)
         {
+            builder.Property(s => s.IsDeleted).HasDefaultValue(false);
+            builder.Property(s => s.CreatedTime).HasDefaultValueSql("GETDATE()");
+            builder.HasIndex(s => s.CreatedTime);
+            builder.Property(s => s.UpdatedTime).HasDefaultValueSql("GETDATE()");
             builder.HasKey(x => x.Id);
             builder.HasKey(tfd => new { tfd.TeacherId, tfd.FacultyId, tfd.DegreeId });
             builder.HasOne(s => s.Teacher)

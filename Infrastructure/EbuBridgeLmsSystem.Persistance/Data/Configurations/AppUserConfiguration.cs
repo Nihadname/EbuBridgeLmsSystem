@@ -13,6 +13,10 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<AppUser> builder)
         {
+            builder.Property(s => s.IsDeleted).HasDefaultValue(false);
+            builder.Property(s => s.CreatedTime).HasDefaultValueSql("GETDATE()");
+            builder.HasIndex(s => s.CreatedTime);
+            builder.Property(s => s.UpdatedTime).HasDefaultValueSql("GETDATE()");
             builder.Property(s => s.UserName).HasMaxLength(100).IsRequired(true);
             builder.Property(s => s.Email).IsRequired()
                        .HasMaxLength(255)

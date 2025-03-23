@@ -11,7 +11,7 @@ using System.Text.Json;
 
 namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllCountries
 {
-    public class GetAllCountriesHandler : IRequestHandler<GetAllCountriesQuery, Result<PaginatedResult<CountryListItemQuery>>>
+    public sealed class GetAllCountriesHandler : IRequestHandler<GetAllCountriesQuery, Result<PaginatedResult<CountryListItemQuery>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
