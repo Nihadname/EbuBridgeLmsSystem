@@ -20,7 +20,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetByIdCit
         }
         public async Task<Result<CityReturnQuery>> Handle(GetByIdCityQuery request, CancellationToken cancellationToken)
         {
-            var existedCity = await _unitOfWork.CityRepository.GetEntity(s => s.Id == request.Id && !s.IsDeleted, includes: new Func<IQueryable<City>, IQueryable<City>>[] {
+            var existedCity = await _unitOfWork.CityRepository.GetEntity(s => s.Id == request.Id && !s.IsDeleted,true, includes: new Func<IQueryable<City>, IQueryable<City>>[] {
                  query => query
             .Include(p => p.Country) });
             if (existedCity == null)

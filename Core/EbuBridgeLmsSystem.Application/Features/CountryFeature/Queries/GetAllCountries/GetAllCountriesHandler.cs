@@ -32,7 +32,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllC
                 var cachedResult = JsonSerializer.Deserialize<PaginatedResult<CountryListItemQuery>>(cachedData);
                 return Result<PaginatedResult<CountryListItemQuery>>.Success(cachedResult);
             }
-            var countryQuery =await _unitOfWork.CountryRepository.GetQuery(s=>!s.IsDeleted,true,true, includes: new Func<IQueryable<Country>, IQueryable<Country>>[] {
+            var countryQuery =await _unitOfWork.CountryRepository.GetQuery(s=>!s.IsDeleted,true, includes: new Func<IQueryable<Country>, IQueryable<Country>>[] {
                  query => query
             .Include(p => p.Cities) }
            );

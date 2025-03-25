@@ -1,14 +1,13 @@
-﻿using EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCourse.GetAllCourseQuery;
-using EbuBridgeLmsSystem.Domain.Entities;
+﻿using EbuBridgeLmsSystem.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetByIdCourse
+namespace EbuBridgeLmsSystem.Domain.DomainDtos.Course
 {
-    public sealed record CourseReturnDto
+    public sealed class CourseDomainReturnDto
     {
         public Guid Id { get; set; }
         public string ImageUrl { get; set; }
@@ -24,6 +23,11 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetByIdC
         public LanguageInCourseListItemDto Language { get; set; }
         public List<LessonInCourseReturnDto> lessonInCourses { get; set; }
     }
+    public sealed record LanguageInCourseListItemDto
+    {
+        public Guid Id { get; init; }
+        public string Name { get; init; }
+    }
     public sealed record LessonInCourseReturnDto
     {
         public string Title { get; set; }
@@ -37,6 +41,5 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetByIdC
         public string GradingPolicy { get; set; }
         public string MeetingLink { get; set; }
     }
-
 
 }

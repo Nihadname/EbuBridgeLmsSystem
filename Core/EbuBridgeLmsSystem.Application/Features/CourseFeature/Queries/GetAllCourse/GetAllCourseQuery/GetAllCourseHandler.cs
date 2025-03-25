@@ -29,14 +29,14 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCo
                 var cachedResult = JsonSerializer.Deserialize<PaginatedResult<CourseListItemDto>>(cacheData);
                 return Result<PaginatedResult<CourseListItemDto>>.Success(cachedResult);
             }
-            var countryQuery = await _unitOfWork.CourseRepository.GetQuery(s => !s.IsDeleted, true, true, includes: new Func<IQueryable<Course>, IQueryable<Course>>[] {
+            var courseQuery = await _unitOfWork.CourseRepository.GetQuery(s => !s.IsDeleted, true, includes: new Func<IQueryable<Course>, IQueryable<Course>>[] {
                  query => query
             .Include(p => p.Language) });
             if (!string.IsNullOrWhiteSpace(request.SearchQuery))
             {
-                countryQuery = countryQuery.Where(s => s.Name.ToLower().Contains(request.SearchQuery));
+                courseQuery = courseQuery.Where(s => s.Name.ToLower().Contains(request.SearchQuery));
             }
-            countryQuery = countryQuery.OrderByDescending(s => s.CreatedTime);
+            courseQuery = courseQuery.OrderByDescending(s => s.CreatedTime);
             var paginationResult = await _unitOfWork.CourseRepository.GetPaginatedResultAsync(request.Cursor, request.Limit, includes: new Func<IQueryable<Course>, IQueryable<Course>>[] {
                  query => query
             .Include(p => p.Language) });
