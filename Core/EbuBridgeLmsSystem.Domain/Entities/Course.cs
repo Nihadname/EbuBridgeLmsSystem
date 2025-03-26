@@ -19,6 +19,8 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public Guid LanguageId { get; set; }
         public Language Language { get; set; }
         public int MaxAmountOfPeople { get; set; }
+        public DateTime EnrollmentEndDeadline { get; set; }
+        public DateTime EnrollmentStartDate { get; set; }
     }
     public enum DifficultyLevel
     {
