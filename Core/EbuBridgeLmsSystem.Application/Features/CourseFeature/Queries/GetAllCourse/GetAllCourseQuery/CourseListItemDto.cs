@@ -9,18 +9,18 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCo
 {
     public class CourseListItemDto
     {
-        public Guid Id { get; set; }
-        public string ImageUrl { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public DifficultyLevel difficultyLevel { get; set; }
-        public ICollection<Lesson> lessons { get; set; }
-        public int DurationInHours { get; set; }
-        public string Requirements { get; set; }
-        public decimal Price { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public LanguageInCourseListItemDto Language { get; set; }
+        public Guid Id { get; init; }
+        public string ImageUrl { get; init; }
+        public string Name { get; init; }
+        public string Description { get; init; }
+        public DifficultyLevel difficultyLevel { get; init; }
+        public ICollection<Lesson> lessons { get; init; }
+        public int DurationInHours { get; init; }
+        public string Requirements { get; init; }
+        public decimal Price { get; init; }
+        public DateTime? StartDate { get; init; }
+        public DateTime? EndDate { get; init; }
+        public LanguageInCourseListItemDto Language { get; init; }
     }
     public sealed record LanguageInCourseListItemDto
     {

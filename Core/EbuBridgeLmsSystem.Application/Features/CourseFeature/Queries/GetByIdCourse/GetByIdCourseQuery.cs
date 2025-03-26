@@ -11,6 +11,6 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetByIdC
 {
     public sealed record GetByIdCourseQuery:IRequest<Result<CourseReturnDto>>
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; init; }
     }
 }

@@ -25,6 +25,7 @@ namespace EbuBridgeLmsSystem.Domain.Repositories
         public IAuditLogRepository AuditLogRepository { get; }
         public ILanguageRepository LanguageRepository { get; }
         public ICourseImageOutBoxRepository CourseImageOutBoxRepository { get; }
+        public ICourseStudentRepository CourseStudentRepository { get; }
 
     }
 }

@@ -10,31 +10,31 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetByIdC
 {
     public sealed record CourseReturnDto
     {
-        public Guid Id { get; set; }
-        public string ImageUrl { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public DifficultyLevel difficultyLevel { get; set; }
-        public int DurationInHours { get; set; }
-        public string Requirements { get; set; }
-        public decimal Price { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public LanguageInCourseListItemDto Language { get; set; }
-        public List<LessonInCourseReturnDto> lessonInCourses { get; set; }
+        public Guid Id { get; init; }
+        public string ImageUrl { get; init; }
+        public string Name { get; init; }
+        public string Description { get; init; }
+        public DifficultyLevel difficultyLevel { get; init; }
+        public int DurationInHours { get; init; }
+        public string Requirements { get; init; }
+        public decimal Price { get; init; }
+        public DateTime? StartDate { get; init; }
+        public DateTime? EndDate { get; init; }
+        public LanguageInCourseListItemDto Language { get; init; }
+        public List<LessonInCourseReturnDto> lessonInCourses { get; init; }
     }
     public sealed record LessonInCourseReturnDto
     {
-        public string Title { get; set; }
-        public DateTime ScheduledDate { get; set; }
-        public TimeSpan Duration { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
-        public LessonStatus Status { get; set; }
-        public string Description { get; set; }
-        public LessonType LessonType { get; set; }
-        public string GradingPolicy { get; set; }
-        public string MeetingLink { get; set; }
+        public string Title { get; init; }
+        public DateTime ScheduledDate { get; init; }
+        public TimeSpan Duration { get; init; }
+        public TimeSpan StartTime { get; init; }
+        public TimeSpan EndTime { get; init; }
+        public LessonStatus Status { get; init; }
+        public string Description { get; init; }
+        public LessonType LessonType { get; init; }
+        public string GradingPolicy { get; init; }
+        public string MeetingLink { get; init; }
     }
 
 

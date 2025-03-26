@@ -49,7 +49,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
                 };
                 var result=await mediator.Send(courseDeleteCommand);
                 return result.ToApiResult();
-            });
+            }).WithTags("Course");
             
 
                 }

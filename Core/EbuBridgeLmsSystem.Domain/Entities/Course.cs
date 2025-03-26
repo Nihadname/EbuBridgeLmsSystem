@@ -18,6 +18,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public ICollection<CourseStudent> courseStudents { get; set; }
         public Guid LanguageId { get; set; }
         public Language Language { get; set; }
+        public int MaxAmountOfPeople { get; set; }
     }
     public enum DifficultyLevel
     {
