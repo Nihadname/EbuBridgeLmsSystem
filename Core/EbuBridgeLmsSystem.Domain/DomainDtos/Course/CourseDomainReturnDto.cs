@@ -14,7 +14,6 @@ namespace EbuBridgeLmsSystem.Domain.DomainDtos.Course
         public string Name { get; set; }
         public string Description { get; set; }
         public DifficultyLevel difficultyLevel { get; set; }
-        public ICollection<Lesson> lessons { get; set; }
         public int DurationInHours { get; set; }
         public string Requirements { get; set; }
         public decimal Price { get; set; }

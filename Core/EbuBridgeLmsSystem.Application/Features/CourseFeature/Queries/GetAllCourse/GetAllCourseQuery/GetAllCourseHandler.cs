@@ -24,10 +24,13 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCo
         {
             var cacheKey = $"courses_{request.Cursor}_{request.Limit}_{request.SearchQuery?.ToLower()}";
             var cacheData =await _cache.GetStringAsync(cacheKey,cancellationToken);
-            if (!string.IsNullOrWhiteSpace(cacheKey))
+            if (!string.IsNullOrWhiteSpace(cacheData))
             {
                 var cachedResult = JsonSerializer.Deserialize<PaginatedResult<CourseListItemDto>>(cacheData);
-                return Result<PaginatedResult<CourseListItemDto>>.Success(cachedResult);
+                if (cachedResult != null)
+                {
+                    return Result<PaginatedResult<CourseListItemDto>>.Success(cachedResult);
+                }
             }
             var courseQuery = await _unitOfWork.CourseRepository.GetQuery(s => !s.IsDeleted, true, includes: new Func<IQueryable<Course>, IQueryable<Course>>[] {
                  query => query

@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EbuBridgeLmsSystem.Api.App.Admin
 {
-    [Route("api/[controller]")]
+    [Area("Admin")]
+    [Route("api/[area]/[controller]")]
     [ApiController]
     public class AuditLogController : ControllerBase
     {

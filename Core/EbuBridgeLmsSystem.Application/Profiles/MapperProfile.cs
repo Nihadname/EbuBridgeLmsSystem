@@ -85,9 +85,6 @@ namespace EbuBridgeLmsSystem.Application.Profiles
             CreateMap<Course, CourseListItemDto>();
             CreateMap<AddressCreateDto, Address>();
             CreateMap<AppUserInAdress, AppUser>();
-            CreateMap<Lesson, LessonInCourseReturnDto>();
-            CreateMap<Course, CourseReturnDto>()
-                .ForMember(s => s.Lessons, map => map.MapFrom(d => d.lessons));
             CreateMap<FeeCreateDto, Fee>();
             CreateMap< AppUser, AppUserInFee>();
             CreateMap<Fee, FeeListItemDto>();

@@ -28,7 +28,10 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCiti
             if (!string.IsNullOrWhiteSpace(cachedData))
             {
                 var cachedResult = JsonSerializer.Deserialize<PaginatedResult<CityListItemQuery>>(cachedData);
-                return Result<PaginatedResult<CityListItemQuery>>.Success(cachedResult);
+                if (cachedResult != null)
+                {
+                    return Result<PaginatedResult<CityListItemQuery>>.Success(cachedResult);
+                }
             }
             var cityQuery = await _unitOfWork.CityRepository.GetQuery(s=>!s.IsDeleted, true, includes: new Func<IQueryable<City>, IQueryable<City>>[] {
                  query => query

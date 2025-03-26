@@ -11,6 +11,7 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
 {
     [Area("Admin")]
     [Route("api/[area]/[controller]")]
+    [ApiController]
     public class AddressController : ControllerBase
     {
         private readonly IMediator _mediator;

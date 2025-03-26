@@ -13,6 +13,7 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
 {
     [Area("Admin")]
     [Route("api/[area]/[controller]")]
+    [ApiController]
     public class CityController : ControllerBase
     {
         private readonly IMediator _mediator;

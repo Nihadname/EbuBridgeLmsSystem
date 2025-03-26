@@ -39,7 +39,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetByIdC
                 },
                 Price=existedCourse.Price,
                 Requirements=existedCourse.Requirements,
-                lessonInCourses=existedCourse.lessons.Select(p=>new LessonInCourseReturnDto() {
+                lessonInCourses=existedCourse.lessonInCourses.Select(p=>new LessonInCourseReturnDto() {
                     Title=p.Title,
                     EndTime=p.EndTime,
                     Description=p.Description,
@@ -50,7 +50,9 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetByIdC
                     MeetingLink=p.MeetingLink,
                     StartTime=p.StartTime,
                     Status=p.Status,
-                }).ToList()
+                }).ToList(),
+                
+
             };
             return Result<CourseReturnDto>.Success(mappedResult);
         }

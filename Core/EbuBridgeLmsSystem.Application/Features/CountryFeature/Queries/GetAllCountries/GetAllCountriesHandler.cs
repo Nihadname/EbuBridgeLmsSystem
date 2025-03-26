@@ -26,11 +26,14 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllC
         public async Task<Result<PaginatedResult<CountryListItemQuery>>> Handle(GetAllCountriesQuery request, CancellationToken cancellationToken)
         {
             string cacheKey = $"countries_{request.Cursor}_{request.Limit}_{request.searchQuery?.ToLower()}";
-            var cachedData = await _cache.GetStringAsync(cacheKey);
+            var cachedData = await _cache.GetStringAsync(cacheKey,cancellationToken);
             if (!string.IsNullOrEmpty(cachedData))
             {
                 var cachedResult = JsonSerializer.Deserialize<PaginatedResult<CountryListItemQuery>>(cachedData);
-                return Result<PaginatedResult<CountryListItemQuery>>.Success(cachedResult);
+                if (cachedResult != null)
+                {
+                    return Result<PaginatedResult<CountryListItemQuery>>.Success(cachedResult);
+                }
             }
             var countryQuery =await _unitOfWork.CountryRepository.GetQuery(s=>!s.IsDeleted,true, includes: new Func<IQueryable<Country>, IQueryable<Country>>[] {
                  query => query
