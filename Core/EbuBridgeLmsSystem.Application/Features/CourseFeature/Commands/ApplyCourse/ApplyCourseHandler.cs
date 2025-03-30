@@ -1,10 +1,13 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities;
+﻿using EbuBridgeLmsSystem.Application.Dtos.Auth;
+using EbuBridgeLmsSystem.Application.Exceptions;
+using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,37 +20,52 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.ApplyCo
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<AppUser> _userManager;
+        private readonly ILogger<ApplyCourseHandler> _logger;
 
-        public ApplyCourseHandler(IUnitOfWork unitOfWork, UserManager<AppUser> userManager)
+        public ApplyCourseHandler(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, ILogger<ApplyCourseHandler> logger)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
+            _logger = logger;
         }
 
         public async Task<Result<Unit>> Handle(ApplyCourseCommand request, CancellationToken cancellationToken)
         {
-          var existedStudent=await _unitOfWork.StudentRepository.GetEntity(s=>s.Id==request.StudentId,true, includes: new Func<IQueryable<Student>, IQueryable<Student>>[] {
+            await _unitOfWork.BeginTransactionAsync(cancellationToken);
+            try
+            {
+                var existedStudent = await _unitOfWork.StudentRepository.GetEntity(s => s.Id == request.StudentId, true, includes: new Func<IQueryable<Student>, IQueryable<Student>>[] {
                  query => query
             .Include(p => p.courseStudents) });
-            if(existedStudent is null)
-                return Result<Unit>.Failure(Error.Custom("student","student doesnt exist"),null,ErrorType.NotFoundError);
-            var isExistedCourse=await _unitOfWork.CourseRepository.isExists(s=>s.Id == request.CourseId);
-            if(!isExistedCourse)
-                return Result<Unit>.Failure(Error.Custom("course", "course doesnt exist"), null, ErrorType.NotFoundError);
-            var allCoursesStudentIsIn = existedStudent.courseStudents;
-            var isAlreadyApplied = allCoursesStudentIsIn.Any(course => course.CourseId == request.CourseId);
-            if (isAlreadyApplied)
-                return Result<Unit>.Failure(Error.Custom("course", "you already applied for this course"), null, ErrorType.BusinessLogicError);
-
-            var newCourseStudent = new CourseStudent()
+                if (existedStudent is null)
+                    return Result<Unit>.Failure(Error.Custom("student", "student doesnt exist"), null, ErrorType.NotFoundError);
+                var existedCourse = await _unitOfWork.CourseRepository.GetEntity(s => s.Id == request.CourseId);
+                if (existedCourse is null)
+                    return Result<Unit>.Failure(Error.Custom("course", "course doesnt exist"), null, ErrorType.NotFoundError);
+                var allCoursesStudentIsIn = existedStudent.courseStudents;
+                var isAlreadyApplied = allCoursesStudentIsIn.Any(course => course.CourseId == request.CourseId);
+                if (isAlreadyApplied)
+                    return Result<Unit>.Failure(Error.Custom("course", "you already applied for this course"), null, ErrorType.BusinessLogicError);
+                if((await _unitOfWork.CourseStudentRepository.GetAll(s=>s.CourseId == request.CourseId)).Count >= existedCourse.MaxAmountOfPeople)
+                {
+                    throw new CustomException(400, "there is already enough students");
+                }
+                var newCourseStudent = new CourseStudent()
+                {
+                    EnrolledDate = DateTime.UtcNow,
+                    CourseId = request.CourseId,
+                    StudentId = request.StudentId
+                };
+                await _unitOfWork.CourseStudentRepository.Create(newCourseStudent);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+                await _unitOfWork.CommitTransactionAsync(cancellationToken);
+                return Result<Unit>.Success(Unit.Value);
+            }catch(Exception ex)
             {
-                EnrolledDate = DateTime.UtcNow,
-                CourseId = request.CourseId,
-                StudentId = request.StudentId
-            };
-            await _unitOfWork.CourseStudentRepository.Create(newCourseStudent);
-            await _unitOfWork.SaveChangesAsync();
-            return Result<Unit>.Success(Unit.Value);
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                _logger.LogError(ex, "Error occurred during user registration");
+                return Result<Unit>.Failure(Error.InternalServerError, null, ErrorType.SystemError);
+            }
 
         }
     }

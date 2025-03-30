@@ -16,6 +16,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
         public Guid LanguageId {  get; init; } 
         public string Requirements { get; init; }
         public decimal Price { get; init; }
+        public int MaxAmountOfPeople { get; init; }
         public DateTime? StartDate { get; init; }
         public DateTime? EndDate { get; init; }
     }

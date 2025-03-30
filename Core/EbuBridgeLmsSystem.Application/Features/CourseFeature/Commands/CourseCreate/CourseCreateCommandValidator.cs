@@ -27,6 +27,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
             RuleFor(x => x)
            .Must(x => x.StartDate <= x.EndDate);
             RuleFor(x => x.formFile).NotNull();   
+            RuleFor(s=>s.MaxAmountOfPeople).NotNull();
             RuleFor(s => s).Custom((c, context) =>
             {
                 long maxSizeInBytes = 15 * 1024 * 1024;

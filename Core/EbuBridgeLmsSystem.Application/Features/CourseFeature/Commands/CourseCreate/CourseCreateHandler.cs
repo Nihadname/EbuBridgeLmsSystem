@@ -67,6 +67,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
                     ImageUrl = null,
                     StartDate = request.StartDate ?? null,
                     EndDate = request.EndDate ?? null,
+                    MaxAmountOfPeople = request.MaxAmountOfPeople,
                 };
                 await _unitOfWork.CourseRepository.Create(newCourse);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
