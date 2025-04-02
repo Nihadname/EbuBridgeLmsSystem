@@ -33,7 +33,7 @@ namespace EbuBridgeLmsSystem.Infrastructure.Concretes
                 throw new CustomException(500, "Image", "Image delete error");
             return "deleted";
         }
-        public async Task<string> UploadMediaAsync(IFormFile file, bool isVideo = false)
+        public async Task<string> UploadMediaAsync(IFormFile file, bool isVideo = false,bool isExtraAsset=false)
         {
             if (file == null || file.Length == 0)
             {
@@ -47,7 +47,14 @@ namespace EbuBridgeLmsSystem.Infrastructure.Concretes
             }
             else
             {
-                uploadResult = new ImageUploadResult();
+                if (isExtraAsset)
+                {
+                    uploadResult = new RawUploadResult();
+                }
+                else
+                {
+                    uploadResult = new ImageUploadResult();
+                }
             }
 
             using (var stream = file.OpenReadStream())
@@ -67,14 +74,26 @@ namespace EbuBridgeLmsSystem.Infrastructure.Concretes
                 }
                 else
                 {
-                    var uploadParams = new ImageUploadParams()
+                    if (isExtraAsset)
                     {
-                        File = new FileDescription(file.FileName, stream),
-                        Transformation = new Transformation().Width(500).Height(500).Crop("fill").Quality("auto").FetchFormat("auto") // Adjust for videos
-                    };
+                        var uploadParams = new RawUploadParams()
+                        {
+                            File = new FileDescription(file.FileName, stream)
+
+                        };
+
+                    }
+                    else
+                    {
+                        var uploadParams = new ImageUploadParams()
+                        {
+                            File = new FileDescription(file.FileName, stream),
+                            Transformation = new Transformation().Width(500).Height(500).Crop("fill").Quality("auto").FetchFormat("auto") // Adjust for videos
+                        };
 
 
-                    uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                        uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                    }
 
 
                 }
