@@ -26,7 +26,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonMaterialFeature.Commands
         public async Task<Result<Unit>> Handle(LessonMaterialCreateCommand request, CancellationToken cancellationToken)
         {
             var validationResult=_validator.Validate(request);
-            if (validationResult.IsValid)
+            if (!validationResult.IsValid)
             {
              return   Result<Unit>.Failure(null, validationResult.Errors.Select(s=>s.ErrorMessage).ToList(), ErrorType.ValidationError);
             }
@@ -37,36 +37,46 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonMaterialFeature.Commands
                  .isExists(s => s.Title.ToLower() == request.Title.ToLower() && s.LessonId == request.LessonId&&!s.IsDeleted);
             if (isExistedLessonMaterialInTheSameLesson)
                 return Result<Unit>.Failure(Error.Custom("LessonMaterial", "LessonMaterial with this title already exists in this lesson"), null, ErrorType.BusinessLogicError);
-            var uploadResult=await UploadLessonMaterialAsset(request);
-            if (!uploadResult.IsSuccess)
-            {
-                Result<Unit>.Failure(uploadResult.Error, uploadResult.Errors, (ErrorType)uploadResult.ErrorType);
-            }
             var newLessonMaterial = new LessonMaterial()
             {
                 LessonId = request.LessonId,
-                Url = uploadResult.Data,
+                Url = null,
                 Title = request.Title,
             };
             await _unitOfWork.LessonMaterialRepository.Create(newLessonMaterial);
             await _unitOfWork.SaveChangesAsync();
+            var backgroundJobId = _backgroundJobClient.Enqueue(() => UploadLessonMaterialAsset(request,newLessonMaterial.Id));
             return Result<Unit>.Success(Unit.Value);
         }
         [AutomaticRetry(Attempts = 3)]
-        private async Task<Result<string>> UploadLessonMaterialAsset(LessonMaterialCreateCommand request)
+        private async Task<Result<string>> UploadLessonMaterialAsset(LessonMaterialCreateCommand request,Guid id)
         {
             try
             {
+                if(id== Guid.Empty)
+                    return Result<string>.Failure(Error.ValidationFailed, null, ErrorType.ValidationError);
                 var contentType = request.File.ContentType.ToLower();
                 var extension = Path.GetExtension(request.File.FileName).ToLower();
                 var imageExtension = extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".gif" || extension == ".webp" || extension == ".svg";
-                if (contentType.StartsWith("image/")&&imageExtension)
+                string resultUrl;
+                if (contentType.StartsWith("image/") && imageExtension)
                 {
-                   var resultImage= await _photoOrVideoService.UploadMediaAsync(request.File);
-                    return Result<string>.Success(resultImage);
+                    resultUrl = await _photoOrVideoService.UploadMediaAsync(request.File);
                 }
-                var resultAsset=await _photoOrVideoService.UploadMediaAsync(request.File, false, true);
-                return Result<string>.Success(resultAsset);
+                else
+                {
+                    resultUrl = await _photoOrVideoService.UploadMediaAsync(request.File, false, true);
+                }
+
+
+                var existedLessonMaterial=await _unitOfWork.LessonMaterialRepository.GetEntity(s=>s.Id == id&&!s.IsDeleted);
+                if (existedLessonMaterial == null)
+                {
+                    return Result<string>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
+                }
+                existedLessonMaterial.Url = resultUrl;
+                await _unitOfWork.SaveChangesAsync();
+                return Result<string>.Success(resultUrl);
             }
             catch (Exception ex)
             {
