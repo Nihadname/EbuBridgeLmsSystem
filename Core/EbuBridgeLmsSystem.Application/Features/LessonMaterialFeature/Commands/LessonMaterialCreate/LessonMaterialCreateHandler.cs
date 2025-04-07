@@ -39,17 +39,26 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonMaterialFeature.Commands
                  .isExists(s => s.Title.ToLower() == request.Title.ToLower() && s.LessonId == request.LessonId&&!s.IsDeleted);
             if (isExistedLessonMaterialInTheSameLesson)
                 return Result<Unit>.Failure(Error.Custom("LessonMaterial", "LessonMaterial with this title already exists in this lesson"), null, ErrorType.BusinessLogicError);
-            var newLessonMaterial = new LessonMaterial()
+            try
             {
-                LessonId = request.LessonId,
-                Url = null,
-                Title = request.Title,
-            };
-            await _unitOfWork.LessonMaterialRepository.Create(newLessonMaterial);
-            await _unitOfWork.SaveChangesAsync();
-            var fileBytes = await request.File.GetFileBytesAsync();
-            var backgroundJobId = _backgroundJobClient.Enqueue(() => UploadLessonMaterialAsset(fileBytes,request.File.Name,request.File.ContentType,newLessonMaterial.Id));
-            return Result<Unit>.Success(Unit.Value);
+                var newLessonMaterial = new LessonMaterial()
+                {
+                    LessonId = request.LessonId,
+                    Url = null,
+                    Title = request.Title,
+                };
+                await _unitOfWork.LessonMaterialRepository.Create(newLessonMaterial);
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.CommitTransactionAsync();
+                var fileBytes = await request.File.GetFileBytesAsync();
+                var backgroundJobId = _backgroundJobClient.Enqueue(() => UploadLessonMaterialAsset(fileBytes, request.File.Name, request.File.ContentType, newLessonMaterial.Id));
+                return Result<Unit>.Success(Unit.Value);
+            }
+            catch
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                throw;
+            }
         }
         [AutomaticRetry(Attempts = 3)]
         private async Task<Result<string>> UploadLessonMaterialAsset(byte[] fileBytes,string fileName, string contentType,Guid id)

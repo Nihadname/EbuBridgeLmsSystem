@@ -3,9 +3,9 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace EbuBridgeLmsSystem.Application.Features.LessonVideoFeature.Commands.LessonVideoFeatureCreate
 {
-    public sealed class LessonVideoFeatureCreateCommandValidator : AbstractValidator<LessonVideoFeatureCreateCommand>
+    public sealed class LessonVideoCreateCommandValidator : AbstractValidator<LessonVideoCreateCommand>
     {
-        public LessonVideoFeatureCreateCommandValidator()
+        public LessonVideoCreateCommandValidator()
         {
             RuleFor(s => s.Title).NotEmpty().WithMessage("Title is required")
                 .MinimumLength(2).WithMessage("Title must be at least 2 characters")
