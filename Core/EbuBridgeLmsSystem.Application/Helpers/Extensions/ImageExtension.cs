@@ -62,5 +62,14 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions
             await file.CopyToAsync(memoryStream);
             return memoryStream.ToArray();
         }
+        public static async Task<string> SaveToTempLocation(IFormFile file)
+        {
+            var tempFilePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + Path.GetExtension(file.FileName));
+            using (var stream = new FileStream(tempFilePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            return tempFilePath;
+        }
     }
 }

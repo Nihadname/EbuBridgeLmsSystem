@@ -8,6 +8,7 @@ using FluentValidation;
 using Hangfire;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,10 +42,11 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonVideoFeature.Commands.Le
             var isExistedLesson = await _unitOfWork.LessonRepository.isExists(s => s.Id == request.LessonId && !s.IsDeleted);
             if (!isExistedLesson)
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
-            var isExistedLessonMaterialInTheSameLesson = await _unitOfWork.LessonMaterialRepository
+            var isExistedLessonMaterialInTheSameLesson = await _unitOfWork.LessonVideoRepository
                  .isExists(s => s.Title.ToLower() == request.Title.ToLower() && s.LessonId == request.LessonId && !s.IsDeleted);
             if (isExistedLessonMaterialInTheSameLesson)
                 return Result<Unit>.Failure(Error.Custom("LessonMaterial", "LessonMaterial with this title already exists in this lesson"), null, ErrorType.BusinessLogicError);
+            await _unitOfWork.BeginTransactionAsync();
             try
             {
                 var newLessonVideo = new LessonVideo()
@@ -56,8 +58,8 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonVideoFeature.Commands.Le
                 await _unitOfWork.LessonVideoRepository.Create(newLessonVideo);
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync();
-                var fileBytes = await request.File.GetFileBytesAsync();
-                var backgroundJobId = _backgroundJobClient.Enqueue(() => UploadLessonMaterialAsset(fileBytes, request.File.Name, request.File.ContentType, newLessonMaterial.Id));
+                var tempFilePath = await ImageExtension.SaveToTempLocation(request.File);
+                var backgroundJobId = _backgroundJobClient.Enqueue(() => UploadLessonMaterialAsset(tempFilePath, request.File.Name, request.File.ContentType, newLessonVideo.Id));
                 return Result<Unit>.Success(Unit.Value);
             }
             catch
@@ -66,6 +68,53 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonVideoFeature.Commands.Le
                 throw;
             }
  
+        }
+        [AutomaticRetry(Attempts = 3)]
+        private async Task<Result<string>> UploadLessonMaterialAsset(string tempFilePath, string fileName, string contentType, Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                    return Result<string>.Failure(Error.ValidationFailed, null, ErrorType.ValidationError);
+                string resultUrl;
+                using (var fileStream = new FileStream(tempFilePath, FileMode.Open))
+                {
+                    var formFile = new FormFile(fileStream, 0, fileStream.Length, "file", fileName)
+                    {
+                        Headers = new HeaderDictionary(),
+                        ContentType = contentType
+                    };
+
+                    resultUrl = await _photoOrVideoService.UploadMediaAsync(formFile, true);
+                }
+                if (File.Exists(tempFilePath))
+                    File.Delete(tempFilePath);
+                await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    var existedLessonMaterial = await _unitOfWork.LessonMaterialRepository.GetEntity(s => s.Id == id && !s.IsDeleted);
+                    if (existedLessonMaterial == null)
+                    {
+                        return Result<string>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
+                    }
+                    existedLessonMaterial.Url = resultUrl;
+                    await _unitOfWork.SaveChangesAsync();
+                    await _unitOfWork.CommitTransactionAsync();
+                }
+                catch
+                {
+                    await _unitOfWork.RollbackTransactionAsync();
+                    throw;
+                }
+                return Result<string>.Success(resultUrl);
+            }
+            catch (Exception ex)
+            {
+                return Result<string>.Failure(Error.Custom(null, $"Error uploading file: {ex.Message}"), null, ErrorType.SystemError);
+
+            }
+
+
         }
     }
 }
