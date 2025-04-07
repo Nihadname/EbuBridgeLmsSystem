@@ -44,6 +44,7 @@ if (app.Environment.IsDevelopment())
 app.MapAuthAdminEndpoints(baseAdminUrl);
 app.MapCourseAdminEndPointsthis(baseAdminUrl);
 app.MapCityAdminEndPoints(baseAdminUrl);
+app.MapLessonMaterialEndPoints(baseAdminUrl);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseHangfireDashboard();

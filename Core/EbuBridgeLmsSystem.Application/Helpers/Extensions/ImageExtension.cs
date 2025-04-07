@@ -56,5 +56,11 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions
             }
         }
 
+        public static async Task<byte[]> GetFileBytesAsync(this IFormFile file)
+        {
+            using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+            return memoryStream.ToArray();
+        }
     }
 }

@@ -4,8 +4,8 @@ namespace EbuBridgeLmsSystem.Application.Dtos.LessonMaterial
 {
     public sealed record LessonMaterialCreateDto
     {
-        public string Title { get; set; }
-        public FormFile File { get; set; }
-        public Guid LessonId { get; set; }
+        public string Title { get; init; }
+        public FormFile File { get; init; }
+        public Guid LessonId { get; init; }
     }
 }

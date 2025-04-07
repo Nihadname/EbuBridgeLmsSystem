@@ -1,4 +1,5 @@
-﻿using EbuBridgeLmsSystem.Application.Interfaces;
+﻿using EbuBridgeLmsSystem.Application.Helpers.Extensions;
+using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
@@ -6,6 +7,7 @@ using FluentValidation;
 using Hangfire;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace EbuBridgeLmsSystem.Application.Features.LessonMaterialFeature.Commands.LessonMaterialCreate
 {
@@ -45,37 +47,52 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonMaterialFeature.Commands
             };
             await _unitOfWork.LessonMaterialRepository.Create(newLessonMaterial);
             await _unitOfWork.SaveChangesAsync();
-            var backgroundJobId = _backgroundJobClient.Enqueue(() => UploadLessonMaterialAsset(request,newLessonMaterial.Id));
+            var fileBytes = await request.File.GetFileBytesAsync();
+            var backgroundJobId = _backgroundJobClient.Enqueue(() => UploadLessonMaterialAsset(fileBytes,request.File.Name,request.File.ContentType,newLessonMaterial.Id));
             return Result<Unit>.Success(Unit.Value);
         }
         [AutomaticRetry(Attempts = 3)]
-        private async Task<Result<string>> UploadLessonMaterialAsset(LessonMaterialCreateCommand request,Guid id)
+        private async Task<Result<string>> UploadLessonMaterialAsset(byte[] fileBytes,string fileName, string contentType,Guid id)
         {
             try
             {
                 if(id== Guid.Empty)
                     return Result<string>.Failure(Error.ValidationFailed, null, ErrorType.ValidationError);
-                var contentType = request.File.ContentType.ToLower();
-                var extension = Path.GetExtension(request.File.FileName).ToLower();
+                using var memoryStream = new MemoryStream(fileBytes);
+                var tempFile = new FormFile(memoryStream, 0, fileBytes.Length, "file", fileName)
+                {
+                    Headers = new HeaderDictionary(),
+                    ContentType = contentType
+                };
+                var extension = Path.GetExtension(fileName).ToLower();
                 var imageExtension = extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".gif" || extension == ".webp" || extension == ".svg";
                 string resultUrl;
                 if (contentType.StartsWith("image/") && imageExtension)
                 {
-                    resultUrl = await _photoOrVideoService.UploadMediaAsync(request.File);
+                    resultUrl = await _photoOrVideoService.UploadMediaAsync(tempFile);
                 }
                 else
                 {
-                    resultUrl = await _photoOrVideoService.UploadMediaAsync(request.File, false, true);
+                    resultUrl = await _photoOrVideoService.UploadMediaAsync(tempFile, false, true);
                 }
 
-
-                var existedLessonMaterial=await _unitOfWork.LessonMaterialRepository.GetEntity(s=>s.Id == id&&!s.IsDeleted);
-                if (existedLessonMaterial == null)
+                await _unitOfWork.BeginTransactionAsync();
+                try
                 {
-                    return Result<string>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
+                    var existedLessonMaterial = await _unitOfWork.LessonMaterialRepository.GetEntity(s => s.Id == id && !s.IsDeleted);
+                    if (existedLessonMaterial == null)
+                    {
+                        return Result<string>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
+                    }
+                    existedLessonMaterial.Url = resultUrl;
+                    await _unitOfWork.SaveChangesAsync();
+                    await _unitOfWork.CommitTransactionAsync();
                 }
-                existedLessonMaterial.Url = resultUrl;
-                await _unitOfWork.SaveChangesAsync();
+                catch
+                {
+                    await _unitOfWork.RollbackTransactionAsync();
+                    throw;
+                }
                 return Result<string>.Success(resultUrl);
             }
             catch (Exception ex)
