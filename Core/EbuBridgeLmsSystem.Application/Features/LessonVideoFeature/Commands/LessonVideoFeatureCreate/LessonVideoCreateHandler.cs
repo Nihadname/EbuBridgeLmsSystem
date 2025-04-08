@@ -1,5 +1,4 @@
-﻿using EbuBridgeLmsSystem.Application.Features.LessonMaterialFeature.Commands.LessonMaterialCreate;
-using EbuBridgeLmsSystem.Application.Helpers.Extensions;
+﻿using EbuBridgeLmsSystem.Application.Helpers.Extensions;
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
@@ -9,11 +8,6 @@ using Hangfire;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Features.LessonVideoFeature.Commands.LessonVideoFeatureCreate
 {

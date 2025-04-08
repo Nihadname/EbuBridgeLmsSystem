@@ -50,7 +50,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<Language> languages { get; set; }
         public DbSet<CourseImageOutBox> courseImageOutBoxes { get; set; }
         public DbSet<LessonUnit> lessonUnits { get; set; }
-        public DbSet<LessonUnitAttendance> lessonUnitAttendances   { get; set; }
+        public DbSet<LessonUnitAttendance> lessonUnitAttendances { get; set; }  
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

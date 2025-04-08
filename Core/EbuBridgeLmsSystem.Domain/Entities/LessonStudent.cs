@@ -8,7 +8,6 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public Lesson Lesson { get; set; }
         public Guid StudentId { get; set; }
         public Student Student { get; set; }
-        public bool Attended { get; set; }
         public ICollection<QuizResult> QuizResults { get; set; }
         public ICollection<LessonUnitAttendance> lessonUnitAttendances { get; set; }
 
