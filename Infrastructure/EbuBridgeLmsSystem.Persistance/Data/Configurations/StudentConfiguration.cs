@@ -18,6 +18,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
        .WithMany(p => p.Students);
      builder.HasOne(s => s.AppUser).WithOne(p => p.Student).OnDelete(DeleteBehavior.Cascade);
             builder.HasIndex(s => s.CreatedTime);
+            builder.Property(s => s.IsEnrolledInAnyCourse).HasDefaultValue(false);
         }
     }
 }

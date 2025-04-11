@@ -41,7 +41,7 @@ namespace EbuBridgeLmsSystem.Persistance.AuthHandler.HttpAuth
                     userQuery = include(userQuery);
                 }
             }
-            var currentUserInTheSystem=await userQuery.FirstOrDefaultAsync(s=>s.Id==UserId);    
+            var currentUserInTheSystem=await userQuery.FirstOrDefaultAsync(s=>s.Id==UserId && !s.IsDeleted);    
             if (currentUserInTheSystem != null)
                 return currentUserInTheSystem;
             return null;

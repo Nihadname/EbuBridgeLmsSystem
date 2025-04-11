@@ -26,6 +26,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
             builder.HasOne(ls => ls.Student)
         .WithMany(s => s.lessonStudents)
         .HasForeignKey(ls => ls.StudentId).OnDelete(DeleteBehavior.NoAction);
+            builder.Property(s => s.isFinished).HasDefaultValue(false);
         }
     }
 }

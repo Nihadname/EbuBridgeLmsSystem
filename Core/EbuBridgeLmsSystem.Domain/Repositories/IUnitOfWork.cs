@@ -29,6 +29,7 @@ namespace EbuBridgeLmsSystem.Domain.Repositories
         public ILessonMaterialRepository LessonMaterialRepository { get; }
         public ILessonRepository LessonRepository { get; }
         public ILessonVideoRepository LessonVideoRepository { get; }
+        public ILessonStudentRepository LessonStudentRepository { get; }
 
     }
 }

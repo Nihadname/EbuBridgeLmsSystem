@@ -56,7 +56,9 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.ApplyCo
                     CourseId = request.CourseId,
                     StudentId = request.StudentId
                 };
+                existedStudent.IsEnrolledInAnyCourse = true;
                 await _unitOfWork.CourseStudentRepository.Create(newCourseStudent);
+                await _unitOfWork.StudentRepository.Update(existedStudent);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
                 return Result<Unit>.Success(Unit.Value);
