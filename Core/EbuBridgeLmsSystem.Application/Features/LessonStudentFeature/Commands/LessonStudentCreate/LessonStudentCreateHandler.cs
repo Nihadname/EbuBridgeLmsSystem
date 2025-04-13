@@ -3,6 +3,7 @@ using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
+using FluentValidation;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -15,15 +16,18 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAppUserResolver _userResolver;
         private readonly ILogger<LessonStudentCreateHandler> _logger;
-        public LessonStudentCreateHandler(IUnitOfWork unitOfWork, IAppUserResolver userResolver, ILogger<LessonStudentCreateHandler> logger)
+        private readonly  IValidator<LessonStudentCreateCommand> _validator;
+        public LessonStudentCreateHandler(IUnitOfWork unitOfWork, IAppUserResolver userResolver, ILogger<LessonStudentCreateHandler> logger, IValidator<LessonStudentCreateCommand> validator)
         {
             _unitOfWork = unitOfWork;
             _userResolver = userResolver;
             _logger = logger;
+            _validator = validator;
         }
 
         public async Task<Result<Unit>> Handle(LessonStudentCreateCommand request, CancellationToken cancellationToken)
         {
+            var validationResult= _validator.Validate(request);
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
@@ -34,7 +38,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
                 if (currentUserInTheSystem == null)
                 {
                     await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                    return Result<Unit>.Failure(Error.Unauthorized, null, ErrorType.UnauthorizedError);
+                    return UnauthorizedError();
                 }
                 var existedStudent = await _unitOfWork.StudentRepository.GetEntity(s => s.Id == request.StudentId && s.AppUserId == currentUserInTheSystem.Id && !s.IsDeleted, includes: new Func<IQueryable<Student>, IQueryable<Student>>[]{
                query => query
@@ -43,26 +47,26 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
                 if (existedStudent == null)
                 {
                     await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                    return Result<Unit>.Failure(Error.Custom("Student", "student either doesnt exist either is not the same user who trying to apply"), null, ErrorType.BusinessLogicError);
+                    return StudentNotFoundError();
                 }
                 var existedLesson = await _unitOfWork.LessonRepository.GetEntity(s => s.Id == request.LessonId && !s.IsDeleted);
                 if (existedLesson == null)
                 {
                     await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                    return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
+                    return LessonNotFoundError();
                 }
                 var isTheLessonInTheCourseStudentIsIn = existedStudent.courseStudents.Select(courseStudent => courseStudent.Course)
                     .Any(course => course.lessons.Any(courseLesson => courseLesson.Id == request.LessonId && !courseLesson.IsDeleted) && !course.IsDeleted);
                 if (!isTheLessonInTheCourseStudentIsIn)
                 {
                     await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                    return Result<Unit>.Failure(Error.Custom("Student", "student tried to apply for a lesson that doesnt exist in  his/her applied courses"), null, ErrorType.BusinessLogicError);
+                    return LessonNotInCourseError(existedLesson.Title);
                 }
                 var isUncompletedCourseLessonsExist = existedStudent.lessonStudents.Any(s => !s.isFinished);
                 if (isUncompletedCourseLessonsExist)
                 {
                     await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                    return Result<Unit>.Failure(Error.Custom("Course lesson", $"there are uncompeleted courses so you cant apply to this course {existedLesson.Title}  "), null, ErrorType.BusinessLogicError);
+                    return UncompletedLessonsError(existedLesson.Title);
                 }
                 var lessonStudent = new LessonStudent()
                 {
@@ -84,5 +88,23 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
 
             }
         }
+        private Result<Unit> UnauthorizedError() =>
+        Result<Unit>.Failure(Error.Unauthorized, null, ErrorType.UnauthorizedError);
+
+        private Result<Unit> StudentNotFoundError() =>
+            Result<Unit>.Failure(Error.Custom("Student", "Student doesn't exist or not authorized"), null, ErrorType.BusinessLogicError);
+
+        private Result<Unit> LessonNotFoundError() =>
+            Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
+
+        private Result<Unit> LessonNotInCourseError(string lessonTitle) =>
+            Result<Unit>.Failure(Error.Custom("Lesson", $"Lesson '{lessonTitle}' not in student's courses"), null, ErrorType.BusinessLogicError);
+
+        private Result<Unit> UncompletedLessonsError(string lessonTitle) =>
+            Result<Unit>.Failure(Error.Custom("Lesson", $"Uncompleted lessons exist, cannot apply to '{lessonTitle}'"), null, ErrorType.BusinessLogicError);
+
+        private Result<Unit> InternalServerError() =>
+            Result<Unit>.Failure(Error.InternalServerError, null, ErrorType.SystemError);
+
     }
 }
