@@ -36,14 +36,14 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonMaterialFeature.Commands
             if (!isExistedLesson)
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
             var isExistedLessonMaterialInTheSameLesson = await _unitOfWork.LessonMaterialRepository
-                 .isExists(s => s.Title.ToLower() == request.Title.ToLower() && s.LessonId == request.LessonId&&!s.IsDeleted);
+                 .isExists(s => s.Title.ToLower() == request.Title.ToLower() && s.LessonUnitId == request.LessonId&&!s.IsDeleted);
             if (isExistedLessonMaterialInTheSameLesson)
                 return Result<Unit>.Failure(Error.Custom("LessonMaterial", "LessonMaterial with this title already exists in this lesson"), null, ErrorType.BusinessLogicError);
             try
             {
-                var newLessonMaterial = new LessonMaterial()
+                var newLessonMaterial = new LessonUnitMaterial()
                 {
-                    LessonId = request.LessonId,
+                    LessonUnitId = request.LessonId,
                     Url = null,
                     Title = request.Title,
                 };

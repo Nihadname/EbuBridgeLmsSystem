@@ -35,30 +35,24 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
                 {
                     return Result<Unit>.Failure(Error.ValidationFailed, validationResult.Errors.Select(s => s.ErrorMessage).ToList(), ErrorType.ValidationError);
                 }
-                var currentUserInTheSystem = await _userResolver.GetCurrentUserAsync(includes: new Func<IQueryable<AppUser>, IQueryable<AppUser>>[]{
+                var currentUserInTheSystem = await _userResolver.GetCurrentUserAsync(s=>s.Student.Id==request.StudentId,includes: new Func<IQueryable<AppUser>, IQueryable<AppUser>>[]{
                q => q.Include(p => p.Student).ThenInclude(s => s.courseStudents).ThenInclude(cs => cs.Course).ThenInclude(c => c.lessons),
         q => q.Include(p => p.Student).ThenInclude(s => s.lessonStudents)
             });
                
                 if (currentUserInTheSystem == null)
-                {
                     return UnauthorizedError();
-                }
                 var userRoles=await _userManager.GetRolesAsync(currentUserInTheSystem);
             if (!userRoles.Any(s => s == RolesEnum.Student.ToString()) || currentUserInTheSystem.Student is null)
             {
                 return Result<Unit>.Failure(Error.Custom("User", "User is not student  or not in student role"), null, ErrorType.BusinessLogicError);
             }
             var existedStudent =  currentUserInTheSystem.Student;
-                if (existedStudent == null||existedStudent.Id!=request.StudentId)
-                {
+                if (existedStudent == null)
                     return StudentNotFoundError();
-                }
                 var existedLesson = await _unitOfWork.LessonRepository.GetEntity(s => s.Id == request.LessonId && !s.IsDeleted);
                 if (existedLesson == null)
-                {
                     return LessonNotFoundError();
-                }
                 var isTheLessonInTheCourseStudentIsIn = existedStudent.courseStudents.Select(courseStudent => courseStudent.Course)
                     .Any(course => course.lessons.Any(courseLesson => courseLesson.Id == request.LessonId && !courseLesson.IsDeleted) && !course.IsDeleted);
                 if (!isTheLessonInTheCourseStudentIsIn)

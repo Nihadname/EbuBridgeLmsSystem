@@ -83,7 +83,7 @@ namespace EbuBridgeLmsSystem.Persistance
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<IAuditLogProcessor,AuditLogProcessor>();
-            services.AddScoped<ILessonMaterialRepository, LessonMaterialRepository>();
+            services.AddScoped<ILessonUnitMaterialRepository, LessonUnitMaterialRepository>();
         }
     }
 }

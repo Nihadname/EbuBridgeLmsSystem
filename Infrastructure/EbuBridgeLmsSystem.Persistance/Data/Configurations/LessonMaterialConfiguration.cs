@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class LessonMaterialConfiguration : IEntityTypeConfiguration<LessonMaterial>
+    public class LessonMaterialConfiguration : IEntityTypeConfiguration<LessonUnitMaterial>
     {
-        public void Configure(EntityTypeBuilder<LessonMaterial> builder)
+        public void Configure(EntityTypeBuilder<LessonUnitMaterial> builder)
         {
             builder.Property(s => s.IsDeleted).HasDefaultValue(false);
             builder.Property(s => s.CreatedTime).HasDefaultValueSql("GETDATE()");

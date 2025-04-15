@@ -2,11 +2,11 @@
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {
-    public sealed class LessonVideo:BaseEntity
+    public sealed class LessonUnitVideo : BaseEntity
     {
         public string Title { get; set; }
         public string Url { get; set; }
-        public Guid LessonId { get; set; }
-        public Lesson Lesson { get; set; }
+        public Guid LessonUnitId { get; set; }
+        public LessonUnit LessonUnit { get; set; }
     }
 }

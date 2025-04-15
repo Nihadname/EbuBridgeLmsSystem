@@ -29,9 +29,9 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
         public ILanguageRepository LanguageRepository { get; private set; }
         public ICourseImageOutBoxRepository CourseImageOutBoxRepository { get; private set; }
         public ICourseStudentRepository CourseStudentRepository { get; private set; }
-        public ILessonMaterialRepository LessonMaterialRepository { get; private set; }
+        public ILessonUnitMaterialRepository LessonMaterialRepository { get; private set; }
         public ILessonRepository LessonRepository { get; private set; }
-        public ILessonVideoRepository LessonVideoRepository { get; private set; }
+        public ILessonUnitVideoRepository LessonVideoRepository { get; private set; }
         public ILessonStudentRepository LessonStudentRepository { get; private set; }
 
         public UnitOfWork(ApplicationDbContext applicationDbContext)
@@ -53,7 +53,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
             LanguageRepository = new LanguageRepository(applicationDbContext);
             CourseImageOutBoxRepository = new CourseImageOutBoxRepository(applicationDbContext);
             CourseStudentRepository = new CourseStudentRepository(applicationDbContext);
-            LessonMaterialRepository = new LessonMaterialRepository(applicationDbContext);
+            LessonMaterialRepository = new LessonUnitMaterialRepository(applicationDbContext);
             LessonRepository=new LessonRepository(applicationDbContext);
             LessonVideoRepository = new LessonVideoRepository(applicationDbContext);
             LessonStudentRepository = new LessonStudentRepository(applicationDbContext);    

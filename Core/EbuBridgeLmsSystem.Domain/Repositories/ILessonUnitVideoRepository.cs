@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Domain.Repositories
 {
-    public interface ILessonVideoRepository:IRepository<LessonVideo>
+    public interface ILessonUnitVideoRepository:IRepository<LessonUnitVideo>
     {
     }
 }
