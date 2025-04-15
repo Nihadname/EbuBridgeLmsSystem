@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EbuBridgeLmsSystem.Api.App.Common;
+using EbuBridgeLmsSystem.Api.Common;
 using EbuBridgeLmsSystem.Api.Extensions;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Dtos.Parent;

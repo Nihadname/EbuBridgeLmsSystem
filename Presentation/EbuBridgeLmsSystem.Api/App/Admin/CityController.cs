@@ -8,7 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetByIdCity;
-using EbuBridgeLmsSystem.Api.App.Common;
+using EbuBridgeLmsSystem.Api.Common;
 
 namespace EbuBridgeLmsSystem.Api.App.Admin
 {

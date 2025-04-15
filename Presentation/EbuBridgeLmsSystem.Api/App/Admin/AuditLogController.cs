@@ -1,4 +1,4 @@
-﻿using EbuBridgeLmsSystem.Api.App.Common;
+﻿using EbuBridgeLmsSystem.Api.Common;
 using EbuBridgeLmsSystem.Api.Extensions;
 using EbuBridgeLmsSystem.Application.Features.AddressFeature.Queries.GetAllAddresses;
 using EbuBridgeLmsSystem.Application.Features.AuditLogFeature.Query.GetAllLogs;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EbuBridgeLmsSystem.Api.App.Admin
 {
-   
+
     public class AuditLogController : BaseAdminController
     {
         private readonly ISender _mediator;

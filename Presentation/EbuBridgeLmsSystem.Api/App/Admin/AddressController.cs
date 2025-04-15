@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EbuBridgeLmsSystem.Api.App.Common;
+using EbuBridgeLmsSystem.Api.Common;
 using EbuBridgeLmsSystem.Api.Extensions;
 using EbuBridgeLmsSystem.Application.Features.AddressFeature.Queries.GetAllAddresses;
 using EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCities;
