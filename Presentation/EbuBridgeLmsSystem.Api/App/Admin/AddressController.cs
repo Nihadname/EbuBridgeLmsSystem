@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EbuBridgeLmsSystem.Api.App.Common;
 using EbuBridgeLmsSystem.Api.Extensions;
 using EbuBridgeLmsSystem.Application.Features.AddressFeature.Queries.GetAllAddresses;
 using EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCities;
@@ -12,12 +13,12 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
     [Area("Admin")]
     [Route("api/[area]/[controller]")]
     [ApiController]
-    public class AddressController : ControllerBase
+    public class AddressController : BaseAdminController
     {
-        private readonly IMediator _mediator;
+        private readonly ISender _mediator;
         private readonly IMapper _mapper;
 
-        public AddressController(IMapper mapper, IMediator mediator)
+        public AddressController(IMapper mapper, ISender mediator)
         {
             _mapper = mapper;
             _mediator = mediator;

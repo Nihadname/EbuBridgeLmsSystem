@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EbuBridgeLmsSystem.Api.App.Common;
 using EbuBridgeLmsSystem.Api.Extensions;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Dtos.Parent;
@@ -16,13 +17,13 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
     [Area("Admin")]
     [Route("api/[area]/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController : BaseAdminController
     {
-        private readonly  IMediator _mediator;
+        private readonly ISender _mediator;
         private readonly IMapper _mapper;
         private readonly IValidator<RegisterDto> _registerValidator;
         private readonly IValidator<TeacherCreateDto> _teacherCreateValidator;
-        public AuthController(IMediator mediator, IMapper mapper, IValidator<RegisterDto> registerValidator, IValidator<TeacherCreateDto> teacherCreateValidator)
+        public AuthController(ISender mediator, IMapper mapper, IValidator<RegisterDto> registerValidator, IValidator<TeacherCreateDto> teacherCreateValidator)
         {
             _mediator = mediator;
             _mapper = mapper;

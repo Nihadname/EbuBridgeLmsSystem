@@ -8,17 +8,18 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetByIdCity;
+using EbuBridgeLmsSystem.Api.App.Common;
 
 namespace EbuBridgeLmsSystem.Api.App.Admin
 {
     [Area("Admin")]
     [Route("api/[area]/[controller]")]
     [ApiController]
-    public class CityController : ControllerBase
+    public class CityController : BaseAdminController
     {
-        private readonly IMediator _mediator;
+        private readonly ISender _mediator;
         private readonly IMapper _mapper;
-        public CityController(IMediator mediator, IMapper mapper)
+        public CityController(ISender mediator, IMapper mapper)
         {
             _mediator = mediator;
             _mapper = mapper;

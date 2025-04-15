@@ -23,7 +23,7 @@ namespace EbuBridgeLmsSystem.Api.App.ClientSide
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly ISender _mediator;
         private readonly IMapper _mapper;
         public AuthController(IMediator mediator, IMapper mapper)
         {

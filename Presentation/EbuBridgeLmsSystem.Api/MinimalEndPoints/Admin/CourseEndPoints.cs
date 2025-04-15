@@ -15,7 +15,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
     {
         public static void MapCourseAdminEndPointsthis (this IEndpointRouteBuilder app, string baseUrl)
         {
-            app.MapPost($"{baseUrl}/Course", [Authorize(Roles = "Admin")] async ([FromForm] CourseCreateDto courseCreateDto,IMediator mediator, IValidator<CourseCreateDto> _validator) =>
+            app.MapPost($"{baseUrl}/Course", [Authorize(Roles = "Admin")] async ([FromForm] CourseCreateDto courseCreateDto, ISender mediator, IValidator<CourseCreateDto> _validator) =>
             {
                 var validationResult = await _validator.ValidateAsync(courseCreateDto);
                

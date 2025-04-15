@@ -17,9 +17,9 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
     [ApiController]
     public class CountryController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly ISender _mediator;
         private readonly IMapper _mapper;
-        public CountryController(IMediator mediator, IMapper mapper)
+        public CountryController(ISender mediator, IMapper mapper)
         {
             _mediator = mediator;
             _mapper = mapper;

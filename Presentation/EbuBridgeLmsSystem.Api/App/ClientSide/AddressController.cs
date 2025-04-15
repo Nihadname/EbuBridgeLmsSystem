@@ -14,7 +14,7 @@ namespace EbuBridgeLmsSystem.Api.App.ClientSide
     [ApiController]
     public class AddressController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly ISender _mediator;
         private readonly IMapper _mapper;
 
         public AddressController(IMapper mapper, IMediator mediator)

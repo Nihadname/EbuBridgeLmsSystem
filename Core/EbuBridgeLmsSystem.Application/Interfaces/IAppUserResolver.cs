@@ -1,9 +1,5 @@
 ﻿using EbuBridgeLmsSystem.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace EbuBridgeLmsSystem.Application.Interfaces
 {
@@ -13,7 +9,7 @@ namespace EbuBridgeLmsSystem.Application.Interfaces
         string UserName { get; }
         bool IsAuthenticated { get; }
 
-        Task<AppUser> GetCurrentUserAsync(params Func<IQueryable<AppUser>, IQueryable<AppUser>>[] includes);
+        Task<AppUser> GetCurrentUserAsync(Expression<Func<AppUser, bool>> predicate = null,params Func<IQueryable<AppUser>, IQueryable<AppUser>>[] includes);
 
     }
 }

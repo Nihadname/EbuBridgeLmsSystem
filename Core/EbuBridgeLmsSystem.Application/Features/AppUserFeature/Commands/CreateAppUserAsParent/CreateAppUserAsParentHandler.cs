@@ -60,12 +60,16 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
                 var Students = new List<Student>();
                 if (request.ParentCreateDto.StudentIds.Any())
                 {
-                    foreach (var student in request.ParentCreateDto.StudentIds)
+                    foreach (Guid student in request.ParentCreateDto.StudentIds)
                     {
                         if (await _unitOfWork.StudentRepository.isExists(s => s.Id == student) is not false)
                         {
-                            var ExistedStudent = await _unitOfWork.StudentRepository.GetEntity(s => s.Id == student && !s.IsDeleted);
-                            Students.Add(ExistedStudent);
+                            var existedStudent = await _unitOfWork.StudentRepository.GetEntity(s => s.Id == student && !s.IsDeleted);
+                            if (existedStudent is null)
+                            {
+                                return Result<UserGetDto>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
+                            }
+                            Students.Add(existedStudent);
                         }
                         else
                         {

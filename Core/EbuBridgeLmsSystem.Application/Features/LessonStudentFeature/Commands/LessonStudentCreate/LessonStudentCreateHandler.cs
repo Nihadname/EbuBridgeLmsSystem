@@ -1,11 +1,11 @@
-﻿using EbuBridgeLmsSystem.Application.Dtos.Auth;
-using EbuBridgeLmsSystem.Application.Interfaces;
+﻿using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using FluentValidation;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -17,24 +17,31 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
         private readonly IAppUserResolver _userResolver;
         private readonly ILogger<LessonStudentCreateHandler> _logger;
         private readonly  IValidator<LessonStudentCreateCommand> _validator;
-        public LessonStudentCreateHandler(IUnitOfWork unitOfWork, IAppUserResolver userResolver, ILogger<LessonStudentCreateHandler> logger, IValidator<LessonStudentCreateCommand> validator)
+        private readonly UserManager<AppUser> _userManager;
+        public LessonStudentCreateHandler(IUnitOfWork unitOfWork, IAppUserResolver userResolver, ILogger<LessonStudentCreateHandler> logger, IValidator<LessonStudentCreateCommand> validator, UserManager<AppUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _userResolver = userResolver;
             _logger = logger;
             _validator = validator;
+            _userManager = userManager;
         }
 
         public async Task<Result<Unit>> Handle(LessonStudentCreateCommand request, CancellationToken cancellationToken)
         {
-            var validationResult= _validator.Validate(request);
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
+                var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+                if (!validationResult.IsValid)
+                {
+                    return Result<Unit>.Failure(Error.ValidationFailed, validationResult.Errors.Select(s => s.ErrorMessage).ToList(), ErrorType.ValidationError);
+                }
                 var currentUserInTheSystem = await _userResolver.GetCurrentUserAsync(includes: new Func<IQueryable<AppUser>, IQueryable<AppUser>>[]{
                query => query
             .Include(p => p.Student)
             });
+               
                 if (currentUserInTheSystem == null)
                 {
                     await _unitOfWork.RollbackTransactionAsync(cancellationToken);
@@ -42,7 +49,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
                 }
                 var existedStudent = await _unitOfWork.StudentRepository.GetEntity(s => s.Id == request.StudentId && s.AppUserId == currentUserInTheSystem.Id && !s.IsDeleted, includes: new Func<IQueryable<Student>, IQueryable<Student>>[]{
                query => query
-            .Include(p => p.courseStudents).ThenInclude(p => p.Student).Include(p => p.courseStudents).ThenInclude(s=>s.Course)
+            .Include(p => p.courseStudents).ThenInclude(s=>s.Course).ThenInclude(s=>s.lessons)
             });
                 if (existedStudent == null)
                 {
@@ -84,7 +91,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
             {
                 await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                 _logger.LogError(ex, "Error occurred during lessonStudent create");
-                return Result<Unit>.Failure(Error.InternalServerError, null, ErrorType.SystemError);
+               return InternalServerError();
 
             }
         }

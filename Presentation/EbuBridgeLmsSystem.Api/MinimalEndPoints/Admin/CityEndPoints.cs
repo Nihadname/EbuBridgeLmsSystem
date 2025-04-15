@@ -1,6 +1,5 @@
 ﻿using EbuBridgeLmsSystem.Api.Extensions;
 using EbuBridgeLmsSystem.Application.Dtos.City;
-using EbuBridgeLmsSystem.Application.Dtos.Course;
 using EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.DeleteCity;
 using FluentValidation;
 using LearningManagementSystem.Core.Entities.Common;
@@ -15,7 +14,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
         public static void MapCityAdminEndPoints(this IEndpointRouteBuilder app, string baseUrl)
         {
             RouteGroupBuilder group = app.MapGroup($"{baseUrl}/City").WithTags("City").RequireAuthorization();
-            group.MapDelete(string.Empty, [Authorize(Roles ="Admin")] async ([FromBody] CityDeleteDto cityDeleteDto, IMediator _mediator,IValidator< CityDeleteDto> validator) =>
+            group.MapDelete(string.Empty, [Authorize(Roles ="Admin")] async ([FromBody] CityDeleteDto cityDeleteDto, ISender _mediator,IValidator< CityDeleteDto> validator) =>
             {
                 var validationResult = await validator.ValidateAsync(cityDeleteDto);
 

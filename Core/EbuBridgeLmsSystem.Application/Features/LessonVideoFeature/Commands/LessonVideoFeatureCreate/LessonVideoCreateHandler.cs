@@ -28,7 +28,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonVideoFeature.Commands.Le
 
         public async Task<Result<Unit>> Handle(LessonVideoCreateCommand request, CancellationToken cancellationToken)
         {
-            var validationResult = _validator.Validate(request);
+            var validationResult =await _validator.ValidateAsync(request);
             if (!validationResult.IsValid)
             {
                 return Result<Unit>.Failure(null, validationResult.Errors.Select(s => s.ErrorMessage).ToList(), ErrorType.ValidationError);

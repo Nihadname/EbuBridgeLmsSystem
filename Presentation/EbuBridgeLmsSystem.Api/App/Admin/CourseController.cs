@@ -14,9 +14,9 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
     [ApiController]
     public class CourseController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly ISender _mediator;
 
-        public CourseController(IMediator mediator)
+        public CourseController(ISender mediator)
         {
             _mediator = mediator;
         }
