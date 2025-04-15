@@ -27,27 +27,27 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonMaterialFeature.Commands
 
         public async Task<Result<Unit>> Handle(LessonMaterialCreateCommand request, CancellationToken cancellationToken)
         {
-            var validationResult=_validator.Validate(request);
+            var validationResult=await _validator.ValidateAsync(request);
             if (!validationResult.IsValid)
             {
              return   Result<Unit>.Failure(null, validationResult.Errors.Select(s=>s.ErrorMessage).ToList(), ErrorType.ValidationError);
             }
-            var isExistedLesson=await _unitOfWork.LessonRepository.isExists(s=>s.Id==request.LessonId&&!s.IsDeleted);
-            if (!isExistedLesson)
+            var isExistedLessonUnit=await _unitOfWork.LessonUnitRepository.isExists(s=>s.Id==request.LessonUnitId&&!s.IsDeleted);
+            if (!isExistedLessonUnit)
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
-            var isExistedLessonMaterialInTheSameLesson = await _unitOfWork.LessonMaterialRepository
-                 .isExists(s => s.Title.ToLower() == request.Title.ToLower() && s.LessonUnitId == request.LessonId&&!s.IsDeleted);
-            if (isExistedLessonMaterialInTheSameLesson)
+            var isExistedLessonUnitMaterialInTheSameLesson = await _unitOfWork.LessonUnitMaterialRepository
+                 .isExists(s => s.Title.ToLower() == request.Title.ToLower() && s.LessonUnitId == request.LessonUnitId&&!s.IsDeleted);
+            if (isExistedLessonUnitMaterialInTheSameLesson)
                 return Result<Unit>.Failure(Error.Custom("LessonMaterial", "LessonMaterial with this title already exists in this lesson"), null, ErrorType.BusinessLogicError);
             try
             {
                 var newLessonMaterial = new LessonUnitMaterial()
                 {
-                    LessonUnitId = request.LessonId,
+                    LessonUnitId = request.LessonUnitId,
                     Url = null,
                     Title = request.Title,
                 };
-                await _unitOfWork.LessonMaterialRepository.Create(newLessonMaterial);
+                await _unitOfWork.LessonUnitMaterialRepository.Create(newLessonMaterial);
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync();
                 var fileBytes = await request.File.GetFileBytesAsync();
@@ -88,7 +88,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonMaterialFeature.Commands
                 await _unitOfWork.BeginTransactionAsync();
                 try
                 {
-                    var existedLessonMaterial = await _unitOfWork.LessonMaterialRepository.GetEntity(s => s.Id == id && !s.IsDeleted);
+                    var existedLessonMaterial = await _unitOfWork.LessonUnitMaterialRepository.GetEntity(s => s.Id == id && !s.IsDeleted);
                     if (existedLessonMaterial == null)
                     {
                         return Result<string>.Failure(Error.NotFound, null, ErrorType.NotFoundError);

@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
-using EbuBridgeLmsSystem.Application.Dtos.Parent;
-using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsStudent;
 using EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth;
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
@@ -14,11 +12,6 @@ using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsParent
 {

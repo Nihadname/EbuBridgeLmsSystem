@@ -53,7 +53,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonMaterialFeature.Commands
                 }
 
             });
-            RuleFor(s => s.LessonId).Must(x => x != Guid.Empty).NotNull()
+            RuleFor(s => s.LessonUnitId).Must(x => x != Guid.Empty).NotNull()
         .NotEmpty();
         }
     }

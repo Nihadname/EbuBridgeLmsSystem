@@ -33,23 +33,23 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonVideoFeature.Commands.Le
             {
                 return Result<Unit>.Failure(null, validationResult.Errors.Select(s => s.ErrorMessage).ToList(), ErrorType.ValidationError);
             }
-            var isExistedLesson = await _unitOfWork.LessonRepository.isExists(s => s.Id == request.LessonId && !s.IsDeleted);
-            if (!isExistedLesson)
+            var isExistedLessonUnit = await _unitOfWork.LessonRepository.isExists(s => s.Id == request.LessonUnitId && !s.IsDeleted);
+            if (!isExistedLessonUnit)
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
-            var isExistedLessonMaterialInTheSameLesson = await _unitOfWork.LessonVideoRepository
-                 .isExists(s => s.Title.ToLower() == request.Title.ToLower() && s.LessonUnitId == request.LessonId && !s.IsDeleted);
-            if (isExistedLessonMaterialInTheSameLesson)
+            var isExistedLessonUnitVideoInTheSameLesson = await _unitOfWork.LessonUnitVideoRepository
+                 .isExists(s => s.Title.ToLower() == request.Title.ToLower() && s.LessonUnitId == request.LessonUnitId && !s.IsDeleted);
+            if (isExistedLessonUnitVideoInTheSameLesson)
                 return Result<Unit>.Failure(Error.Custom("LessonMaterial", "LessonMaterial with this title already exists in this lesson"), null, ErrorType.BusinessLogicError);
             await _unitOfWork.BeginTransactionAsync();
             try
             {
                 var newLessonVideo = new LessonUnitVideo()
                 {
-                    LessonUnitId = request.LessonId,
+                    LessonUnitId = request.LessonUnitId,
                     Url = null,
                     Title = request.Title,
                 };
-                await _unitOfWork.LessonVideoRepository.Create(newLessonVideo);
+                await _unitOfWork.LessonUnitVideoRepository.Create(newLessonVideo);
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync();
                 var tempFilePath = await ImageExtension.SaveToTempLocation(request.File);
@@ -86,7 +86,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonVideoFeature.Commands.Le
                 await _unitOfWork.BeginTransactionAsync();
                 try
                 {
-                    var existedLessonMaterial = await _unitOfWork.LessonMaterialRepository.GetEntity(s => s.Id == id && !s.IsDeleted);
+                    var existedLessonMaterial = await _unitOfWork.LessonUnitVideoRepository.GetEntity(s => s.Id == id && !s.IsDeleted);
                     if (existedLessonMaterial == null)
                     {
                         return Result<string>.Failure(Error.NotFound, null, ErrorType.NotFoundError);

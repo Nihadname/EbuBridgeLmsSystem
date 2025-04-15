@@ -19,13 +19,12 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.ApplyCo
     public sealed class ApplyCourseHandler : IRequestHandler<ApplyCourseCommand, Result<Unit>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly UserManager<AppUser> _userManager;
+       
         private readonly ILogger<ApplyCourseHandler> _logger;
 
-        public ApplyCourseHandler(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, ILogger<ApplyCourseHandler> logger)
+        public ApplyCourseHandler(IUnitOfWork unitOfWork, ILogger<ApplyCourseHandler> logger)
         {
             _unitOfWork = unitOfWork;
-            _userManager = userManager;
             _logger = logger;
         }
 

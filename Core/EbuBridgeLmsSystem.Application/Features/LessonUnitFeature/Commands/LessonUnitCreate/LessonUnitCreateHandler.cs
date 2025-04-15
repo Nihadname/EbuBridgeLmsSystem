@@ -1,4 +1,5 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities.Common;
+﻿using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using FluentValidation;
 using LearningManagementSystem.Core.Entities.Common;
@@ -26,9 +27,15 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonUnitFeature.Commands.Les
             var isExistLesson=await _unitOfWork.LessonRepository.isExists(s=>s.Id==request.LessonId);
             if (isExistLesson)
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
-
-
-            throw new NotImplementedException();
+            var newLessonUnit = new LessonUnit()
+            {
+                LessonId = request.LessonId,
+                LessonSetTime = DateTime.UtcNow,
+                Name = request.Name,
+            };
+            await _unitOfWork.LessonUnitRepository.Create(newLessonUnit);
+            await _unitOfWork.SaveChangesAsync();
+            return Result<Unit>.Success(Unit.Value);
         }
     }
 }

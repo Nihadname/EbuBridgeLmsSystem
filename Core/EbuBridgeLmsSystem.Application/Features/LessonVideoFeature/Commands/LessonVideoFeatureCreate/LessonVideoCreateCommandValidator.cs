@@ -43,7 +43,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonVideoFeature.Commands.Le
                 }
             });
             RuleFor(s => s.File).NotNull().WithMessage("Video file is required");
-            RuleFor(s => s.LessonId).NotEmpty().WithMessage("Lesson ID is required")
+            RuleFor(s => s.LessonUnitId).NotEmpty().WithMessage("Lesson ID is required")
                 .Must(x => x != Guid.Empty).WithMessage("Lesson ID cannot be empty");
         }
     }
