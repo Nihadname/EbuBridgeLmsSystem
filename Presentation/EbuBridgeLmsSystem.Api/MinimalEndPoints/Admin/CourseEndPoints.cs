@@ -17,13 +17,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
         {
             app.MapPost($"{baseUrl}/Course", [Authorize(Roles = "Admin")] async ([FromForm] CourseCreateDto courseCreateDto, ISender mediator, IValidator<CourseCreateDto> _validator) =>
             {
-                var validationResult = await _validator.ValidateAsync(courseCreateDto);
                
-                if (!validationResult.IsValid)
-                {
-                    var returnedResult=Result<Unit>.Failure(null, validationResult.Errors.Select(e => e.ErrorMessage).ToList(), ErrorType.ValidationError);
-                    return returnedResult.ToApiResult();
-                }
                 var courseCommand = new CourseCreateCommand
                 {
                     Name = courseCreateDto.Name,

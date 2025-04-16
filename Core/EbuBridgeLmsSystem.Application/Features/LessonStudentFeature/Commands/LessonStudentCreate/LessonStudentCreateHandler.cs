@@ -30,11 +30,6 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
 
         public async Task<Result<Unit>> Handle(LessonStudentCreateCommand request, CancellationToken cancellationToken)
         {
-                var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-                if (!validationResult.IsValid)
-                {
-                    return Result<Unit>.Failure(Error.ValidationFailed, validationResult.Errors.Select(s => s.ErrorMessage).ToList(), ErrorType.ValidationError);
-                }
                 var currentUserInTheSystem = await _userResolver.GetCurrentUserAsync(s=>s.Student.Id==request.StudentId,includes: new Func<IQueryable<AppUser>, IQueryable<AppUser>>[]{
                q => q.Include(p => p.Student).ThenInclude(s => s.courseStudents).ThenInclude(cs => cs.Course).ThenInclude(c => c.lessons),
         q => q.Include(p => p.Student).ThenInclude(s => s.lessonStudents)
@@ -76,7 +71,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
                 await _unitOfWork.LessonStudentRepository.Create(lessonStudent);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
-                return Result<Unit>.Success(Unit.Value);
+                return Result<Unit>.Success(Unit.Value, SuccessReturnType.Created);
 
             }
             catch (Exception ex)

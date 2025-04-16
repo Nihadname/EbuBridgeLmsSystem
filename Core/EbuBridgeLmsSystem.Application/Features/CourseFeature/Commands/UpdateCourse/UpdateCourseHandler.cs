@@ -44,7 +44,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.UpdateC
                 await _unitOfWork.CourseRepository.Update(existingCourseResult.Data);
                 await _unitOfWork.SaveChangesAsync();
             }
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value, null);
         }
         private async Task<Result<Course>> GetExistingCourse(Guid courseId)
         {
@@ -53,11 +53,11 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.UpdateC
             var existedCourse = await _unitOfWork.CourseRepository.GetEntity(s => s.Id == courseId & !s.IsDeleted,AsnoTracking:true);
             if (existedCourse == null)
                 return Result<Course>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
-            return Result<Course>.Success(existedCourse);   
+            return Result<Course>.Success(existedCourse, null);   
         }
         private async Task<Result<bool>> UpdateCourseName(string name, Course existingCourse)
         {
-            if(string.IsNullOrWhiteSpace(name)) return Result<bool>.Success(false);
+            if(string.IsNullOrWhiteSpace(name)) return Result<bool>.Success(false,null);
             var existedCourseWithThisName = await _unitOfWork.CourseRepository.GetEntity(s => EF.Functions.Like(s.Name, $"%{name}%") && s.Id != existingCourse.Id, AsnoTracking: true);
             if(existedCourseWithThisName is not null)
             {
@@ -66,7 +66,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.UpdateC
                 return Result<bool>.Failure(Error.Custom("Course Name", "It already exists"), null, ErrorType.BusinessLogicError);
             }
             existingCourse.Name = name;
-            return Result<bool>.Success(true); 
+            return Result<bool>.Success(true, null); 
         }
         private bool UpdateCourseDetails(string description,string requirements, Course existingCourse)
         {
@@ -101,24 +101,24 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.UpdateC
         }
         private  Result<bool> UpdateCourseDifficultyLevel(UpdateCourseCommand request, Course existingCourse)
         {
-            if(!request.difficultyLevel.HasValue) return Result<bool>.Success(false);
+            if(!request.difficultyLevel.HasValue) return Result<bool>.Success(false,null);
             if (Enum.TryParse<DifficultyLevel>(request.difficultyLevel.ToString(), out var difficulty))
             {
                 existingCourse.difficultyLevel = difficulty;
-                return Result<bool>.Success(true);
+                return Result<bool>.Success(true, null);
             }
             return Result<bool>.Failure(Error.BadRequest,null,ErrorType.ValidationError);
         }
         private async Task<Result<bool>> UpdateCourseLanguage(UpdateCourseCommand request, Course existingCourse)
         {
-            if (!request.LanguageId.HasValue || request.LanguageId == Guid.Empty) return Result<bool>.Success(false);
+            if (!request.LanguageId.HasValue || request.LanguageId == Guid.Empty) return Result<bool>.Success(false,null);
 
             var languageExists = await _unitOfWork.LanguageRepository.isExists(s => s.Id == request.LanguageId&&!s.IsDeleted);
             if (!languageExists)
                 return Result<bool>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
 
             existingCourse.LanguageId = request.LanguageId.Value;
-            return Result<bool>.Success(true);
+            return Result<bool>.Success(true, null);
         }
         private bool UpdateCoursePrice(UpdateCourseCommand request, Course existingCourse)
         {

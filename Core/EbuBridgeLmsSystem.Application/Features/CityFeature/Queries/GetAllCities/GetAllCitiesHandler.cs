@@ -30,7 +30,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCiti
                 var cachedResult = JsonSerializer.Deserialize<PaginatedResult<CityListItemQuery>>(cachedData);
                 if (cachedResult != null)
                 {
-                    return Result<PaginatedResult<CityListItemQuery>>.Success(cachedResult);
+                    return Result<PaginatedResult<CityListItemQuery>>.Success(cachedResult, null);
                 }
             }
             var cityQuery = await _unitOfWork.CityRepository.GetQuery(s=>!s.IsDeleted, true, includes: new Func<IQueryable<City>, IQueryable<City>>[] {
@@ -60,7 +60,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCiti
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
             };
             await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(mappedResult), cacheOptions);
-            return Result<PaginatedResult<CityListItemQuery>>.Success(mappedResult);
+            return Result<PaginatedResult<CityListItemQuery>>.Success(mappedResult, null);
         }
     }
 }

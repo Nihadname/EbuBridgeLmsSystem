@@ -27,7 +27,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.Update
                 return Result<Unit>.Failure(Error.DuplicateConflict, null, ErrorType.ValidationError);
             _mapper.Map(request, existedCountry);
            await  _unitOfWork.SaveChangesAsync(cancellationToken);
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value, null);
         }
     }
 }

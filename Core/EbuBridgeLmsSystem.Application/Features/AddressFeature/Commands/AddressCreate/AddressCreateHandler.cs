@@ -60,7 +60,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Addres
                 await _unitOfWork.AddressRepository.Create(mappedAddress);
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync();
-                return Result<Unit>.Success(Unit.Value);
+                return Result<Unit>.Success(Unit.Value,SuccessReturnType.Created);
             }
             catch (Exception ex)
             {

@@ -26,7 +26,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetByIdCit
             if (existedCity == null)
                 return Result<CityReturnQuery>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
             var mappedCountry = _mapper.Map<CityReturnQuery>(existedCity);
-            return Result<CityReturnQuery>.Success(mappedCountry);
+            return Result<CityReturnQuery>.Success(mappedCountry, null);
         }
     }
 }

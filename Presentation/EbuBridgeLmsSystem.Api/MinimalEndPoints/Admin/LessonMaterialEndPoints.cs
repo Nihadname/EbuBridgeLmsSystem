@@ -18,17 +18,11 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
             RouteGroupBuilder group = app.MapGroup($"{baseUrl}/LessonMaterial").WithTags("LessonMaterial").RequireAuthorization();
             group.MapPost(string.Empty, [Authorize(Roles = "Admin")] async ([FromBody] LessonMaterialCreateDto lessonMaterialCreateDto, ISender _mediator, IValidator<LessonMaterialCreateDto> validator) =>
             {
-                var validationResult = await validator.ValidateAsync(lessonMaterialCreateDto);
-
-                if (!validationResult.IsValid)
-                {
-                    var returnedResult = Result<Unit>.Failure(null, validationResult.Errors.Select(e => e.ErrorMessage).ToList(), ErrorType.ValidationError);
-                    return returnedResult.ToApiResult();
-                }
+                
                 var lessonMaterialCreateCommand = new LessonMaterialCreateCommand()
                 {
                   File=lessonMaterialCreateDto.File,
-                  LessonId=lessonMaterialCreateDto.LessonId,
+                  LessonUnitId=lessonMaterialCreateDto.LessonUnitId,
                   Title=lessonMaterialCreateDto.Title,
                 
                 };

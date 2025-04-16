@@ -30,7 +30,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.SendVe
             var result=await _userManager.SendVerificationCode(mappedSendVerificationCode,_emailService,_backgroundJobClient);
             if (!result.IsSuccess)
                 return Result<Unit>.Failure(result.Error, result.Errors, (ErrorType)result.ErrorType);
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value, SuccessReturnType.NoContent);
            
         }
     }

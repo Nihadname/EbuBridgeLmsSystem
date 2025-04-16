@@ -29,7 +29,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCo
                 var cachedResult = JsonSerializer.Deserialize<PaginatedResult<CourseListItemDto>>(cacheData);
                 if (cachedResult != null)
                 {
-                    return Result<PaginatedResult<CourseListItemDto>>.Success(cachedResult);
+                    return Result<PaginatedResult<CourseListItemDto>>.Success(cachedResult,null);
                 }
             }
             var courseQuery = await _unitOfWork.CourseRepository.GetQuery(s => !s.IsDeleted, true, includes: new Func<IQueryable<Course>, IQueryable<Course>>[] {
@@ -72,7 +72,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCo
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
             };
             await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(mappedResult), cacheOptions);
-            return Result<PaginatedResult<CourseListItemDto>>.Success(mappedResult);
+            return Result<PaginatedResult<CourseListItemDto>>.Success(mappedResult, null);
 
 
         }

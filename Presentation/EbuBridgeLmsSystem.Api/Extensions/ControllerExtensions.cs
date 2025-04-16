@@ -21,7 +21,12 @@ namespace EbuBridgeLmsSystem.Api.Extensions
                         return controller.StatusCode(500, result);
                 }
             }
-            return controller.Ok(result);
+            return result.SuccessReturnType switch
+            {
+                SuccessReturnType.NoContent => controller.NoContent(),
+                SuccessReturnType.Created => controller.Created(),
+                _ => controller.Ok(result)
+            };
         }
         public static IResult ToApiResult<T>(this Result<T> result)
         {
@@ -35,7 +40,12 @@ namespace EbuBridgeLmsSystem.Api.Extensions
                     _ => Results.InternalServerError(result)
                 };
             }
-            return Results.Ok(result);
+            return result.SuccessReturnType switch
+            {
+                SuccessReturnType.NoContent => Results.NoContent(),
+                SuccessReturnType.Created => Results.Created(),
+                _ => Results.Ok(result)
+            };
         }
 
     }

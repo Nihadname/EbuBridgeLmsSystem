@@ -39,11 +39,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
-                var validationResult = await _validator.ValidateAsync(request.RegisterDto, cancellationToken);
-                if (!validationResult.IsValid)
-                {
-                    return Result<UserGetDto>.Failure(null, validationResult.Errors.Select(e => e.ErrorMessage).ToList(), ErrorType.ValidationError);
-                }
+               
                 var appUserResult = await _userManager.CreateUser(request.RegisterDto, _unitOfWork, _emailService, _backgroundJobClient);
                 if(!appUserResult.IsSuccess)
                     return Result<UserGetDto>.Failure(appUserResult.Error, appUserResult.Errors, (ErrorType)appUserResult.ErrorType);
@@ -74,7 +70,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
                 await _unitOfWork.ParentRepository.Create(mappedParent);
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
                 var MappedUser = _mapper.Map<UserGetDto>(appUserResult.Data);
-                return Result<UserGetDto>.Success(MappedUser);
+                return Result<UserGetDto>.Success(MappedUser,SuccessReturnType.Created);
 
             }
             catch (Exception ex)

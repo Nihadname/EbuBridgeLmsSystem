@@ -58,12 +58,12 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Update
                 return Result<Unit>.Failure(Error.Custom("location", "location doesnt exist in the map"), null, ErrorType.NotFoundError);
             if (!hasChanges)
             {
-                return Result<Unit>.Success(Unit.Value); 
+                return Result<Unit>.Success(Unit.Value, SuccessReturnType.NoContent); 
             }
             await _unitOfWork.AddressRepository.Update(existedAddress);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             _logger.LogInformation("Address with ID {AddressId} successfully updated.", request.Id);
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value, SuccessReturnType.NoContent);
         }
         private async Task<Result<Unit>> ValidateUpdateMethod(bool hasCity,bool hasCountry,UpdateAddressCommand request, Address existingAddress)
         {
@@ -79,7 +79,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Update
             {
                 return Result<Unit>.Failure(Error.Custom("location", "city doesnt exist in the database or either your value is invalid or city is in diffrent  country"), null, ErrorType.NotFoundError);
             }
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value,null);
         }
     }
 }

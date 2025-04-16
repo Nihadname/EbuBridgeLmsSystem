@@ -26,7 +26,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.CreateCit
                 {
                     existedCity.IsDeleted = false;
                     await _unitOfWork.SaveChangesAsync(cancellationToken);
-                    return Result<Unit>.Success(Unit.Value);
+                    return Result<Unit>.Success(Unit.Value, null);
                 }
                 return Result<Unit>.Failure(Error.DuplicateConflict, null, ErrorType.ValidationError);
             }
@@ -36,7 +36,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.CreateCit
             var mappedCity = _mapper.Map<City>(request);
             await _unitOfWork.CityRepository.Create(mappedCity);
             await _unitOfWork.SaveChangesAsync();
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value, null);
         }
     }
 }

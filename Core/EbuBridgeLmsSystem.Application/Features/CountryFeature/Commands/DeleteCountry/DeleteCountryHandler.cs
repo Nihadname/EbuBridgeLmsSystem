@@ -28,7 +28,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.Delete
                 return Result<Unit>.Failure(Error.BadRequest, null, ErrorType.ValidationError);
             await _unitOfWork.CountryRepository.Delete(existedCountry);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value, null);
 
         }
     }

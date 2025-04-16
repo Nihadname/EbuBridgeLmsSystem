@@ -60,7 +60,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.ApplyCo
                 await _unitOfWork.StudentRepository.Update(existedStudent);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
-                return Result<Unit>.Success(Unit.Value);
+                return Result<Unit>.Success(Unit.Value, SuccessReturnType.NoContent);
             }catch(Exception ex)
             {
                 await _unitOfWork.RollbackTransactionAsync(cancellationToken);

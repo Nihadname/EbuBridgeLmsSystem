@@ -63,7 +63,7 @@ namespace EbuBridgeLmsSystem.Application.Features.ProfileFeature.Commands.Update
                 _logger.LogError(ex, "Error occurred during user image update");
                 return Result<Unit>.Failure(Error.InternalServerError, null, ErrorType.SystemError);
             }
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value, SuccessReturnType.NoContent);
         }
     }
 }

@@ -30,11 +30,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
-                var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-                if (!validationResult.IsValid)
-                {
-                    return Result<Unit>.Failure(null, validationResult.Errors.Select(e => e.ErrorMessage).ToList(), ErrorType.ValidationError);
-                }
+              
                 var isDuplicateNameCourse = await _unitOfWork.CourseRepository.GetEntity(c => EF.Functions.Like(c.Name, $"%{request.Name}%"), AsnoTracking: true);
                 if (isDuplicateNameCourse is not null)
                 {
@@ -42,7 +38,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
                     {
                         isDuplicateNameCourse.IsDeleted = false;
                         await _unitOfWork.SaveChangesAsync(cancellationToken);
-                        return Result<Unit>.Success(Unit.Value);
+                        return Result<Unit>.Success(Unit.Value,SuccessReturnType.Created);
                     }
                     return Result<Unit>.Failure(Error.DuplicateConflict, null, ErrorType.BusinessLogicError);
                 }
@@ -83,7 +79,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
                 //_backgroundJobClient.Enqueue(() => UploadImageToCloud(newCourse.Id, request.formFile));
-                return Result<Unit>.Success(Unit.Value);
+                return Result<Unit>.Success(Unit.Value, SuccessReturnType.Created);
             }
             catch (Exception ex)
             {

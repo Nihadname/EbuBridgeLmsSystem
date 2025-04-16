@@ -32,7 +32,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllC
                 var cachedResult = JsonSerializer.Deserialize<PaginatedResult<CountryListItemQuery>>(cachedData);
                 if (cachedResult != null)
                 {
-                    return Result<PaginatedResult<CountryListItemQuery>>.Success(cachedResult);
+                    return Result<PaginatedResult<CountryListItemQuery>>.Success(cachedResult,null);
                 }
             }
             var countryQuery =await _unitOfWork.CountryRepository.GetQuery(s=>!s.IsDeleted,true, includes: new Func<IQueryable<Country>, IQueryable<Country>>[] {
@@ -63,7 +63,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllC
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10) 
             };
             await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(mappedResult), cacheOptions);
-            return Result<PaginatedResult<CountryListItemQuery>>.Success(mappedResult);
+            return Result<PaginatedResult<CountryListItemQuery>>.Success(mappedResult, null);
             
         }
     }

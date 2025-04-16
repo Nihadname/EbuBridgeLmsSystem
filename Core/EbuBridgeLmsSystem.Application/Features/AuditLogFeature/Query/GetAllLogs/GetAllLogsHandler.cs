@@ -33,7 +33,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AuditLogFeature.Query.GetAllLo
                 var cachedResult = JsonSerializer.Deserialize<PaginatedResult<AuditLogListItemDto>>(cachedData);
                 if (cachedResult != null)
                 {
-                    return Result<PaginatedResult<AuditLogListItemDto>>.Success(cachedResult);
+                    return Result<PaginatedResult<AuditLogListItemDto>>.Success(cachedResult, null);
                 }
             }
             var auditLogQuery = await _unitOfWork.AuditLogRepository.GetQuery(s => (string.IsNullOrWhiteSpace(tableName) ||
@@ -73,7 +73,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AuditLogFeature.Query.GetAllLo
                 _logger.LogError($"Error caching audit logs with key {cacheKey}: {ex.Message}");
                 return Result<PaginatedResult<AuditLogListItemDto>>.Failure(Error.SystemError, null, ErrorType.SystemError);
                 }
-                return Result<PaginatedResult<AuditLogListItemDto>>.Success(mappedResult);
+                return Result<PaginatedResult<AuditLogListItemDto>>.Success(mappedResult, null);
             }
             
         }

@@ -19,11 +19,6 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonUnitFeature.Commands.Les
 
         public async Task<Result<Unit>> Handle(LessonUnitCreateCommand request, CancellationToken cancellationToken)
         {
-            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-            if (!validationResult.IsValid)
-            {
-                return Result<Unit>.Failure(Error.ValidationFailed, validationResult.Errors.Select(s => s.ErrorMessage).ToList(), ErrorType.ValidationError);
-            }
             var isExistLesson=await _unitOfWork.LessonRepository.isExists(s=>s.Id==request.LessonId);
             if (isExistLesson)
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
@@ -35,7 +30,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonUnitFeature.Commands.Les
             };
             await _unitOfWork.LessonUnitRepository.Create(newLessonUnit);
             await _unitOfWork.SaveChangesAsync();
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value, SuccessReturnType.Created);
         }
     }
 }

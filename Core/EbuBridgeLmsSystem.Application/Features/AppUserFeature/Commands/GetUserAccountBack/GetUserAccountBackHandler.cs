@@ -41,7 +41,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.GetUse
                     null,
                     ErrorType.SystemError);
             }
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value, SuccessReturnType.NoContent);
         }
     }
 }

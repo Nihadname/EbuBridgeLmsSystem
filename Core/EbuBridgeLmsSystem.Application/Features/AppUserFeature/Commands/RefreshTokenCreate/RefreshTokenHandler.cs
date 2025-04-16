@@ -70,7 +70,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Refres
                     SameSite = SameSiteMode.Lax,
                     Expires = DateTime.UtcNow.AddDays(7)
                 });
-                return Result<AuthRefreshTokenResponseDto>.Success(new AuthRefreshTokenResponseDto { AccessToken = newAccessToken });
+                return Result<AuthRefreshTokenResponseDto>.Success(new AuthRefreshTokenResponseDto { AccessToken = newAccessToken },null);
 
             }
             catch (Exception ex)

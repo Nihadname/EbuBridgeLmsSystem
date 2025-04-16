@@ -45,8 +45,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Revoke
             existedRefreshToken.Expires = DateTime.UtcNow;
             await existedRefreshToken.UpdateStatus();
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value, null);
         }
     }
 }

@@ -6,6 +6,6 @@ namespace EbuBridgeLmsSystem.Application.Dtos.LessonMaterial
     {
         public string Title { get; init; }
         public FormFile File { get; init; }
-        public Guid LessonId { get; init; }
+        public Guid LessonUnitId { get; init; }
     }
 }

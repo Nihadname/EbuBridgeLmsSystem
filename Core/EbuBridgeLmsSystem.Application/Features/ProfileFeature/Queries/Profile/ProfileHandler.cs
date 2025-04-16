@@ -28,7 +28,7 @@ namespace EbuBridgeLmsSystem.Application.Features.ProfileFeature.Queries.Profile
             if(currentUser == null)
                 return Result<UserGetDto>.Failure(Error.Unauthorized,null, ErrorType.UnauthorizedError);
             var mappedUser = _mapper.Map<UserGetDto>(currentUser);
-            return Result<UserGetDto>.Success(mappedUser);
+            return Result<UserGetDto>.Success(mappedUser, null);
 
         }
     }

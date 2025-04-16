@@ -55,7 +55,7 @@ namespace EbuBridgeLmsSystem.Application.Validators.LessonMaterialValidators
                 }
 
             });
-            RuleFor(s => s.LessonId).Must(x => x != Guid.Empty).NotNull()
+            RuleFor(s => s.LessonUnitId).Must(x => x != Guid.Empty).NotNull()
         .NotEmpty();
         }
     }

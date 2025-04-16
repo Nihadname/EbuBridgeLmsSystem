@@ -23,7 +23,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetById
             if (existedCountry == null)
                 return Result<CountryReturnQuery>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
             var mappedCountry=_mapper.Map<CountryReturnQuery>(existedCountry);
-            return Result<CountryReturnQuery>.Success(mappedCountry);
+            return Result<CountryReturnQuery>.Success(mappedCountry, null);
         }
     }
 }

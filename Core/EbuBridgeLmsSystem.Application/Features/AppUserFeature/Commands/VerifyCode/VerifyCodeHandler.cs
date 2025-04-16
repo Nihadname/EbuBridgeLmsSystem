@@ -42,7 +42,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Verify
             }
             await ResetFailedAttempts(cacheKey);
             await UpdateUserVerificationStatusAsync(existedUser);
-            return Result<string>.Success("Code verified successfully. You can now log in.");
+            return Result<string>.Success("Code verified successfully. You can now log in.", null);
         }
         private bool IsVerificationCodeValid(string code, AppUser existedUser)
         {

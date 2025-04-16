@@ -25,7 +25,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.DeleteCit
                 return Result<Unit>.Failure(Error.BadRequest, null, ErrorType.ValidationError);
             await _unitOfWork.CityRepository.Delete(existedCity);
             await _unitOfWork.SaveChangesAsync();
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value, null);
             
         }
     }

@@ -39,7 +39,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.UserSo
                     null,
                     ErrorType.SystemError);
             }
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value,SuccessReturnType.NoContent);
         }
     }
 }

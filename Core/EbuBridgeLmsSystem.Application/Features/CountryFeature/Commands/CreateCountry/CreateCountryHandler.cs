@@ -27,14 +27,14 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.Create
                 {
                     existedCountry.IsDeleted = false;
                     await _unitOfWork.SaveChangesAsync(cancellationToken);
-                    return Result<Unit>.Success(Unit.Value);
+                    return Result<Unit>.Success(Unit.Value, null);
                 }
                 return Result<Unit>.Failure(Error.DuplicateConflict, null, ErrorType.ValidationError);
             }
         var mappedCountry=_mapper.Map<Country>(request);
             await _unitOfWork.CountryRepository.Create(mappedCountry);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value,null);
         }
     }
 }

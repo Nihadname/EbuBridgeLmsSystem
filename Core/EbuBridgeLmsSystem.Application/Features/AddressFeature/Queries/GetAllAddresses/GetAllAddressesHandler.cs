@@ -30,7 +30,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Queries.GetAllA
             if (!string.IsNullOrWhiteSpace(cachedData))
             {
                 var cachedResult = JsonSerializer.Deserialize<PaginatedResult<AddressListItemQuery>>(cachedData);
-                return Result<PaginatedResult<AddressListItemQuery>>.Success(cachedResult);
+                return Result<PaginatedResult<AddressListItemQuery>>.Success(cachedResult, null);
             }
             var addressQuery = await _unitOfWork.AddressRepository.GetQuery(s=>!s.IsDeleted, true, includes: new Func<IQueryable<Address>, IQueryable<Address>>[] {
                  query => query
@@ -64,7 +64,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Queries.GetAllA
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
             };
             await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(mappedResult), cacheOptions);
-            return Result<PaginatedResult<AddressListItemQuery>>.Success(mappedResult);
+            return Result<PaginatedResult<AddressListItemQuery>>.Success(mappedResult,null);
         }
     }
 }

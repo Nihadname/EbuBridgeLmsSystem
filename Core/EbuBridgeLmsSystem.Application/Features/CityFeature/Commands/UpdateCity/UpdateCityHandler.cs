@@ -52,7 +52,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Commands.UpdateCit
                 await _unitOfWork.CityRepository.Update(existedCity);
                 await _unitOfWork.SaveChangesAsync();
             }
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value, null);
         }
     }
 }

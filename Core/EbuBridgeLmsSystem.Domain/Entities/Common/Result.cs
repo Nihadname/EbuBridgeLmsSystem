@@ -9,20 +9,22 @@ namespace LearningManagementSystem.Core.Entities.Common
         public Error? Error { get; private set; }    
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public ErrorType? ErrorType { get; private set; }
+        public SuccessReturnType? SuccessReturnType { get; private set; }
         public T Data { get; private set; }
 
-        private Result(bool isSuccess, Error error, T data, ErrorType? errorType = null, List<string> errors=null)
+        private Result(bool isSuccess, Error error, T data, ErrorType? errorType = null,SuccessReturnType? successReturnType=null, List<string> errors=null)
         {
             IsSuccess = isSuccess;
             Data = data;
             ErrorType = errorType;
+            SuccessReturnType = successReturnType;
             Errors = errors;
             Error= error;
         }
         public List<string> Errors { get; private set; }
  
-        public static Result<T> Success(T data) => new(true,null, data);
-        public static Result<T> Failure(Error error, List<string> errors, ErrorType errorType) => new(false, error, default, errorType, errors);
+        public static Result<T> Success(T data,SuccessReturnType? successReturnType) => new(true,null, data,null,successReturnType);
+        public static Result<T> Failure(Error error, List<string> errors, ErrorType errorType) => new(false, error, default, errorType,null, errors);
 
         public static Result<TOut> FailureResult<TIn, TOut>(Result<TIn> result)
         {
@@ -37,6 +39,12 @@ namespace LearningManagementSystem.Core.Entities.Common
         NotFoundError,
         UnauthorizedError,
         SystemError
+
+    }
+    public enum SuccessReturnType
+    {
+        Created,
+        NoContent,
 
     }
 }

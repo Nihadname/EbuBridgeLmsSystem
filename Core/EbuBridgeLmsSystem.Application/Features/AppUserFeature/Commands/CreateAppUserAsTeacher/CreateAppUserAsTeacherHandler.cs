@@ -44,25 +44,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
-                var registerValidationResult = await _registerValidator.ValidateAsync(request.RegisterDto, cancellationToken);
-                var teacherValidationResult = await _teacherValidator.ValidateAsync(request.TeacherCreateDto, cancellationToken);
-                List<FluentValidation.Results.ValidationResult> validations = new();
-                validations.Add(registerValidationResult);
-                validations.Add(teacherValidationResult);
-                if (validations.Any(s => s.IsValid == false))
-                {
-                    var errors = new List<string>();
-                    foreach (var validationResult in validations)
-                    {
-                        var errorsInValidation = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
-                        foreach (var error in errorsInValidation)
-                        {
-                            errors.Add(error);
-                        }
-
-                    }
-                    return Result<UserGetDto>.Failure(null, errors,ErrorType.ValidationError);
-                }
+                
                 var appUserResult = await _userManager.CreateUser(request.RegisterDto, _unitOfWork, _emailService, _backgroundJobClient);
                 if (!appUserResult.IsSuccess)
                     return Result<UserGetDto>.Failure(appUserResult.Error, appUserResult.Errors, (ErrorType)appUserResult.ErrorType);
@@ -72,7 +54,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
                 await _unitOfWork.TeacherRepository.Create(mappedTeacher);
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
                 var mappedUser = _mapper.Map<UserGetDto>(appUserResult.Data);
-                return Result<UserGetDto>.Success(mappedUser);
+                return Result<UserGetDto>.Success(mappedUser, SuccessReturnType.Created);
             }
             catch (Exception ex)
             {

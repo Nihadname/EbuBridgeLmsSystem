@@ -25,7 +25,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Delete
                 return Result<Unit>.Failure(Error.BadRequest, null, ErrorType.ValidationError);
             await _unitOfWork.AddressRepository.Delete(existedAddress);
             await _unitOfWork.SaveChangesAsync();
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value,SuccessReturnType.NoContent);
         }
     }
 }

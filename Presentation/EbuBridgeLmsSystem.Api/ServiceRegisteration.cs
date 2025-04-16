@@ -50,28 +50,7 @@ namespace EbuBridgeLmsSystem.Api
                 // Other Swagger configuration (e.g., c.SwaggerDoc)
             });
 
-            services.AddControllersWithViews()
-           .ConfigureApiBehaviorOptions(opt =>
-           {
-               opt.InvalidModelStateResponseFactory = context =>
-               {
-                   var errorsValidation = context.ModelState
-                      .Where(e => e.Value?.Errors.Count > 0)
-                      .ToDictionary(
-                          x => x.Key,
-                          x => x.Value.Errors.First().ErrorMessage
-                      );
-                   List<string> errors = new List<string>();
-                   foreach (KeyValuePair<string, string> keyValues in errorsValidation)
-                   {
-                       errors.Add(keyValues.Key + " " + keyValues.Value);
-                   }
-
-                   var response = Result<string>.Failure(Error.ValidationFailed, errors, ErrorType.ValidationError);
-
-                   return new BadRequestObjectResult(response);
-               };
-           });
+            
 
             services.AddCors(options =>
             {

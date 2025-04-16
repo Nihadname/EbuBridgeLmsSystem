@@ -27,11 +27,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonMaterialFeature.Commands
 
         public async Task<Result<Unit>> Handle(LessonMaterialCreateCommand request, CancellationToken cancellationToken)
         {
-            var validationResult=await _validator.ValidateAsync(request);
-            if (!validationResult.IsValid)
-            {
-             return   Result<Unit>.Failure(null, validationResult.Errors.Select(s=>s.ErrorMessage).ToList(), ErrorType.ValidationError);
-            }
+           
             var isExistedLessonUnit=await _unitOfWork.LessonUnitRepository.isExists(s=>s.Id==request.LessonUnitId&&!s.IsDeleted);
             if (!isExistedLessonUnit)
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
@@ -52,7 +48,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonMaterialFeature.Commands
                 await _unitOfWork.CommitTransactionAsync();
                 var fileBytes = await request.File.GetFileBytesAsync();
                 var backgroundJobId = _backgroundJobClient.Enqueue(() => UploadLessonMaterialAsset(fileBytes, request.File.Name, request.File.ContentType, newLessonMaterial.Id));
-                return Result<Unit>.Success(Unit.Value);
+                return Result<Unit>.Success(Unit.Value,SuccessReturnType.Created);
             }
             catch
             {
@@ -102,7 +98,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonMaterialFeature.Commands
                     await _unitOfWork.RollbackTransactionAsync();
                     throw;
                 }
-                return Result<string>.Success(resultUrl);
+                return Result<string>.Success(resultUrl, null);
             }
             catch (Exception ex)
             {

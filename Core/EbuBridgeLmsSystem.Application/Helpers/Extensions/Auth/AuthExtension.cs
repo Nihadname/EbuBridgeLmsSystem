@@ -82,7 +82,7 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth
             var sendVerificationCodeResult = await userManager.SendVerificationCode(new SendVerificationCodeDto { Email = appUser.Email }, emailService,backgroundJobClient);
             if (!sendVerificationCodeResult.IsSuccess)
               return  Result<AppUser>.Failure(sendVerificationCodeResult.Error, sendVerificationCodeResult.Errors, (ErrorType)sendVerificationCodeResult.ErrorType);
-            return Result<AppUser>.Success(appUser);
+            return Result<AppUser>.Success(appUser, null);
         }
         public static async Task<Result<string>> SendVerificationCode(this UserManager<AppUser> userManager,
             SendVerificationCodeDto sendVerificationCodeDto,
@@ -101,7 +101,7 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth
             await userManager.UpdateAsync(user);
             var body = $"<h1>Welcome!</h1><p>Thank you for joining us. We're excited to have you!, this is your verfication code {verificationCode} </p>";
             backgroundJobClient.Enqueue(() => emailService.SendEmailAsync(user.Email, "verfication code", body, true));
-            return Result<string>.Success("Verification code sent");
+            return Result<string>.Success("Verification code sent", null);
         }
         public static async Task<Result<AppUser>> GetUserByEmailAsync(this UserManager<AppUser> userManager,string email)
         {
@@ -110,7 +110,7 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth
             {
                 return Result<AppUser>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
             }
-            return Result<AppUser>.Success(user);
+            return Result<AppUser>.Success(user, null);
         }
 
     }

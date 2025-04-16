@@ -40,7 +40,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Forgot
           if(!bodyResult.IsSuccess)
                 return Result<Unit>.Failure(userResult.Error, userResult.Errors, (ErrorType)userResult.ErrorType);
             await _emailService.SendEmailAsync(userResult.Data.Email, "Reset Password", bodyResult.Data, true);
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value,SuccessReturnType.NoContent);
         }
 
         
@@ -64,7 +64,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Forgot
     <p>If you did not request a password reset, please ignore this email.</p>
   </body>
 </html>";
-            return Result<string>.Success(body);
+            return Result<string>.Success(body, null);
         }
     }
 }

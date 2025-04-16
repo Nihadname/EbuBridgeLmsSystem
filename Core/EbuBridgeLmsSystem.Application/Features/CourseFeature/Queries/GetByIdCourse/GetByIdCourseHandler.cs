@@ -54,7 +54,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetByIdC
                 
 
             };
-            return Result<CourseReturnDto>.Success(mappedResult);
+            return Result<CourseReturnDto>.Success(mappedResult, null);
         }
     }
 }

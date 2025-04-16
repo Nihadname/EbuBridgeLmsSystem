@@ -48,7 +48,12 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
             {
                 return Result<AuthResponseDto>.Failure(Error.Custom("Password", "Password or email is wrong\""), null, ErrorType.ValidationError);
             }
-          var IsUserBlockedResult=  await HandleUserBlockSituation(user);
+            var lockOutResult = await CheckLockOutStatus(user, request.Password);
+            if (!lockOutResult.IsSuccess)
+            {
+                return Result<AuthResponseDto>.Failure(lockOutResult.Error, lockOutResult.Errors, (ErrorType)lockOutResult.ErrorType);
+            }
+            var IsUserBlockedResult=  await HandleUserBlockSituation(user);
             if (!IsUserBlockedResult.IsSuccess)
             {
                 return Result<AuthResponseDto>.Failure(IsUserBlockedResult.Error, IsUserBlockedResult.Errors, (ErrorType)IsUserBlockedResult.ErrorType);
@@ -56,9 +61,8 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
             var deleteUserRecoveryResult = CheckAccountRecovery(user);
             if (!deleteUserRecoveryResult.IsSuccess)
             {
-                return Result<AuthResponseDto>.Failure(IsUserBlockedResult.Error, IsUserBlockedResult.Errors, (ErrorType)IsUserBlockedResult.ErrorType);
+                return Result<AuthResponseDto>.Failure(deleteUserRecoveryResult.Error, deleteUserRecoveryResult.Errors, (ErrorType)deleteUserRecoveryResult.ErrorType);
             }
-
 
             IList<string> roles = await _userManager.GetRolesAsync(user);
             if (user.IsReportedHighly)
@@ -98,7 +102,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
             {
                 IsSuccess = true,
                 Token = _tokenService.GetToken(SecretKey, Audience, Issuer, user, roles)
-            });
+            },null);
         }
         private async Task<AppUser> FindUserAsync(string userNameOrEmail)
         {
@@ -126,7 +130,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
                     user.IsBlocked = false;
                     user.BlockedUntil = null;
                     await _userManager.UpdateAsync(user);
-                    return Result<AuthResponseDto>.Success(null);
+                    return Result<AuthResponseDto>.Success(null,null);
                 }
                 else
                 {
@@ -134,7 +138,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
                     return Result<AuthResponseDto>.Failure(Error.Custom("UserNameOrGmail", $"you are blocked until {user.BlockedUntil?.ToString("dd MMM yyyy hh:mm")}"), null, ErrorType.BusinessLogicError);
                 }
             }
-            return Result<AuthResponseDto>.Success(null);
+            return Result<AuthResponseDto>.Success(null,null);
 
         }
         private Result<string> CheckAccountRecovery(AppUser user)
@@ -149,7 +153,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
                     return Result<string>.Failure(Error.Custom("Error Login", "you lost the chance of getting your account back becuase 7 days already passed"), null, ErrorType.BusinessLogicError);
                 }
             }
-            return Result<string>.Success(null);
+            return Result<string>.Success(null, null);
         }
         private async Task<Result<bool>> CheckLockOutStatus(AppUser user,string password)
         {
@@ -163,7 +167,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
                 else
                     return Result<bool>.Failure(Error.Custom(null, $"Şifrenizi 5 defa yanlış girdiğiniz için kullanıcı {Math.Ceiling(timeSpan.Value.TotalMinutes)} dakika süreyle bloke edilmiştir"), null, ErrorType.BusinessLogicError);
             }
-            return Result<bool>.Success(true);
+            return Result<bool>.Success(true, null);
         }
     }
 

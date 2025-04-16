@@ -16,13 +16,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
             RouteGroupBuilder group = app.MapGroup($"{baseUrl}/City").WithTags("City").RequireAuthorization();
             group.MapDelete(string.Empty, [Authorize(Roles ="Admin")] async ([FromBody] CityDeleteDto cityDeleteDto, ISender _mediator,IValidator< CityDeleteDto> validator) =>
             {
-                var validationResult = await validator.ValidateAsync(cityDeleteDto);
-
-                if (!validationResult.IsValid)
-                {
-                    var returnedResult = Result<Unit>.Failure(null, validationResult.Errors.Select(e => e.ErrorMessage).ToList(), ErrorType.ValidationError);
-                    return returnedResult.ToApiResult();
-                }
+                
                 var cityDeleteCommand = new DeleteCityCommand()
                 {
                     Id = cityDeleteDto.Id,

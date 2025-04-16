@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using EbuBridgeLmsSystem.Application.BackgroundServices;
+using EbuBridgeLmsSystem.Application.Behaviours;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsStudent;
 using EbuBridgeLmsSystem.Application.Profiles;
 using EbuBridgeLmsSystem.Application.Validators.AuthValidators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Hangfire;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -53,6 +55,7 @@ namespace EbuBridgeLmsSystem.Application
                 opt.Providers.Add<BrotliCompressionProvider>();
                 opt.Providers.Add<GzipCompressionProvider>();
             });
+            serviceDescriptors.AddTransient(typeof(IPipelineBehavior<,>), typeof(FluentValidationBehavior<,>));
 
         }
     }

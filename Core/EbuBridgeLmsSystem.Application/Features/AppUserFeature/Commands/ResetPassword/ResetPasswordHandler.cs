@@ -6,6 +6,7 @@ using EbuBridgeLmsSystem.Domain.Entities.Common;
 using FluentValidation;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 
 namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ResetPassword
@@ -25,25 +26,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ResetP
 
         public async Task<Result<Unit>> Handle(ResetPasswordHandleCommand request, CancellationToken cancellationToken)
         {
-            var resetPasswordTokenAndEmailDtoValidator = await _resetPasswordTokenAndEmailDtoValidator.ValidateAsync(request.ResetPasswordTokenAndEmailDto, cancellationToken);
-            var resetPasswordDtoValidator = await _resetPasswordDtoValidator.ValidateAsync(request.resetPasswordDto, cancellationToken);
-            List<FluentValidation.Results.ValidationResult> validations = new();
-            validations.Add(resetPasswordTokenAndEmailDtoValidator);
-            validations.Add(resetPasswordDtoValidator);
-            if (validations.Any(s => s.IsValid == false))
-            {
-                var errors = new List<string>();
-                foreach (var validationResult in validations)
-                {
-                    var errorsInValidation = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
-                    foreach (var error in errorsInValidation)
-                    {
-                        errors.Add(error);
-                    }
-
-                }
-                return Result<Unit>.Failure(null, errors, ErrorType.ValidationError);
-            }
+            
             var isExpiredResult = await CheckExperySutiationOfToken(request.ResetPasswordTokenAndEmailDto);
             if (!isExpiredResult.IsSuccess)
                 return Result<Unit>.Failure(isExpiredResult.Error, isExpiredResult.Errors, (ErrorType)isExpiredResult.ErrorType);
@@ -60,7 +43,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ResetP
             if (!result.Succeeded)
                 return Result<Unit>.Failure(Error.SystemError, (List<string>)result.Errors, ErrorType.SystemError);
             await _userManager.UpdateSecurityStampAsync(existedUserResult.Data);
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value, SuccessReturnType.NoContent);
         }
         private async Task<Result<bool>> CheckExperySutiationOfToken(ResetPasswordTokenAndEmailDto resetPasswordTokenAndEmailDto)
         {
@@ -73,7 +56,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.ResetP
     "ResetPassword",
     resetPasswordTokenAndEmailDto.Token
 );
-            return Result<bool>.Success(result);
+            return Result<bool>.Success(result,null);
 
         }
 

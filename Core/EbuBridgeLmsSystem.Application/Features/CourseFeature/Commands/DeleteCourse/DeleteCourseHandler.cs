@@ -21,7 +21,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.DeleteC
                 return Result<Unit>.Failure(Error.NotFound,null,ErrorType.NotFoundError);
             await _unitOfWork.CourseRepository.Delete(existedCourse);
             await _unitOfWork.SaveChangesAsync();
-            return Result<Unit>.Success(Unit.Value);
+            return Result<Unit>.Success(Unit.Value, SuccessReturnType.NoContent);
 
         }
     }
