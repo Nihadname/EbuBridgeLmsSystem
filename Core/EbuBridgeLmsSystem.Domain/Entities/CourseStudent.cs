@@ -10,5 +10,6 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public Guid StudentId { get; set; }
         public Student Student { get; set; }
         public DateTime EnrolledDate { get; set; }
+        public bool isApproved { get; set; }
     }
 }
