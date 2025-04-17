@@ -17,14 +17,12 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAppUserResolver _userResolver;
         private readonly ILogger<LessonStudentCreateHandler> _logger;
-        private readonly  IValidator<LessonStudentCreateCommand> _validator;
         private readonly UserManager<AppUser> _userManager;
-        public LessonStudentCreateHandler(IUnitOfWork unitOfWork, IAppUserResolver userResolver, ILogger<LessonStudentCreateHandler> logger, IValidator<LessonStudentCreateCommand> validator, UserManager<AppUser> userManager)
+        public LessonStudentCreateHandler(IUnitOfWork unitOfWork, IAppUserResolver userResolver, ILogger<LessonStudentCreateHandler> logger, UserManager<AppUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _userResolver = userResolver;
             _logger = logger;
-            _validator = validator;
             _userManager = userManager;
         }
 

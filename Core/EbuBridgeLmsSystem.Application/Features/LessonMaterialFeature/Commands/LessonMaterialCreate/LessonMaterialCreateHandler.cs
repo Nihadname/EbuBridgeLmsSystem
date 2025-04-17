@@ -16,13 +16,11 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonMaterialFeature.Commands
         private readonly IUnitOfWork _unitOfWork;
         private readonly IBackgroundJobClient _backgroundJobClient;
         private readonly IPhotoOrVideoService _photoOrVideoService;
-        private readonly IValidator<LessonMaterialCreateCommand> _validator;
         public LessonMaterialCreateHandler(IBackgroundJobClient backgroundJobClient, IUnitOfWork unitOfWork, IPhotoOrVideoService photoOrVideoService, IValidator<LessonMaterialCreateCommand> validator)
         {
             _backgroundJobClient = backgroundJobClient;
             _unitOfWork = unitOfWork;
             _photoOrVideoService = photoOrVideoService;
-            _validator = validator;
         }
 
         public async Task<Result<Unit>> Handle(LessonMaterialCreateCommand request, CancellationToken cancellationToken)

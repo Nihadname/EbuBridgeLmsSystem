@@ -16,12 +16,10 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
         private readonly IUnitOfWork _unitOfWork;
 
         private readonly ILogger<CourseCreateHandler> _logger;
-        private readonly IValidator<CourseCreateCommand> _validator;
-        public CourseCreateHandler(IUnitOfWork unitOfWork, ILogger<CourseCreateHandler> logger, IValidator<CourseCreateCommand> validator)
+        public CourseCreateHandler(IUnitOfWork unitOfWork, ILogger<CourseCreateHandler> logger)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
-            _validator = validator;
         }
 
         public async Task<Result<Unit>> Handle(CourseCreateCommand request, CancellationToken cancellationToken)

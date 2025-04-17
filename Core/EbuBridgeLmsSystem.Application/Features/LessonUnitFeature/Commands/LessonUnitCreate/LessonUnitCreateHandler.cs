@@ -1,7 +1,6 @@
 ﻿using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
-using FluentValidation;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 
@@ -10,11 +9,10 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonUnitFeature.Commands.Les
     public sealed class LessonUnitCreateHandler : IRequestHandler<LessonUnitCreateCommand, Result<Unit>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IValidator<LessonUnitCreateCommand> _validator;
-        public LessonUnitCreateHandler(IUnitOfWork unitOfWork, IValidator<LessonUnitCreateCommand> validator)
+ 
+        public LessonUnitCreateHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _validator = validator;
         }
 
         public async Task<Result<Unit>> Handle(LessonUnitCreateCommand request, CancellationToken cancellationToken)

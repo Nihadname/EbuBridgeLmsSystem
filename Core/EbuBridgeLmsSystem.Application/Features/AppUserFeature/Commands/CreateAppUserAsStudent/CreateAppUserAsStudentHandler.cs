@@ -23,16 +23,14 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
         private readonly IEmailService _emailService;
         private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<CreateAppUserAsStudentHandler> _logger;
-        private readonly IValidator<RegisterDto> _validator;
         private readonly IBackgroundJobClient _backgroundJobClient;
-        public CreateAppUserAsStudentHandler(IMapper mapper, UserManager<AppUser> userManager, IEmailService emailService, IUnitOfWork unitOfWork, ILogger<CreateAppUserAsStudentHandler> logger, IValidator<RegisterDto> validator, IBackgroundJobClient backgroundJobClient)
+        public CreateAppUserAsStudentHandler(IMapper mapper, UserManager<AppUser> userManager, IEmailService emailService, IUnitOfWork unitOfWork, ILogger<CreateAppUserAsStudentHandler> logger, IBackgroundJobClient backgroundJobClient)
         {
             _mapper = mapper;
             _userManager = userManager;
             _emailService = emailService;
             _unitOfWork = unitOfWork;
             _logger = logger;
-            _validator = validator;
             _backgroundJobClient = backgroundJobClient;
         }
 

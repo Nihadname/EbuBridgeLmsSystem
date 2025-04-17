@@ -1,4 +1,5 @@
 ﻿using EbuBridgeLmsSystem.Application.Dtos.Auth;
+using EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth;
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Application.Settings;
 using EbuBridgeLmsSystem.Domain.Entities;
@@ -24,7 +25,8 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly SignInManager<AppUser> _signInManager;
-        public LoginHandler(IOptions<JwtSettings> jwtSettings, UserManager<AppUser> userManager, IEmailService emailService, ITokenService tokenService, IUnitOfWork unitOfWork, IHttpContextAccessor contextAccessor, SignInManager<AppUser> signInManager)
+        private readonly IBackgroundJobClient _backgroundJobClient;
+        public LoginHandler(IOptions<JwtSettings> jwtSettings, UserManager<AppUser> userManager, IEmailService emailService, ITokenService tokenService, IUnitOfWork unitOfWork, IHttpContextAccessor contextAccessor, SignInManager<AppUser> signInManager, IBackgroundJobClient backgroundJobClient)
         {
             _userManager = userManager;
             _emailService = emailService;
@@ -33,6 +35,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
             _unitOfWork = unitOfWork;
             _contextAccessor = contextAccessor;
             _signInManager = signInManager;
+            _backgroundJobClient = backgroundJobClient;
         }
 
         public async Task<Result<AuthResponseDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -69,7 +72,17 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
             {
                 return Result<AuthResponseDto>.Failure(Error.Custom("User", "You are reported too many times ,so account is locked now, we will contact with you"), null, ErrorType.BusinessLogicError);
             }
-            if (!user.IsEmailVerificationCodeValid) return Result<AuthResponseDto>.Failure(Error.Custom("User", "pls verify your account by getting code"), null, ErrorType.BusinessLogicError);
+            if (!user.IsEmailVerificationCodeValid)
+            {
+                var mappedSendVerificationCode = new SendVerificationCodeDto
+                {
+                    Email=user.Email,
+                };
+                var verficationResult = await _userManager.SendVerificationCode(mappedSendVerificationCode, _emailService, _backgroundJobClient);
+                if (!verficationResult.IsSuccess)
+                    return Result<AuthResponseDto>.Failure(verficationResult.Error, verficationResult.Errors, (ErrorType)verficationResult.ErrorType);
+                return Result<AuthResponseDto>.Failure(Error.Custom("User", "pls verify your account by getting code , it is already sent to your email check it"), null, ErrorType.BusinessLogicError);
+            }
             var Audience = _jwtSettings.Audience;
             var SecretKey = _jwtSettings.secretKey;
             var Issuer = _jwtSettings.Issuer;

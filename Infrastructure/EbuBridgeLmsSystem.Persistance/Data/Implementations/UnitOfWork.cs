@@ -34,6 +34,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
         public ILessonUnitVideoRepository LessonUnitVideoRepository { get; private set; }
         public ILessonStudentRepository LessonStudentRepository { get; private set; }
         public ILessonUnitRepository LessonUnitRepository   { get; private set; }
+        public ILessonUnitAttendanceRepository LessonUnitAttendanceRepository { get; private set; }
 
         public UnitOfWork(ApplicationDbContext applicationDbContext)
         {
@@ -59,6 +60,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
             LessonUnitVideoRepository = new LessonUnitVideoRepository(applicationDbContext);
             LessonStudentRepository = new LessonStudentRepository(applicationDbContext);    
             LessonUnitRepository=new LessonUnitRepository(applicationDbContext);
+            LessonUnitAttendanceRepository = new LessonUnitAttendanceRepository(applicationDbContext);
             _applicationDbContext = applicationDbContext;
 
         }

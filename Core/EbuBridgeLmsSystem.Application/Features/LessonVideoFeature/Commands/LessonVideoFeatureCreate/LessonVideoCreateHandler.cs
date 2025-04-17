@@ -16,11 +16,10 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonVideoFeature.Commands.Le
         private readonly IUnitOfWork _unitOfWork;
         private readonly IBackgroundJobClient _backgroundJobClient;
         private readonly IPhotoOrVideoService _photoOrVideoService;
-        private readonly IValidator<LessonVideoCreateCommand> _validator;
+ 
 
-        public LessonVideoCreateHandler(IValidator<LessonVideoCreateCommand> validator, IPhotoOrVideoService photoOrVideoService, IBackgroundJobClient backgroundJobClient, IUnitOfWork unitOfWork)
+        public LessonVideoCreateHandler(IPhotoOrVideoService photoOrVideoService, IBackgroundJobClient backgroundJobClient, IUnitOfWork unitOfWork)
         {
-            _validator = validator;
             _photoOrVideoService = photoOrVideoService;
             _backgroundJobClient = backgroundJobClient;
             _unitOfWork = unitOfWork;

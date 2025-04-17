@@ -1,18 +1,11 @@
-﻿using EbuBridgeLmsSystem.Application.Dtos.Auth;
-using EbuBridgeLmsSystem.Application.Exceptions;
+﻿using EbuBridgeLmsSystem.Application.Exceptions;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.ApplyCourse
 {
