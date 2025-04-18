@@ -33,7 +33,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonVideoFeature.Commands.Le
             var isExistedLessonUnitVideoInTheSameLesson = await _unitOfWork.LessonUnitVideoRepository
                  .isExists(s => s.Title.ToLower() == request.Title.ToLower() && s.LessonUnitId == request.LessonUnitId && !s.IsDeleted);
             if (isExistedLessonUnitVideoInTheSameLesson)
-                return Result<Unit>.Failure(Error.Custom("LessonMaterial", "LessonMaterial with this title already exists in this lesson"), null, ErrorType.BusinessLogicError);
+                return Result<Unit>.Failure(Error.Custom("lessonVideo", "lessonVideo with this title already exists in this lesson"), null, ErrorType.BusinessLogicError);
             await _unitOfWork.BeginTransactionAsync();
             try
             {

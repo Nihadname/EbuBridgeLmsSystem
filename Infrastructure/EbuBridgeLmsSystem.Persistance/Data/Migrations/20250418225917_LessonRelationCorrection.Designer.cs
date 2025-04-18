@@ -4,6 +4,7 @@ using EbuBridgeLmsSystem.Persistance.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250418225917_LessonRelationCorrection")]
+    partial class LessonRelationCorrection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1042,10 +1045,13 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.Property<bool>("IsPresent")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("LessonStudentLessonId")
+                    b.Property<Guid>("LessonStudentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("LessonStudentStudentId")
+                    b.Property<Guid>("LessonStudentLessonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("LessonStudentStudentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("UpdatedTime")
@@ -1058,8 +1064,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("lessonUnitAssignmentId")
-                        .IsUnique();
+                    b.HasIndex("lessonUnitAssignmentId");
 
                     b.HasIndex("LessonStudentLessonId", "LessonStudentStudentId");
 
@@ -2090,14 +2095,18 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LessonUnitAttendance", b =>
                 {
                     b.HasOne("EbuBridgeLmsSystem.Domain.Entities.LessonUnitAssignment", "lessonUnitAssignment")
-                        .WithOne("lessonUnitAttendance")
-                        .HasForeignKey("EbuBridgeLmsSystem.Domain.Entities.LessonUnitAttendance", "lessonUnitAssignmentId")
+                        .WithMany("LessonUnitAttendances")
+                        .HasForeignKey("lessonUnitAssignmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EbuBridgeLmsSystem.Domain.Entities.LessonStudent", null)
+                    b.HasOne("EbuBridgeLmsSystem.Domain.Entities.LessonStudent", "LessonStudent")
                         .WithMany("lessonUnitAttendances")
-                        .HasForeignKey("LessonStudentLessonId", "LessonStudentStudentId");
+                        .HasForeignKey("LessonStudentLessonId", "LessonStudentStudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LessonStudent");
 
                     b.Navigation("lessonUnitAssignment");
                 });
@@ -2434,7 +2443,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LessonUnitAssignment", b =>
                 {
-                    b.Navigation("lessonUnitAttendance");
+                    b.Navigation("LessonUnitAttendances");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.Parent", b =>

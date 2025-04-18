@@ -12,5 +12,6 @@ namespace EbuBridgeLmsSystem.Domain.Entities
 
         public DateTime ScheduledStartTime { get; set; }
         public DateTime ScheduledEndTime { get; set; }
+        public LessonUnitAttendance lessonUnitAttendance { get; set; }
     }
 }

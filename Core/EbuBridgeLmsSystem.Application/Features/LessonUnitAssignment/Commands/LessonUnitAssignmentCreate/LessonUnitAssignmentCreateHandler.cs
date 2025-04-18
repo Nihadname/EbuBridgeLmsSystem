@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EbuBridgeLmsSystem.Domain.Repositories;
+using LearningManagementSystem.Core.Entities.Common;
+using MediatR;
 
 namespace EbuBridgeLmsSystem.Application.Features.LessonUnitAssignment.Commands.LessonUnitAssignmentCreate
 {
-    public class LessonUnitAssignmentCreateHandler
+    public class LessonUnitAssignmentCreateHandler : IRequestHandler<LessonUnitAssignmentCreateCommand, Result<Unit>>
     {
+        private readonly IUnitOfWork _unitOfWork;
+
+        public LessonUnitAssignmentCreateHandler(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
+
+        public Task<Result<Unit>> Handle(LessonUnitAssignmentCreateCommand request, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();        }
     }
 }
