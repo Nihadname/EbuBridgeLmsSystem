@@ -51,8 +51,9 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<CourseImageOutBox> courseImageOutBoxes { get; set; }
         public DbSet<LessonUnit> lessonUnits { get; set; }
         public DbSet<LessonUnitAttendance> lessonUnitAttendances { get; set; } 
-        public DbSet<LessonHomework> lessonHomeworks { get; set; }
+        public DbSet<LessonUnitStudentHomework> lessonUnitStudentHomeworks { get; set; }
         public DbSet<LessonHomeworkLink> lessonHomeworkLinks { get; set; }
+        public DbSet<LessonUnitStudentHomeworkMaterial> lessonUnitStudentHomeworkMaterials { get; set; }
         public DbSet<CourseStudentApprovalOutBox> courseStudentApprovalOutBoxes { get; set; }
         public DbSet<LessonUnitAssignment> lessonUnitAssignments { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)

@@ -15,7 +15,6 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public  Lesson Lesson { get; set; }
         public ICollection<LessonUnitVideo> LessonUnitVideos { get; set; }
         public ICollection<LessonUnitMaterial> LessonUnitMaterials { get; set; }
-        public ICollection<LessonUnitHomeworkSubmission> lessonUnitHomeworkSubmissions { get; set; }
         public ICollection<LessonUnitAssignment> lessonUnitAssignments { get; set; }
     }
 }

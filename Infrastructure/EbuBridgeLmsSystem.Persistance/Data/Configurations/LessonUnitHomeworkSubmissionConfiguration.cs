@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class LessonUnitHomeworkSubmissionConfiguration : IEntityTypeConfiguration<LessonUnitHomeworkSubmission>
+    public class LessonUnitHomeworkSubmissionConfiguration : IEntityTypeConfiguration<LessonUnitStudentHomeworkSubmission>
     {
-        public void Configure(EntityTypeBuilder<LessonUnitHomeworkSubmission> builder)
+        public void Configure(EntityTypeBuilder<LessonUnitStudentHomeworkSubmission> builder)
         {
             builder.Property(s => s.Grade).HasColumnType("decimal(18, 2)");
         }
