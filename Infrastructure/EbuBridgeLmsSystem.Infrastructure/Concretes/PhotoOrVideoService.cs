@@ -26,7 +26,7 @@ namespace EbuBridgeLmsSystem.Infrastructure.Concretes
         {
             ResourceType resourceTypeMain = new ResourceType();
             resourceTypeMain = (ResourceType)resourceType;
-            string publicId = await ExtractPublicIdFromUrl(mediaUrl);
+            string publicId =  ExtractPublicIdFromUrl(mediaUrl);
             var deletionParams = new DeletionParams(publicId) { ResourceType = resourceTypeMain };
             var result = await _cloudinary.DestroyAsync(deletionParams);
             if (result.Result != "ok")
@@ -146,7 +146,7 @@ namespace EbuBridgeLmsSystem.Infrastructure.Concretes
                 }
             }
         }
-        private async Task<string> ExtractPublicIdFromUrl(string url)
+        private  string ExtractPublicIdFromUrl(string url)
         {
             try
             {

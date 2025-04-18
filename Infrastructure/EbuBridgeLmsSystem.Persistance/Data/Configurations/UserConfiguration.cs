@@ -6,6 +6,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
     public class UserConfiguration : IEntityTypeConfiguration<AppUser>
     {
+        [Obsolete]
         public void Configure(EntityTypeBuilder<AppUser> builder)
         {
             builder.Property(s => s.fullName).HasMaxLength(150).IsRequired(true);

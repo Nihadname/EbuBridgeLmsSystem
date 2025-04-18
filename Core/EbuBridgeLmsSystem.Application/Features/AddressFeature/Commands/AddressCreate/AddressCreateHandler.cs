@@ -9,7 +9,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
 namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.AddressCreate
 {
@@ -52,7 +51,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Addres
                 var isExistedCity = await _unitOfWork.CityRepository.isExists(s => s.Id == request.CityId&&s.CountryId==request.CountryId&&!s.IsDeleted);
                 if (!isExistedCity)
                     return Result<Unit>.Failure(Error.Custom("location", "city doesnt exist in the database or either your value is invalid or city is in diffrent  country"), null, ErrorType.NotFoundError);
-                var isLocationExist = await AddressHelper.IsLocationExist(request);
+                var isLocationExist = await AddressHelper.IsLocationExist(request,_configuration,_httpClient,_unitOfWork);
                 if (!isLocationExist)
                     return Result<Unit>.Failure(Error.Custom("location", "location doesnt exist in the map"), null, ErrorType.NotFoundError);
                 request.AppUserId = currentUserInSystem.Id;

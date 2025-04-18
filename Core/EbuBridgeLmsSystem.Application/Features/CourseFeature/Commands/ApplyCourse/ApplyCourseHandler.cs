@@ -23,9 +23,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.ApplyCo
 
         public async Task<Result<Unit>> Handle(ApplyCourseCommand request, CancellationToken cancellationToken)
         {
-            await _unitOfWork.BeginTransactionAsync(cancellationToken);
-            try
-            {
+          
                 var existedStudent = await _unitOfWork.StudentRepository.GetEntity(s => s.Id == request.StudentId, true, includes: new Func<IQueryable<Student>, IQueryable<Student>>[] {
                  query => query
             .Include(p => p.courseStudents) });
@@ -42,11 +40,15 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.ApplyCo
                 {
                     throw new CustomException(400, "there is already enough students");
                 }
+            await _unitOfWork.BeginTransactionAsync(cancellationToken);
+            try
+            {
                 var newCourseStudent = new CourseStudent()
                 {
                     EnrolledDate = DateTime.UtcNow,
                     CourseId = request.CourseId,
-                    StudentId = request.StudentId
+                    StudentId = request.StudentId,
+                   isApproved=false
                 };
                 existedStudent.IsEnrolledInAnyCourse = true;
                 await _unitOfWork.CourseStudentRepository.Create(newCourseStudent);

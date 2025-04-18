@@ -23,7 +23,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
         private readonly ILogger<CreateAppUserAsParentHandler> _logger;
         private readonly IMapper _mapper;
         private readonly IBackgroundJobClient _backgroundJobClient;
-        public CreateAppUserAsParentHandler(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, IEmailService emailService, IMapper mapper, IBackgroundJobClient backgroundJobClient)
+        public CreateAppUserAsParentHandler(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, IEmailService emailService, IMapper mapper, IBackgroundJobClient backgroundJobClient, ILogger<CreateAppUserAsParentHandler> logger)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
@@ -31,6 +31,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
             _mapper = mapper;
 
             _backgroundJobClient = backgroundJobClient;
+            _logger = logger;
         }
 
         public async Task<Result<UserGetDto>> Handle(CreateAppUserAsParentCommand request, CancellationToken cancellationToken)

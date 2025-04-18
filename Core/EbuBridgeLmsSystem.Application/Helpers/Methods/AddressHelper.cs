@@ -1,5 +1,4 @@
-﻿using EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.AddressCreate;
-using EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Common;
+﻿using EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Common;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -10,13 +9,14 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Methods
 {
     public static class AddressHelper
     {
-        private static IConfiguration _configuration;
-        private static HttpClient _httpClient;
-        private static IUnitOfWork _unitOfWork;
-        public static async Task<bool> IsLocationExist(AddressBaseCommand addressBaseCommand )
+
+        public static async Task<bool> IsLocationExist(AddressBaseCommand addressBaseCommand,
+        IConfiguration configuration,
+        HttpClient httpClient,
+        IUnitOfWork unitOfWork)
         {
-            var apiKey = _configuration.GetSection("MapApiKey").Value;
-            var CityLocation = await _unitOfWork.CityRepository.GetEntity(s => s.Id == addressBaseCommand.CityId, includes: new Func<IQueryable<City>, IQueryable<City>>[] {
+            var apiKey = configuration.GetSection("MapApiKey").Value;
+            var CityLocation = await unitOfWork.CityRepository.GetEntity(s => s.Id == addressBaseCommand.CityId, includes: new Func<IQueryable<City>, IQueryable<City>>[] {
                  query => query
             .Include(p => p.Country) });
             if (CityLocation == null || CityLocation.Country == null)
@@ -25,7 +25,7 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Methods
 
             try
             {
-                var response = await _httpClient.GetAsync(url);
+                var response = await httpClient.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)
                 {

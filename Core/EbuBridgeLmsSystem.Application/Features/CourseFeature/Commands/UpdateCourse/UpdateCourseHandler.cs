@@ -12,6 +12,12 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.UpdateC
     public class UpdateCourseHandler : IRequestHandler<UpdateCourseCommand, Result<Unit>>
     {
         private readonly IUnitOfWork _unitOfWork;
+
+        public UpdateCourseHandler(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
+
         public async Task<Result<Unit>> Handle(UpdateCourseCommand request, CancellationToken cancellationToken)
         {
             var existingCourseResult=await GetExistingCourse(request.CourseId);

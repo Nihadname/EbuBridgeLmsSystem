@@ -1,27 +1,27 @@
-﻿using AutoMapper;
-using EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.AddressCreate;
-using EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.UpdateAdress;
+﻿using EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.UpdateAdress;
 using EbuBridgeLmsSystem.Application.Helpers.Methods;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.UpdateAddress
 {
     public class UpdateAddressHandler : IRequestHandler<UpdateAddressCommand, Result<Unit>>
     {
-        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<UpdateAddressHandler> _logger;
-
-        public UpdateAddressHandler(ILogger<UpdateAddressHandler> logger, IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient;
+        public UpdateAddressHandler(ILogger<UpdateAddressHandler> logger, IUnitOfWork unitOfWork,HttpClient httpClient, IConfiguration configuration)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _httpClient = httpClient;
+            _configuration = configuration;
         }
 
         public async Task<Result<Unit>> Handle(UpdateAddressCommand request, CancellationToken cancellationToken)
@@ -53,7 +53,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Update
                 existedAddress.Street = request.Street;
                 hasChanges = true;
             }
-            var isLocationExist = await AddressHelper.IsLocationExist(request);
+            var isLocationExist = await AddressHelper.IsLocationExist(request, _configuration, _httpClient, _unitOfWork);
             if (!isLocationExist)
                 return Result<Unit>.Failure(Error.Custom("location", "location doesnt exist in the map"), null, ErrorType.NotFoundError);
             if (!hasChanges)

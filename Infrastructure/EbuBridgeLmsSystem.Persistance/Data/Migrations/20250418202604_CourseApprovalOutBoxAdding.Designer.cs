@@ -4,6 +4,7 @@ using EbuBridgeLmsSystem.Persistance.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250418202604_CourseApprovalOutBoxAdding")]
+    partial class CourseApprovalOutBoxAdding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -972,51 +975,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.ToTable("lessonUnits");
                 });
 
-            modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LessonUnitAssignment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("CreatedTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<DateTime?>("DeletedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<Guid>("LessonUnitId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("ScheduledEndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ScheduledStartTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LessonUnitId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("lessonUnitAssignments");
-                });
-
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LessonUnitAttendance", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1027,17 +985,13 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("CreatedTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletedTime")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsPresent")
                         .HasColumnType("bit");
@@ -1051,22 +1005,15 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.Property<Guid>("LessonStudentStudentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("LessonUnitId")
+                    b.Property<Guid>("LessonUnitId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("UpdatedTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<Guid>("lessonUnitAssignmentId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LessonUnitId");
-
-                    b.HasIndex("lessonUnitAssignmentId");
 
                     b.HasIndex("LessonStudentLessonId", "LessonStudentStudentId");
 
@@ -2075,34 +2022,11 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.Navigation("Lesson");
                 });
 
-            modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LessonUnitAssignment", b =>
-                {
-                    b.HasOne("EbuBridgeLmsSystem.Domain.Entities.LessonUnit", "LessonUnit")
-                        .WithMany()
-                        .HasForeignKey("LessonUnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EbuBridgeLmsSystem.Domain.Entities.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LessonUnit");
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LessonUnitAttendance", b =>
                 {
-                    b.HasOne("EbuBridgeLmsSystem.Domain.Entities.LessonUnit", null)
+                    b.HasOne("EbuBridgeLmsSystem.Domain.Entities.LessonUnit", "LessonUnit")
                         .WithMany("LessonUnitAttendances")
-                        .HasForeignKey("LessonUnitId");
-
-                    b.HasOne("EbuBridgeLmsSystem.Domain.Entities.LessonUnitAssignment", "lessonUnitAssignment")
-                        .WithMany()
-                        .HasForeignKey("lessonUnitAssignmentId")
+                        .HasForeignKey("LessonUnitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2114,7 +2038,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
                     b.Navigation("LessonStudent");
 
-                    b.Navigation("lessonUnitAssignment");
+                    b.Navigation("LessonUnit");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LessonUnitHomeworkSubmission", b =>
