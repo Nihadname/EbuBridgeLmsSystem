@@ -20,14 +20,12 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
         public async Task<CourseDomainReturnDto> GetCourseReturnDtoByIdAsync(Guid Id,CancellationToken cancellationToken)
         {
             var course = await _context.Courses.Where(s => s.Id == Id && !s.IsDeleted).Include(p => p.Language)
-        .Include(p => p.lessons).Select(existedCourse => new CourseDomainReturnDto() {
+        .Include(p => p.Lessons).Select(existedCourse => new CourseDomainReturnDto() {
             Id = existedCourse.Id,
             Name = existedCourse.Name,
             Description = existedCourse.Description,
-            difficultyLevel = existedCourse.difficultyLevel,
+            difficultyLevel = existedCourse.DifficultyLevel,
             DurationInHours = existedCourse.DurationInHours,
-            EndDate = existedCourse.EndDate,
-            StartDate = existedCourse.StartDate,
             ImageUrl = existedCourse.ImageUrl,
             Language = new LanguageInCourseListItemDto()
             {
@@ -36,17 +34,12 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
             },
             Price = existedCourse.Price,
             Requirements = existedCourse.Requirements,
-            lessonInCourses = existedCourse.lessons.Select(p => new LessonInCourseReturnDto()
+            lessonInCourses = existedCourse.Lessons.Select(p => new LessonInCourseReturnDto()
             {
                 Title = p.Title,
-                EndTime = p.EndTime,
                 Description = p.Description,
-                Duration = p.Duration,
-                ScheduledDate = p.ScheduledDate,
                 GradingPolicy = p.GradingPolicy,
                 LessonType = p.LessonType,
-                MeetingLink = p.MeetingLink,
-                StartTime = p.StartTime,
                 Status = p.Status,
             }).ToList()
         }).FirstOrDefaultAsync(cancellationToken);

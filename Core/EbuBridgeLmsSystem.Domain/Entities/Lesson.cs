@@ -5,22 +5,17 @@ namespace EbuBridgeLmsSystem.Domain.Entities
     public sealed class Lesson:BaseEntity
     {
         public string Title { get; set; } 
-        public DateTime ScheduledDate { get; set; }
-        public TimeSpan Duration { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
         public LessonStatus Status { get; set; }
         public string Description { get; set; }
         public LessonType LessonType { get; set; }
         public string GradingPolicy { get; set; }
-        public string MeetingLink { get; set; }
         public Guid CourseId { get; set; }
         public Course Course { get; set; }
         public Guid TeacherId { get; set; }
         public Teacher Teacher { get; set; }
-        public ICollection<LessonStudent> lessonStudents { get; set; }  
-        public ICollection<LessonQuiz>  lessonQuizzes { get; set; }
-        public ICollection<LessonUnit> lessonUnits { get; set; }
+        public ICollection<LessonStudent> LessonStudents { get; set; }  
+        public ICollection<LessonQuiz>  LessonQuizzes { get; set; }
+        public ICollection<LessonUnit> LessonUnits { get; set; }
 
     }
     public enum LessonStatus

@@ -29,7 +29,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
         public async Task<Result<Unit>> Handle(LessonStudentCreateCommand request, CancellationToken cancellationToken)
         {
                 var currentUserInTheSystem = await _userResolver.GetCurrentUserAsync(s=>s.Student.Id==request.StudentId,includes: new Func<IQueryable<AppUser>, IQueryable<AppUser>>[]{
-               q => q.Include(p => p.Student).ThenInclude(s => s.courseStudents).ThenInclude(cs => cs.Course).ThenInclude(c => c.lessons),
+               q => q.Include(p => p.Student).ThenInclude(s => s.courseStudents).ThenInclude(cs => cs.Course).ThenInclude(c => c.Lessons),
         q => q.Include(p => p.Student).ThenInclude(s => s.lessonStudents)
             });
                
@@ -47,7 +47,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
                 if (existedLesson == null)
                     return LessonNotFoundError();
                 var isTheLessonInTheCourseStudentIsIn = existedStudent.courseStudents.Select(courseStudent => courseStudent.Course)
-                    .Any(course => course.lessons.Any(courseLesson => courseLesson.Id == request.LessonId && !courseLesson.IsDeleted) && !course.IsDeleted);
+                    .Any(course => course.Lessons.Any(courseLesson => courseLesson.Id == request.LessonId && !courseLesson.IsDeleted) && !course.IsDeleted);
                 if (!isTheLessonInTheCourseStudentIsIn)
                 {
                     return LessonNotInCourseError(existedLesson.Title);

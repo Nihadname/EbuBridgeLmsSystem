@@ -35,7 +35,6 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.UpdateC
                 return Result<Unit>.FailureResult<bool, Unit>(checkIfCourseLanguageChangedResult);
             var IsDurationChanged=UpdateCourseDuration(request, existingCourseResult.Data);
             var isPriceChanged = UpdateCoursePrice(request, existingCourseResult.Data);
-            var isDatesChanged= UpdateCourseDates(request, existingCourseResult.Data);
             var isCourseDetailsResult = UpdateCourseDetails(request.Description, request.Requirements, existingCourseResult.Data);
             await UpdateCourseImage(request, existingCourseResult.Data);
             hasChanges |= checkNameChangeResult.Data;
@@ -44,7 +43,6 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.UpdateC
             hasChanges |= checkIfDifficultyLevelChangedResult.Data;
             hasChanges |= isPriceChanged;
             hasChanges |= IsDurationChanged;
-            hasChanges |= isDatesChanged;
             if (hasChanges)
             {
                 await _unitOfWork.CourseRepository.Update(existingCourseResult.Data);
@@ -110,7 +108,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.UpdateC
             if(!request.difficultyLevel.HasValue) return Result<bool>.Success(false,null);
             if (Enum.TryParse<DifficultyLevel>(request.difficultyLevel.ToString(), out var difficulty))
             {
-                existingCourse.difficultyLevel = difficulty;
+                existingCourse.DifficultyLevel = difficulty;
                 return Result<bool>.Success(true, null);
             }
             return Result<bool>.Failure(Error.BadRequest,null,ErrorType.ValidationError);
@@ -140,23 +138,6 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.UpdateC
             existingCourse.DurationInHours = request.DurationHours.Value;
             return true;
         }
-        private bool UpdateCourseDates(UpdateCourseCommand request, Course existingCourse)
-        {
-            bool hasChanges = false;
-
-            if (request.StartDate.HasValue)
-            {
-                existingCourse.StartDate = request.StartDate.Value;
-                hasChanges = true;
-            }
-
-            if (request.EndDate.HasValue)
-            {
-                existingCourse.EndDate = request.EndDate.Value;
-                hasChanges = true;
-            }
-
-            return hasChanges;
-        }
+       
     }
 }

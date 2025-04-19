@@ -6,7 +6,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public Guid LessonUnitId { get; set; }
-        public LessonUnit LessonUnit { get; set; }
+        public Guid LessonUnitStudentHomeworkId { get; set; }
+        public LessonUnitStudentHomework LessonUnitStudentHomework { get; set; }
     }
 }

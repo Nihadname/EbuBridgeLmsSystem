@@ -29,8 +29,6 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetByIdC
                 Description=existedCourse.Description,
                 difficultyLevel=existedCourse.difficultyLevel,
                 DurationInHours=existedCourse.DurationInHours,
-                EndDate=existedCourse.EndDate,
-                StartDate=existedCourse.StartDate,
                 ImageUrl=existedCourse.ImageUrl,
                 Language=new LanguageInCourseListItemDto()
                 {

@@ -21,7 +21,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
             builder.HasIndex(s => s.CreatedTime);
             builder.HasKey(ls => new { ls.LessonId, ls.StudentId });
             builder.HasOne(ls => ls.Lesson)
-        .WithMany(l => l.lessonStudents)
+        .WithMany(l => l.LessonStudents)
         .HasForeignKey(ls => ls.LessonId).OnDelete(DeleteBehavior.NoAction);
             builder.HasOne(ls => ls.Student)
         .WithMany(s => s.lessonStudents)

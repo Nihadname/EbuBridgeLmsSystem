@@ -6,12 +6,12 @@ namespace EbuBridgeLmsSystem.Domain.Entities
     {
         public Guid LessonUnitId { get; set; }
         public LessonUnit LessonUnit { get; set; }
-
         public Guid StudentId { get; set; }
         public Student Student { get; set; }
-
         public DateTime ScheduledStartTime { get; set; }
         public DateTime ScheduledEndTime { get; set; }
+        public TimeSpan Duration { get; set; }
+        public string MeetingLink { get; set; }
         public LessonUnitAttendance lessonUnitAttendance { get; set; }
     }
 }

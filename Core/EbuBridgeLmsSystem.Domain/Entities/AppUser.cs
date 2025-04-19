@@ -9,7 +9,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public bool IsDeleted { get; set; }
         public DateTime? DeletedTime { get; set; }
         public string fullName { get; set; }
-        public string? Image { get; set; }
+        public string Image { get; set; }
         public bool IsBlocked { get; set; }
         public DateTime? CreatedTime { get; set; }
         public DateTime? UpdatedTime { get; set; }

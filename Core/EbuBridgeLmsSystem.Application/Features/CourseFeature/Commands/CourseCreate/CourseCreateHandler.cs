@@ -53,14 +53,12 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
                 {
                     Name = request.Name,
                     Description = request.Description,
-                    difficultyLevel = request.difficultyLevel,
+                    DifficultyLevel = request.difficultyLevel,
                     LanguageId = request.LanguageId,
                     DurationInHours =request.DurationHours,
                     Requirements = request.Requirements,
                     Price = request.Price,
                     ImageUrl = null,
-                    StartDate = request.StartDate ?? null,
-                    EndDate = request.EndDate ?? null,
                     MaxAmountOfPeople = request.MaxAmountOfPeople,
                 };
                 await _unitOfWork.CourseRepository.Create(newCourse);

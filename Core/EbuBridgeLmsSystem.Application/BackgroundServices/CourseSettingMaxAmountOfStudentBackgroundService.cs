@@ -1,0 +1,21 @@
+﻿using EbuBridgeLmsSystem.Domain.Repositories;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+
+namespace EbuBridgeLmsSystem.Application.BackgroundServices
+{
+    public sealed class CourseSettingMaxAmountOfStudentBackgroundService : BackgroundService
+    {
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<CourseImageUploadBackgroundService> _logger;
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+            }
+                throw new NotImplementedException();
+        }
+    }
+}

@@ -8,19 +8,16 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public string ImageUrl { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public DifficultyLevel difficultyLevel { get; set; }
-        public ICollection<Lesson> lessons { get; set; }
+        public DifficultyLevel DifficultyLevel { get; set; }
+        public ICollection<Lesson> Lessons { get; set; }
         public int DurationInHours { get; set; }
         public string Requirements { get; set; }
         public decimal Price { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public ICollection<CourseStudent> courseStudents { get; set; }
+        public ICollection<CourseStudent> CourseStudents { get; set; }
         public Guid LanguageId { get; set; }
         public Language Language { get; set; }
         public int MaxAmountOfPeople { get; set; }
-        public DateTime EnrollmentEndDeadline { get; set; }
-        public DateTime EnrollmentStartDate { get; set; }
+
     }
     public enum DifficultyLevel
     {

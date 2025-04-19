@@ -23,7 +23,6 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonUnitFeature.Commands.Les
             var newLessonUnit = new LessonUnit()
             {
                 LessonId = request.LessonId,
-                LessonSetTime = DateTime.UtcNow,
                 Name = request.Name,
             };
             await _unitOfWork.LessonUnitRepository.Create(newLessonUnit);
