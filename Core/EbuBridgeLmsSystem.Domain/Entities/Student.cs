@@ -12,6 +12,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public ICollection<LessonStudent> lessonStudents { get; set; }
         public ICollection<CourseStudent> courseStudents { get; set; }
         public ICollection<LessonUnitAssignment> lessonUnitAssignments { get; set; }
+        public ICollection<TeacherStudent> TeacherStudents { get; set; }
         public ICollection<Fee> fees { get; set; }
         public bool IsEnrolledInAnyCourse { get; set; }
 

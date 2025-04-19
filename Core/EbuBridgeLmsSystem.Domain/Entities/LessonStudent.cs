@@ -11,6 +11,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public ICollection<QuizResult> QuizResults { get; set; }
         public ICollection<LessonUnitAttendance> lessonUnitAttendances { get; set; }
         public bool isFinished { get; set; }
+        public bool isApproved { get; set; }
 
     }
 }

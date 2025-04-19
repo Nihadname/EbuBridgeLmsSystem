@@ -17,7 +17,7 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
                 var allCourses = await unitOfWork.CourseRepository.GetAll(s=>s.IsDeleted);
                 foreach (var course in allCourses)
                 {
-                    
+                    var limitSetToCourses=course.CourseTeachers.Select(s=>s.Teacher).Count();
                 }
             }
                 throw new NotImplementedException();
