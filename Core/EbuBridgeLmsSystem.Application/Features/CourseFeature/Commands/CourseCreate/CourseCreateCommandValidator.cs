@@ -15,17 +15,17 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
             RuleFor(s => s.Requirements).NotEmpty();
             RuleFor(x => x.Price)
             .GreaterThan(0).WithMessage("Salary must be a positive number.").NotEmpty();
-            RuleFor(x => x.StartDate)
-               .NotNull()
-         .GreaterThanOrEqualTo(DateTime.UtcNow)
-         .WithMessage("StartDate must be in the future.");
+         //   RuleFor(x => x.StartDate)
+         //      .NotNull()
+         //.GreaterThanOrEqualTo(DateTime.UtcNow)
+         //.WithMessage("StartDate must be in the future.");
 
-            RuleFor(x => x.EndDate)
-                 .NotNull()
-                .GreaterThanOrEqualTo(DateTime.UtcNow)
-                .WithMessage("StartDate must be in the future.");
-            RuleFor(x => x)
-           .Must(x => x.StartDate <= x.EndDate);
+         //   RuleFor(x => x.EndDate)
+         //        .NotNull()
+         //       .GreaterThanOrEqualTo(DateTime.UtcNow)
+         //       .WithMessage("StartDate must be in the future.");
+         //   RuleFor(x => x)
+         //  .Must(x => x.StartDate <= x.EndDate);
             RuleFor(x => x.formFile).NotNull();   
             RuleFor(s=>s.MaxAmountOfPeople).NotNull();
             RuleFor(s => s).Custom((c, context) =>

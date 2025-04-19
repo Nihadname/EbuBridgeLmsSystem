@@ -39,14 +39,9 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetByIdC
                 Requirements=existedCourse.Requirements,
                 lessonInCourses=existedCourse.lessonInCourses.Select(p=>new LessonInCourseReturnDto() {
                     Title=p.Title,
-                    EndTime=p.EndTime,
                     Description=p.Description,
-                    Duration=p.Duration,
-                    ScheduledDate=p.ScheduledDate,
                     GradingPolicy=p.GradingPolicy,
                     LessonType=p.LessonType,
-                    MeetingLink=p.MeetingLink,
-                    StartTime=p.StartTime,
                     Status=p.Status,
                 }).ToList(),
                 

@@ -17,7 +17,5 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.UpdateC
         public Guid? LanguageId { get; init; }
         public string Requirements { get; init; }
         public decimal? Price { get; init; }
-        public DateTime? StartDate { get; init; }
-        public DateTime? EndDate { get; init; }
     }
 }

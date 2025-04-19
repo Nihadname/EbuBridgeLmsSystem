@@ -28,8 +28,6 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
                     LanguageId = courseCreateDto.LanguageId,
                     Requirements = courseCreateDto.Requirements,
                     Price = courseCreateDto.Price,
-                    StartDate = courseCreateDto.StartDate,
-                    EndDate = courseCreateDto.EndDate,
                 };
                 var result=await mediator.Send(courseCommand);
                 return result.ToApiResult();

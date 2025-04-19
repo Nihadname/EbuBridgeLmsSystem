@@ -18,8 +18,6 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetByIdC
         public int DurationInHours { get; init; }
         public string Requirements { get; init; }
         public decimal Price { get; init; }
-        public DateTime? StartDate { get; init; }
-        public DateTime? EndDate { get; init; }
         public LanguageInCourseListItemDto Language { get; init; }
         public List<LessonInCourseReturnDto> lessonInCourses { get; init; }
     }
