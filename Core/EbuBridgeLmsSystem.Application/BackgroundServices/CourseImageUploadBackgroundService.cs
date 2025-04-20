@@ -23,14 +23,14 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
             {
                 var unitOfWork=scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
                 var imageService=scope.ServiceProvider.GetRequiredService<IPhotoOrVideoService>();
-                var outBoxQuery = await unitOfWork.CourseImageOutBoxRepository.GetQuery(s => s.OutboxProccess == Domain.Enums.OutboxProccess.Pending);
+                var outBoxQuery = await unitOfWork.CourseImageOutBoxRepository.GetQuery(s => s.OutboxProccess == Domain.Enums.OutboxProccess.Pending&& !s.IsDeleted);
                 var pendingOutBoxes=outBoxQuery.OrderBy(s=>s.CreatedTime).ToList();
                
                 foreach (var pendingOutBox in pendingOutBoxes)
                 {
                     try
                     {
-                        var existedCourseWithId = await unitOfWork.CourseRepository.GetEntity(s => s.Id == pendingOutBox.CourseId);
+                        var existedCourseWithId = await unitOfWork.CourseRepository.GetEntity(s => s.Id == pendingOutBox.CourseId&&!s.IsDeleted);
                         if(existedCourseWithId != null)
                         {
                             var fileName = ImageExtension.GetImageFileNameFromCourseId(existedCourseWithId.Id);
