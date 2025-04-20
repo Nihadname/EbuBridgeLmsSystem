@@ -56,6 +56,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<LessonUnitStudentHomeworkMaterial> lessonUnitStudentHomeworkMaterials { get; set; }
         public DbSet<CourseStudentApprovalOutBox> courseStudentApprovalOutBoxes { get; set; }
         public DbSet<LessonUnitAssignment> lessonUnitAssignments { get; set; }
+        public  DbSet<LessonStudentStudentApprovalOutBox> LessonStudentStudentApprovalOutBoxes { get;set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class LessonQuizConfiguration : IEntityTypeConfiguration<LessonQuiz>
+    public sealed class LessonQuizConfiguration : IEntityTypeConfiguration<LessonQuiz>
     {
         public void Configure(EntityTypeBuilder<LessonQuiz> builder)
         {
@@ -14,6 +14,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
             builder.Property(s => s.UpdatedTime).HasDefaultValueSql("GETDATE()");
             builder.HasKey(e => e.Id);
             builder.Property(s=>s.Title).HasMaxLength(70);
+            builder.Property(s => s.Instructions).HasMaxLength(200);
             builder.HasIndex(s => s.CreatedTime);
         }
     }

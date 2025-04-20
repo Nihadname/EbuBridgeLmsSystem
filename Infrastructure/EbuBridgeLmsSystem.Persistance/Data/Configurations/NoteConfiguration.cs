@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class NoteConfiguration : IEntityTypeConfiguration<Note>
+    public sealed class NoteConfiguration : IEntityTypeConfiguration<Note>
     {
         public void Configure(EntityTypeBuilder<Note> builder)
         {

@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public sealed class LessonUnitConfiguration : IEntityTypeConfiguration<LessonUnit>
+    public sealed class LessonUnitStudentHomeworkMaterialConfiguration : IEntityTypeConfiguration<LessonUnitStudentHomeworkMaterial>
     {
-        public void Configure(EntityTypeBuilder<LessonUnit> builder)
+        public void Configure(EntityTypeBuilder<LessonUnitStudentHomeworkMaterial> builder)
         {
             builder.Property(s => s.IsDeleted).HasDefaultValue(false);
             builder.Property(s => s.CreatedTime).HasDefaultValueSql("GETDATE()");
             builder.HasIndex(s => s.CreatedTime);
             builder.Property(s => s.UpdatedTime).HasDefaultValueSql("GETDATE()");
-            builder.Property(s => s.Name).HasMaxLength(90);
+            builder.Property(s => s.FileName).HasMaxLength(400);
 
         }
     }

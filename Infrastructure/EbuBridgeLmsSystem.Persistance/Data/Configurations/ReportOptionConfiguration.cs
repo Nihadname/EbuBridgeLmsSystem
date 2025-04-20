@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class ReportOptionConfiguration : IEntityTypeConfiguration<ReportOption>
+    public sealed class ReportOptionConfiguration : IEntityTypeConfiguration<ReportOption>
     {
         public void Configure(EntityTypeBuilder<ReportOption> builder)
         {

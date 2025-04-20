@@ -13,5 +13,15 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public TimeSpan Duration { get; set; }
         public string MeetingLink { get; set; }
         public LessonUnitAttendance lessonUnitAttendance { get; set; }
+
+
+
+        public void SetDurationAutomaticly()
+        {
+            if (ScheduledEndTime > ScheduledStartTime)
+                this.Duration = ScheduledEndTime - ScheduledStartTime;
+            else
+                this.Duration = TimeSpan.Zero;
+        }
     }
 }

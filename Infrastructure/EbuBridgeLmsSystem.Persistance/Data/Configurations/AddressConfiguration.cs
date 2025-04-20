@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class AddressConfiguration : IEntityTypeConfiguration<Address>
+    public sealed class AddressConfiguration : IEntityTypeConfiguration<Address>
     {
         public void Configure(EntityTypeBuilder<Address> builder)
         {

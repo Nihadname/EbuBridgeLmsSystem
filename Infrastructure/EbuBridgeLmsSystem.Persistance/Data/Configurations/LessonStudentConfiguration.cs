@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class LessonStudentConfiguration : IEntityTypeConfiguration<LessonStudent>
+    public sealed class LessonStudentConfiguration : IEntityTypeConfiguration<LessonStudent>
     {
         public void Configure(EntityTypeBuilder<LessonStudent> builder)
         {
@@ -27,6 +27,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
         .WithMany(s => s.lessonStudents)
         .HasForeignKey(ls => ls.StudentId).OnDelete(DeleteBehavior.NoAction);
             builder.Property(s => s.isFinished).HasDefaultValue(false);
+            builder.Property(s => s.isApproved).HasDefaultValue(false);
         }
     }
 }

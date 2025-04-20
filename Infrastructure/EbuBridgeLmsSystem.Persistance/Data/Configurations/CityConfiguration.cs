@@ -6,7 +6,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
     public sealed class CityConfiguration : IEntityTypeConfiguration<City>
     {
-        public void Configure(EntityTypeBuilder<City> builder)
+        public  void Configure(EntityTypeBuilder<City> builder)
         {
             builder.Property(s => s.IsDeleted).HasDefaultValue(false);
             builder.Property(s => s.CreatedTime).HasDefaultValueSql("GETDATE()");

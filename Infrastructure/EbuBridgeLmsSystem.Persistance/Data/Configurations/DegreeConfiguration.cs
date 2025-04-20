@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class DegreeConfiguration : IEntityTypeConfiguration<Degree>
+    public sealed class DegreeConfiguration : IEntityTypeConfiguration<Degree>
     {
         public void Configure(EntityTypeBuilder<Degree> builder)
         {

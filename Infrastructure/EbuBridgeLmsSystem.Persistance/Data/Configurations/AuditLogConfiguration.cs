@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
+    public sealed class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
     {
         public void Configure(EntityTypeBuilder<AuditLog> builder)
         {

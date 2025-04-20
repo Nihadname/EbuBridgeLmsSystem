@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class RequestToRegisterConfiguration : IEntityTypeConfiguration<RequestToRegister>
+    public sealed class RequestToRegisterConfiguration : IEntityTypeConfiguration<RequestToRegister>
     {
         public void Configure(EntityTypeBuilder<RequestToRegister> builder)
         {

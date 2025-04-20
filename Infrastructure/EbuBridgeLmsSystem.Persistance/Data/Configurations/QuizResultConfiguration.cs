@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class QuizResultConfiguration : IEntityTypeConfiguration<QuizResult>
+    public sealed class QuizResultConfiguration : IEntityTypeConfiguration<QuizResult>
     {
         public void Configure(EntityTypeBuilder<QuizResult> builder)
         {

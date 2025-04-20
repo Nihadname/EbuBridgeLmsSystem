@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class LessonUnitHomeworkSubmissionConfiguration : IEntityTypeConfiguration<LessonUnitStudentHomeworkSubmission>
+    public sealed class LessonUnitHomeworkSubmissionConfiguration : IEntityTypeConfiguration<LessonUnitStudentHomeworkSubmission>
     {
         public void Configure(EntityTypeBuilder<LessonUnitStudentHomeworkSubmission> builder)
         {

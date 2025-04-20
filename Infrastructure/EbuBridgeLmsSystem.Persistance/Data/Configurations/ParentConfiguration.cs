@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class ParentConfiguration : IEntityTypeConfiguration<Parent>
+    public sealed class ParentConfiguration : IEntityTypeConfiguration<Parent>
     {
         public void Configure(EntityTypeBuilder<Parent> builder)
         {

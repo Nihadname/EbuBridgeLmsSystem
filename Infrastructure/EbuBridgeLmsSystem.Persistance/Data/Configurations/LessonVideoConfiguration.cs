@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class LessonVideoConfiguration : IEntityTypeConfiguration<LessonUnitVideo>
+    public sealed class LessonVideoConfiguration : IEntityTypeConfiguration<LessonUnitVideo>
     {
         public void Configure(EntityTypeBuilder<LessonUnitVideo> builder)
         {

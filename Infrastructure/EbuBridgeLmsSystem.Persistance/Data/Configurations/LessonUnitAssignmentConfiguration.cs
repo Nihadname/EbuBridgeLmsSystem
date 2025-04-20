@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
 {
-    public class LessonUnitAssignmentConfiguration : IEntityTypeConfiguration<LessonUnitAssignment>
+    public sealed class LessonUnitAssignmentConfiguration : IEntityTypeConfiguration<LessonUnitAssignment>
     {
         public void Configure(EntityTypeBuilder<LessonUnitAssignment> builder)
         {
@@ -12,6 +12,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
             builder.Property(s => s.CreatedTime).HasDefaultValueSql("GETDATE()");
             builder.Property(s => s.UpdatedTime).HasDefaultValueSql("GETDATE()");
             builder.HasKey(e => e.Id);
+            builder.Property(s => s.MeetingLink).HasMaxLength(400);
         }
     }
 }
