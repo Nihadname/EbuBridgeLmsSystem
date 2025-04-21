@@ -21,7 +21,7 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
             _mediator = mediator;
         }
         [HttpGet("GetAllWithPaganation")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll(string? cursor = null, string? searchQuery = null, int limit = 4)
         {
             var cityGetAllQuery = new GetAllCourseRequestQuery()
@@ -34,7 +34,7 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
             return this.ToActionResult(result);
         }
         [HttpGet("{Id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetById(Guid Id)
         {
             if(Id == Guid.Empty)

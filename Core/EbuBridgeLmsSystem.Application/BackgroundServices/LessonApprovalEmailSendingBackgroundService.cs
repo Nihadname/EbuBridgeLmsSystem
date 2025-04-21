@@ -8,11 +8,11 @@ using Microsoft.Extensions.Logging;
 
 namespace EbuBridgeLmsSystem.Application.BackgroundServices
 {
-    internal class CourseApprovalEmailSendingBackgroundService : BackgroundService
+    public class LessonApprovalEmailSendingBackgroundService : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<CourseApprovalEmailSendingBackgroundService> _logger;
-        public CourseApprovalEmailSendingBackgroundService(IServiceProvider serviceProvider, ILogger<CourseApprovalEmailSendingBackgroundService> logger)
+        private readonly ILogger<LessonApprovalEmailSendingBackgroundService> _logger;
+        public LessonApprovalEmailSendingBackgroundService(IServiceProvider serviceProvider, ILogger<LessonApprovalEmailSendingBackgroundService> logger)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
@@ -23,36 +23,33 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
             {
                 var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
                 var emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
-                var outBoxQuery = await unitOfWork.CourseStudentApprovalOutBoxRepository.GetQuery(s => s.OutboxProccess == Domain.Enums.OutboxProccess.Pending);
+                var outBoxQuery = await unitOfWork.LessonStudentStudentApprovalOutBoxRepository.GetQuery(s => s.OutboxProccess == Domain.Enums.OutboxProccess.Pending);
                 var pendingOutBoxes = outBoxQuery.OrderBy(s => s.CreatedTime).ToList();
-                foreach (var pendingOutBox in pendingOutBoxes)
+                foreach (var outbox in pendingOutBoxes)
                 {
                     if (stoppingToken.IsCancellationRequested)
                         break;
                     try
                     {
-                        var existedCourseStudentWithOutBoxId = await unitOfWork.CourseStudentRepository.GetEntity(s => s.Id == pendingOutBox.Id && !s.IsDeleted && s.isApproved, includes: new Func<IQueryable<CourseStudent>, IQueryable<CourseStudent>>[] {
+                        var existedLessonStudentWithOutBoxId=await unitOfWork.LessonStudentRepository.GetEntity(s=>s.Id==outbox.Id&&!s.IsDeleted&&s.isApproved, includes: new Func<IQueryable<LessonStudent>, IQueryable<LessonStudent>>[] {
                  query => query
-            .Include(p => p.Student).ThenInclude(s=>s.AppUser) });
-                        if (existedCourseStudentWithOutBoxId is not null)
+            .Include(p => p.Student).ThenInclude(s=>s.AppUser).Include(s=>s.Lesson) });
+                        if(existedLessonStudentWithOutBoxId is not null)
                         {
-                            var body = $"<h1>Welcome!</h1><p>Thank you for joining us. We're excited to have you!, this is your confirmation towards attending this course </p>";
-                            await emailService.SendEmailAsync(existedCourseStudentWithOutBoxId.Student.AppUser.Email, "Course approval", body, true);
-                            pendingOutBox.OutboxProccess = Domain.Enums.OutboxProccess.Completed;
-                            await unitOfWork.CourseStudentApprovalOutBoxRepository.Update(pendingOutBox);
+                            var body = $"<h1>Welcome!</h1><p>Thank you for joining us. We're excited to have you!, this is your confirmation towards attending this lesson ${existedLessonStudentWithOutBoxId.Lesson.Title} </p>";
+                            await emailService.SendEmailAsync(existedLessonStudentWithOutBoxId.Student.AppUser.Email, "Course approval", body, true);
+                            outbox.OutboxProccess = Domain.Enums.OutboxProccess.Completed;
+                            await unitOfWork.LessonStudentStudentApprovalOutBoxRepository.Update(outbox);
                             await unitOfWork.SaveChangesAsync(stoppingToken);
                         }
                     }
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, $"Error processing outbox for course: {ex.Message}");
-
                     }
                 }
-
             }
             await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
-
         }
     }
 }

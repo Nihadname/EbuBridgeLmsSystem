@@ -11,8 +11,6 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public string GradingPolicy { get; set; }
         public Guid CourseId { get; set; }
         public Course Course { get; set; }
-        public Guid TeacherId { get; set; }
-        public Teacher Teacher { get; set; }
         public ICollection<LessonStudent> LessonStudents { get; set; }  
         public ICollection<LessonQuiz>  LessonQuizzes { get; set; }
         public ICollection<LessonUnit> LessonUnits { get; set; }

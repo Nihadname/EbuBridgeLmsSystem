@@ -5,7 +5,7 @@ using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.LessonStudentApproval
+namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.LessonStudentApproval
 {
     public sealed class LessonStudentApprovalHandler : IRequestHandler<LessonStudentApprovalCommand, Result<Unit>>
     {
@@ -21,7 +21,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.LessonStu
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
-             var existedLessonStudent=await _unitOfWork.LessonStudentRepository.GetEntity(s=>s.Id==request.LessonStudentId&&!s.IsDeleted);
+                var existedLessonStudent = await _unitOfWork.LessonStudentRepository.GetEntity(s => s.Id == request.LessonStudentId && !s.IsDeleted);
                 if (existedLessonStudent == null)
                     return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
                 existedLessonStudent.isApproved = true;
@@ -29,7 +29,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.LessonStu
                 LessonStudentStudentApprovalOutBox lessonStudentStudentApprovalOutBox = new()
                 {
                     LessonStudentId = existedLessonStudent.Id,
-                    OutboxProccess=Domain.Enums.OutboxProccess.Pending,
+                    OutboxProccess = Domain.Enums.OutboxProccess.Pending,
                     CreatedTime = DateTime.UtcNow,
                 };
                 await _unitOfWork.LessonStudentStudentApprovalOutBoxRepository.Create(lessonStudentStudentApprovalOutBox);

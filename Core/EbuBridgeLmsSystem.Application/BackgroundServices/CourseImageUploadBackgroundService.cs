@@ -28,6 +28,8 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
                
                 foreach (var pendingOutBox in pendingOutBoxes)
                 {
+                    if (stoppingToken.IsCancellationRequested)
+                        break;
                     try
                     {
                         var existedCourseWithId = await unitOfWork.CourseRepository.GetEntity(s => s.Id == pendingOutBox.CourseId&&!s.IsDeleted);

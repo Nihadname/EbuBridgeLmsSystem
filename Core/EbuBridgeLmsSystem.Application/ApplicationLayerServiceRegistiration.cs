@@ -49,6 +49,8 @@ namespace EbuBridgeLmsSystem.Application
             });
             serviceDescriptors.AddHostedService<UserPermanentDeleteBackgroundService>();
             serviceDescriptors.AddHostedService<CourseImageUploadBackgroundService>();
+            serviceDescriptors.AddHostedService<CourseApprovalEmailSendingBackgroundService>();
+            serviceDescriptors.AddHostedService<LessonApprovalEmailSendingBackgroundService>();
             serviceDescriptors.AddResponseCompression(opt =>
             {
                 opt.EnableForHttps = true;

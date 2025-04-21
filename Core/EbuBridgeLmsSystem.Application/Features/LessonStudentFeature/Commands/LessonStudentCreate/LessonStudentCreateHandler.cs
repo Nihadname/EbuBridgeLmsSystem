@@ -43,7 +43,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
             var existedStudent =  currentUserInTheSystem.Student;
                 if (existedStudent == null)
                     return StudentNotFoundError();
-                var existedLesson = await _unitOfWork.LessonRepository.GetEntity(s => s.Id == request.LessonId && !s.IsDeleted);
+                var existedLesson = await _unitOfWork.LessonRepository.GetEntity(s => s.Id == request.LessonId && !s.IsDeleted&&s.Status==LessonStatus.Completed);
                 if (existedLesson == null)
                     return LessonNotFoundError();
                 var isTheLessonInTheCourseStudentIsIn = existedStudent.courseStudents.Select(courseStudent => courseStudent.Course)

@@ -15,7 +15,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
     {
         public static void MapCourseAdminEndPointsthis (this IEndpointRouteBuilder app, string baseUrl)
         {
-            app.MapPost($"{baseUrl}/Course", [Authorize(Roles = "Admin")] async ([FromForm] CourseCreateDto courseCreateDto, ISender mediator, IValidator<CourseCreateDto> _validator) =>
+            app.MapPost($"{baseUrl}/Course",  async ([FromForm] CourseCreateDto courseCreateDto, ISender mediator) =>
             {
                
                 var courseCommand = new CourseCreateCommand
@@ -33,7 +33,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
                 return result.ToApiResult();
 
             }).WithTags("Course").DisableAntiforgery();
-            app.MapDelete($"{baseUrl}/Course/Delete", [Authorize(Roles = "Admin")] async([FromForm] CourseDeleteDto courseDeleteDto, IMediator mediator) =>
+            app.MapDelete($"{baseUrl}/Course/Delete", async([FromForm] CourseDeleteDto courseDeleteDto, IMediator mediator) =>
             {
                 var courseDeleteCommand = new DeleteCourseCommand()
                 {

@@ -1,16 +1,15 @@
-﻿using EbuBridgeLmsSystem.Application.Dtos.Lesson;
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace EbuBridgeLmsSystem.Application.Validators.LessonValidators
+namespace EbuBridgeLmsSystem.Application.Features.LessonFeature.Commands.LessonCreate
 {
-    public class LessonCreateDtoValidator : AbstractValidator<LessonCreateDto>
+    public sealed class LessonCreateCommandValidator : AbstractValidator<LessonCreateCommand>
     {
-        public LessonCreateDtoValidator()
+        public LessonCreateCommandValidator()
         {
             RuleFor(x => x.Title)
-           .NotEmpty().WithMessage("Title is required.")
-           .MaximumLength(100).WithMessage("Title must not exceed 100 characters.")
-           .Must(title => !string.IsNullOrWhiteSpace(title)).WithMessage("Title cannot be just whitespace.");
+            .NotEmpty().WithMessage("Title is required.")
+            .MaximumLength(100).WithMessage("Title must not exceed 100 characters.")
+            .Must(title => !string.IsNullOrWhiteSpace(title)).WithMessage("Title cannot be just whitespace.");
 
             RuleFor(x => x.Status)
                 .IsInEnum().WithMessage("Invalid LessonStatus. It must be one of the predefined enum values.");
