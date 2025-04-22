@@ -1,10 +1,8 @@
 ﻿using EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCourse.GetAllCourseQuery;
-using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetByIdCourse
 {

@@ -22,8 +22,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var config = builder.Configuration;
-var baseAdminUrl = config["ApiSettings:BaseAdminUrl"];
-var clientSideUrl=config["ApiSettings:ClientSideUrl"];
+
 builder.Services.Register(config);
 builder.Services.AddPersistenceServices(config);
 builder.Services.AddInfrastructureServices(config);
@@ -41,10 +40,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.MapAuthAdminEndpoints(baseAdminUrl);
-app.MapCourseAdminEndPointsthis(baseAdminUrl);
-app.MapCityAdminEndPoints(baseAdminUrl);
-app.MapLessonMaterialEndPoints(baseAdminUrl);
+app.RegisterMinimalEndpoints(config);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseHangfireDashboard();
