@@ -1,4 +1,5 @@
 ﻿using EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin;
+using EbuBridgeLmsSystem.Api.MinimalEndPoints.ClientSide;
 
 namespace EbuBridgeLmsSystem.Api
 {
@@ -13,6 +14,7 @@ namespace EbuBridgeLmsSystem.Api
             app.MapCityAdminEndPoints(baseAdminUrl);
             app.MapLessonMaterialEndPoints(baseAdminUrl);
             app.MapLessonAdminEndPointsthis(baseAdminUrl);
+            app.MapCourseClientEndPointsthis(clientSideUrl);
         }
     }
 }

@@ -1,12 +1,14 @@
 ﻿using EbuBridgeLmsSystem.Api.Extensions;
 using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Dtos.Course;
+using EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.ApproveStudentCourseRequest;
 using EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseCreate;
 using EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.DeleteCourse;
 using FluentValidation;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
@@ -42,7 +44,16 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
                 var result=await mediator.Send(courseDeleteCommand);
                 return result.ToApiResult();
             }).WithTags("Course");
-            
+
+            app.MapPost($"{baseUrl}/Course/ApproveStudentCourseRequest",  async ([FromForm] ApproveStudentCourseRequestDto ApproveStudentCourseRequestDto,  ISender mediator) =>
+            {
+                var newApproveStudentCourseRequestCommand = new ApproveStudentCourseRequestCommand()
+                {
+                    Id=ApproveStudentCourseRequestDto.Id
+                };
+                var result = await mediator.Send(newApproveStudentCourseRequestCommand);
+                return result.ToApiResult();
+            }).WithTags("Course");
 
                 }
     }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EbuBridgeLmsSystem.Api.Common;
 using EbuBridgeLmsSystem.Api.Extensions;
+using EbuBridgeLmsSystem.Application.Features.AddressFeature.Queries.GetAddressById;
 using EbuBridgeLmsSystem.Application.Features.AddressFeature.Queries.GetAllAddresses;
 using EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCities;
 using MediatR;
@@ -35,6 +36,18 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
             };
             var result = await _mediator.Send(getAllAddressQuery);
             return this.ToActionResult(result);
+        }
+        [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var getAddressById = new GetAddressByIdQuery()
+            {
+                Id = id
+            };
+            var result = await _mediator.Send(getAddressById);
+            return this.ToActionResult(result);
+
         }
     }
 }

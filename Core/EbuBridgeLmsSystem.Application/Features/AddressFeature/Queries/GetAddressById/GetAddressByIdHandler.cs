@@ -1,4 +1,5 @@
 ﻿using EbuBridgeLmsSystem.Application.Features.AddressFeature.Queries.GetAllAddresses;
+using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
@@ -31,8 +32,8 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Queries.GetAddr
             var newGetAddresReturnDto=new AddressGetReturnDto() { 
                 Id = existedAddress.Id,
                 Street=existedAddress.Street,   
-                City=existedAddress.City,
-                Country=existedAddress.Country,
+                City=existedAddress.City.Name,
+                Country=existedAddress.Country.Name,
                 Region=existedAddress.Region,
                 AppUserInAdress=new AppUserInAdress()
                 {

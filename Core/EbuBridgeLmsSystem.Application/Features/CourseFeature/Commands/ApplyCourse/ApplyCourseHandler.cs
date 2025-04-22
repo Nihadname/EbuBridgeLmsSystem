@@ -1,4 +1,5 @@
 ﻿using EbuBridgeLmsSystem.Application.Exceptions;
+using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
@@ -14,21 +15,25 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.ApplyCo
         private readonly IUnitOfWork _unitOfWork;
        
         private readonly ILogger<ApplyCourseHandler> _logger;
+        private readonly IAppUserResolver _appUserResolver;
 
-        public ApplyCourseHandler(IUnitOfWork unitOfWork, ILogger<ApplyCourseHandler> logger)
+        public ApplyCourseHandler(IUnitOfWork unitOfWork, ILogger<ApplyCourseHandler> logger, IAppUserResolver appUserResolver)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _appUserResolver = appUserResolver;
         }
 
         public async Task<Result<Unit>> Handle(ApplyCourseCommand request, CancellationToken cancellationToken)
         {
-          
-                var existedStudent = await _unitOfWork.StudentRepository.GetEntity(s => s.Id == request.StudentId, true, includes: new Func<IQueryable<Student>, IQueryable<Student>>[] {
+                var currentUserInSystem = await _appUserResolver.GetCurrentUserAsync();
+            if (currentUserInSystem == null)
+                return Result<Unit>.Failure(Error.Unauthorized, null, ErrorType.UnauthorizedError);
+                var existedStudent = await _unitOfWork.StudentRepository.GetEntity(s => s.Id == request.StudentId&&!s.IsDeleted&&s.AppUserId==currentUserInSystem.Id, true, includes: new Func<IQueryable<Student>, IQueryable<Student>>[] {
                  query => query
             .Include(p => p.courseStudents) });
                 if (existedStudent is null)
-                    return Result<Unit>.Failure(Error.Custom("student", "student doesnt exist"), null, ErrorType.NotFoundError);
+                    return Result<Unit>.Failure(Error.Custom("student", "student doesnt exist or you arent the user who is atteched to this given student"), null, ErrorType.NotFoundError);
                 var existedCourse = await _unitOfWork.CourseRepository.GetEntity(s => s.Id == request.CourseId);
                 if (existedCourse is null)
                     return Result<Unit>.Failure(Error.Custom("course", "course doesnt exist"), null, ErrorType.NotFoundError);

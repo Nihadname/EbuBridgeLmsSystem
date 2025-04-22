@@ -12,6 +12,5 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.ApplyCo
     {
         public Guid StudentId { get; init; }
         public Guid CourseId { get; init; }
-        public DateTime EnrolledDate { get; init; }
     }
 }
