@@ -17,7 +17,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public AppUser AppUser { get; set; }
         public ICollection<CourseTeacher> CourseTeachers { get; set; }
         public List<TeacherFacultyDegree> TeacherFacultyDegrees { get; set; }
-        public ICollection<TeacherStudent> TeacherStudents { get; set; }
+        public ICollection<LessonStudentTeacher>  lessonStudentTeachers { get; set; }
 
     }
 }

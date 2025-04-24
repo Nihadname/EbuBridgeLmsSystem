@@ -27,7 +27,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<Parent> parents { get; set; }
         public DbSet<Teacher> teachers { get; set; }
         public DbSet<Lesson> lessons { get; set; }
-        public DbSet<LessonStudent> lessonsStudents { get; set; }
+        public DbSet<LessonStudentTeacher> lessonsStudents { get; set; }
         public DbSet<LessonUnitMaterial> lessonUnitMaterials { get; set; }
         public DbSet<LessonQuiz> lessonQuizzes { get; set; }
         public DbSet<LessonUnitVideo>  lessonUnitVideos { get; set; }

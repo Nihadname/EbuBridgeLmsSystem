@@ -31,7 +31,7 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
                         break;
                     try
                     {
-                        var existedLessonStudentWithOutBoxId=await unitOfWork.LessonStudentRepository.GetEntity(s=>s.Id==outbox.Id&&!s.IsDeleted&&s.isApproved, includes: new Func<IQueryable<LessonStudent>, IQueryable<LessonStudent>>[] {
+                        var existedLessonStudentWithOutBoxId=await unitOfWork.LessonStudentRepository.GetEntity(s=>s.Id==outbox.Id&&!s.IsDeleted&&s.isApproved, includes: new Func<IQueryable<LessonStudentTeacher>, IQueryable<LessonStudentTeacher>>[] {
                  query => query
             .Include(p => p.Student).ThenInclude(s=>s.AppUser).Include(s=>s.Lesson) });
                         if(existedLessonStudentWithOutBoxId is not null)

@@ -59,7 +59,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
-                var lessonStudent = new LessonStudent()
+                var lessonStudent = new LessonStudentTeacher()
                 {
                     LessonId = request.LessonId,
                     StudentId = request.StudentId,

@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace EbuBridgeLmsSystem.Application.Validators.LessonStudentValidators
 {
-    public sealed class LessonStudentApproveRequestDtoValidator : AbstractValidator<LessonStudent>
+    public sealed class LessonStudentApproveRequestDtoValidator : AbstractValidator<LessonStudentTeacher>
     {
         public LessonStudentApproveRequestDtoValidator()
         {

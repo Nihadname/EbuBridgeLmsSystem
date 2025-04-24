@@ -4,7 +4,7 @@ using LearningManagementSystem.DataAccess.Data.Implementations;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
 {
-    public class LessonStudentRepository : Repository<LessonStudent>, ILessonStudentRepository
+    public class LessonStudentRepository : Repository<LessonStudentTeacher>, ILessonStudentRepository
     {
         public LessonStudentRepository(ApplicationDbContext context) : base(context)
         {
