@@ -131,7 +131,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Login
                 user.IsFirstTimeLogined = false;
                 await _userManager.UpdateAsync(user);
                 var body = "<h1>Welcome!</h1><p>Thank you for joining us. We're excited to have you!</p>";
-                BackgroundJob.Enqueue(() => _emailService.SendEmailAsync(user.Email, "first time login", body, true));
+                BackgroundJob.Enqueue(() => _emailService.SendEmail(user.Email, "first time login", body, true));
             }
         }
         private async Task<Result<AuthResponseDto>> HandleUserBlockSituation(AppUser user)

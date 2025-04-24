@@ -1,5 +1,6 @@
 ﻿using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using FluentValidation;
+using System.Text.RegularExpressions;
 
 namespace EbuBridgeLmsSystem.Application.Validators.AuthValidators
 {
@@ -22,9 +23,10 @@ namespace EbuBridgeLmsSystem.Application.Validators.AuthValidators
             RuleFor(s => s.RepeatPassword).NotEmpty().WithMessage("not empty")
                                 .MinimumLength(8);
             RuleFor(x => x.PhoneNumber)
-              .NotEmpty().WithMessage("Phone number is required.")
-            .Matches(@"^(\+?\d{1,4}?)[\s.-]?\(?\d{1,4}?\)?[\s.-]?\d{1,4}[\s.-]?\d{1,9}$")
-            .WithMessage("Invalid phone number format.");
+    .NotEmpty().WithMessage("Phone number is required.")
+    .Must(pn => pn != null && Regex.IsMatch(pn.Trim(), @"^\+994(50|51|55|60|70|77|99)\d{7}$"))
+    .WithMessage("Invalid Azerbaijani phone number format.");
+
             RuleFor(s => s).Custom((s, context) =>
             {
                 if (s.Password != s.RepeatPassword)

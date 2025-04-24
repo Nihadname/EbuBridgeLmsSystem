@@ -21,14 +21,10 @@ namespace EbuBridgeLmsSystem.Api.App.Admin
     {
         private readonly ISender _mediator;
         private readonly IMapper _mapper;
-        private readonly IValidator<RegisterDto> _registerValidator;
-        private readonly IValidator<TeacherCreateDto> _teacherCreateValidator;
-        public AuthController(ISender mediator, IMapper mapper, IValidator<RegisterDto> registerValidator, IValidator<TeacherCreateDto> teacherCreateValidator)
+        public AuthController(ISender mediator, IMapper mapper)
         {
             _mediator = mediator;
             _mapper = mapper;
-            _registerValidator = registerValidator;
-            _teacherCreateValidator = teacherCreateValidator;
         }
         //[HttpPost("RegisterForStudent")]
         //[Authorize(Roles ="Admin")]

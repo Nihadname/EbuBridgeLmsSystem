@@ -1,14 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using LearningManagementSystem.Core.Entities;
+﻿using EbuBridgeLmsSystem.Application.AppDefaults;
 using EbuBridgeLmsSystem.Domain.Entities;
-using Microsoft.Extensions.DependencyInjection;
 using EbuBridgeLmsSystem.Persistance.Data;
+using EbuBridgeLmsSystem.Persistance.SeedDatas.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Data;
-using EbuBridgeLmsSystem.Domain.Enums;
-using EbuBridgeLmsSystem.Application.AppDefaults;
 
 namespace EbuBridgeLmsSystem.Persistance.SeedDatas
 {
@@ -56,18 +53,7 @@ namespace EbuBridgeLmsSystem.Persistance.SeedDatas
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
             dbContext.Database.EnsureCreated();
             if (dbContext.Database.GetPendingMigrations().Any()) await dbContext.Database.MigrateAsync();
-            var roles = Enum.GetNames(typeof(RolesEnum));
-            foreach (var role in roles)
-            {
-                if (!await roleManager.RoleExistsAsync(role))
-                {
-                    var result = await roleManager.CreateAsync(new IdentityRole { Name = role, NormalizedName = role.ToUpper() });
-                    if (!result.Succeeded)
-                    {
-                        Console.WriteLine($"Failed to create role {role}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
-                    }
-                }
-            }
+            await RoleExtension.CheckRolesExistence(roleManager);
             var users = new Dictionary<string, string>
         {
             { "TeymurDevv@gmail.com", "12345@Tt" },
@@ -104,11 +90,7 @@ namespace EbuBridgeLmsSystem.Persistance.SeedDatas
                 }
                 if (existingUser != null)
                 {
-                    var roleResult = await userManager.AddToRolesAsync(existingUser, roles);
-                    if (!roleResult.Succeeded)
-                    {
-                        Console.WriteLine($"Failed to assign roles to {email}: {string.Join(", ", roleResult.Errors.Select(e => e.Description))}");
-                    }
+                    await RoleExtension.AddAllRolesToUser(roleManager, existingUser,userManager);
                 }
 
 

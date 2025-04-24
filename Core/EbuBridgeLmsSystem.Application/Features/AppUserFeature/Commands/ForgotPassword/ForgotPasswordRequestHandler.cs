@@ -39,7 +39,7 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Forgot
            var bodyResult=  GetEmailBody(authGetEmailBodyDto);
           if(!bodyResult.IsSuccess)
                 return Result<Unit>.Failure(userResult.Error, userResult.Errors, (ErrorType)userResult.ErrorType);
-            await _emailService.SendEmailAsync(userResult.Data.Email, "Reset Password", bodyResult.Data, true);
+             _emailService.SendEmail(userResult.Data.Email, "Reset Password", bodyResult.Data, true);
             return Result<Unit>.Success(Unit.Value,SuccessReturnType.NoContent);
         }
 

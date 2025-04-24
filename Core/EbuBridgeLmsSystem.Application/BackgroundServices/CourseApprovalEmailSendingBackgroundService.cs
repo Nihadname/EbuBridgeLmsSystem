@@ -31,13 +31,13 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
                         break;
                     try
                     {
-                        var existedCourseStudentWithOutBoxId = await unitOfWork.CourseStudentRepository.GetEntity(s => s.Id == pendingOutBox.Id && !s.IsDeleted && s.isApproved, includes: new Func<IQueryable<CourseStudent>, IQueryable<CourseStudent>>[] {
+                        var existedCourseStudentWithOutBoxId = await unitOfWork.CourseStudentRepository.GetEntity(s => s.Id == pendingOutBox.CourseStudentId && !s.IsDeleted && s.isApproved, includes: new Func<IQueryable<CourseStudent>, IQueryable<CourseStudent>>[] {
                  query => query
             .Include(p => p.Student).ThenInclude(s=>s.AppUser) });
                         if (existedCourseStudentWithOutBoxId is not null)
                         {
                             var body = $"<h1>Welcome!</h1><p>Thank you for joining us. We're excited to have you!, this is your confirmation towards attending this course </p>";
-                            await emailService.SendEmailAsync(existedCourseStudentWithOutBoxId.Student.AppUser.Email, "Course approval", body, true);
+                             emailService.SendEmail(existedCourseStudentWithOutBoxId.Student.AppUser.Email, "Course approval", body, true);
                             pendingOutBox.OutboxProccess = Domain.Enums.OutboxProccess.Completed;
                             await unitOfWork.CourseStudentApprovalOutBoxRepository.Update(pendingOutBox);
                             await unitOfWork.SaveChangesAsync(stoppingToken);
@@ -51,7 +51,7 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
                 }
 
             }
-            await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
 
         }
     }

@@ -49,9 +49,10 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
                 request.StudentCreateDto.AvarageScore = null;
                 var mappedStudent = _mapper.Map<Student>(request.StudentCreateDto);
                 await _unitOfWork.StudentRepository.Create(mappedStudent);
+                await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
                 var mappedUser = _mapper.Map<UserGetDto>(appUserResult.Data);
-                return Result<UserGetDto>.Success(mappedUser,SuccessReturnType.Created);
+                return Result<UserGetDto>.Success(mappedUser,null);
             }
             catch (Exception ex)
             {

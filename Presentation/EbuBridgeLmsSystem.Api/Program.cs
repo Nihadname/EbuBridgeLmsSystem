@@ -38,8 +38,13 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "SCP.GORE API V1");
+        c.InjectJavascript("/swagger/custom-swagger.js");
+    });
 }
+
 app.RegisterMinimalEndpoints(config);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -69,6 +74,7 @@ try
     await context.Database.MigrateAsync();
     await UserSeed.SeedAdminUserAsync(userManager, roleManager);
     await UserSeed.SeedUserWhoHaveAllRoles(services);
+    await StudentSeed.CreateStudentForAppUser(services);
 }
 catch (Exception ex)
 {

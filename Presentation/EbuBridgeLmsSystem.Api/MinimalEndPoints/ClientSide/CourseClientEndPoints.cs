@@ -2,6 +2,7 @@
 using EbuBridgeLmsSystem.Application.Dtos.Course;
 using EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.ApplyCourse;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.ClientSide
@@ -10,7 +11,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.ClientSide
     {
         public static void MapCourseClientEndPointsthis(this IEndpointRouteBuilder app, string baseUrl)
         {
-            app.MapPost($"{baseUrl}Course/ApplyCourse", async ([FromForm] ApplyCourseDto ApplyCourseDto, ISender mediator) =>
+            app.MapPost($"{baseUrl}Course/ApplyCourse",[Authorize] async ([FromForm] ApplyCourseDto ApplyCourseDto, ISender mediator) =>
             {
                 var applyCourseCommand = new ApplyCourseCommand()
                 {
@@ -19,7 +20,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.ClientSide
                 };
                 var result = await mediator.Send(applyCourseCommand);
                 return result.ToApiResult();
-            }).WithTags("Course");
+            }).WithTags("Course").DisableAntiforgery();
         }
     }
 }

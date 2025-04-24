@@ -3,7 +3,6 @@ using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Enums;
 using EbuBridgeLmsSystem.Domain.Repositories;
-using FluentValidation;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

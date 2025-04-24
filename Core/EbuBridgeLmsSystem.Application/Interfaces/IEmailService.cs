@@ -8,6 +8,6 @@ namespace EbuBridgeLmsSystem.Application.Interfaces
 {
     public interface IEmailService
     {
-        Task SendEmailAsync(string to, string subject, string body, bool isHtml = true);
+      void  SendEmail(string to, string subject, string body, bool isHtml = true);
     }
 }

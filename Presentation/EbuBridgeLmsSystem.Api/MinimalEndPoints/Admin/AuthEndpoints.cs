@@ -4,9 +4,7 @@ using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Dtos.Student;
 using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsStudent;
 using FluentValidation;
-using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 
 namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
 {

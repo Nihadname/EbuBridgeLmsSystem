@@ -37,7 +37,7 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
                         if(existedLessonStudentWithOutBoxId is not null)
                         {
                             var body = $"<h1>Welcome!</h1><p>Thank you for joining us. We're excited to have you!, this is your confirmation towards attending this lesson ${existedLessonStudentWithOutBoxId.Lesson.Title} </p>";
-                            await emailService.SendEmailAsync(existedLessonStudentWithOutBoxId.Student.AppUser.Email, "Course approval", body, true);
+                             emailService.SendEmail(existedLessonStudentWithOutBoxId.Student.AppUser.Email, "Course approval", body, true);
                             outbox.OutboxProccess = Domain.Enums.OutboxProccess.Completed;
                             await unitOfWork.LessonStudentStudentApprovalOutBoxRepository.Update(outbox);
                             await unitOfWork.SaveChangesAsync(stoppingToken);

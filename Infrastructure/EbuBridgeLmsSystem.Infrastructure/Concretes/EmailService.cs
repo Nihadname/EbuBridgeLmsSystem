@@ -1,26 +1,27 @@
 ﻿using EbuBridgeLmsSystem.Application.Interfaces;
 using Resend;
+using System.Net.Mail;
+using System.Net;
 
 namespace EbuBridgeLmsSystem.Infrastructure.Concretes
 {
     public class EmailService : IEmailService
     {
-        private readonly IResend _resend;
-
-
-        public EmailService(IResend resend)
+        public void SendEmail(string to, string subject, string body, bool isHtml = true)
         {
-            _resend = resend;
-        }
-        public async Task SendEmailAsync(string to, string subject, string body, bool isHtml = true)
-        {
-            var message = new EmailMessage();
-            message.From = "info@kuzeygo.com";
-            message.To.Add(to);
-            message.Subject =subject;
-            message.HtmlBody = body;
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress("nihadcoding@gmail.com\r\n");
+            mailMessage.To.Add(new MailAddress(to));
+            mailMessage.Subject = subject;
+            mailMessage.IsBodyHtml = true;
+            mailMessage.Body = body;
 
-            await _resend.EmailSendAsync(message);
+            SmtpClient smtpClient = new SmtpClient();
+            smtpClient.Host = "smtp.gmail.com";
+            smtpClient.Port = 587;
+            smtpClient.EnableSsl = true;
+            smtpClient.Credentials = new NetworkCredential("nihadcoding@gmail.com", "kixx kxou qgdj wgmx");
+            smtpClient.Send(mailMessage);
         }
     }
 }
