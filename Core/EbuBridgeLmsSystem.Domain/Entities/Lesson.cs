@@ -14,6 +14,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public ICollection<LessonStudentTeacher> LessonStudents { get; set; }  
         public ICollection<LessonQuiz>  LessonQuizzes { get; set; }
         public ICollection<LessonUnit> LessonUnits { get; set; }
+        public ICollection<CourseTeacherLesson> CourseTeacherLessons { get; set; }
 
     }
     public enum LessonStatus

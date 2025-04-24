@@ -1,6 +1,4 @@
-﻿using EbuBridgeLmsSystem.Application.Interfaces;
-using EbuBridgeLmsSystem.Domain.Entities;
-using EbuBridgeLmsSystem.Domain.Entities.Common;
+﻿using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Persistance.Data;
 using LearningManagementSystem.Core.Entities.Common;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Security.Claims;
 using System.Text.Json;
-using System.Threading;
 
 namespace EbuBridgeLmsSystem.Persistance.Processors
 {

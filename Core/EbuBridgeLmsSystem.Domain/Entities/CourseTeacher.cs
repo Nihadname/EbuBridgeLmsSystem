@@ -8,5 +8,6 @@ namespace EbuBridgeLmsSystem.Domain.Entities
         public Course Course { get; set; }
         public Guid TeacherId { get; set; }
         public Teacher Teacher { get; set; }
+        public ICollection<CourseTeacherLesson> CourseTeacherLessons { get; set; }
     }
 }
