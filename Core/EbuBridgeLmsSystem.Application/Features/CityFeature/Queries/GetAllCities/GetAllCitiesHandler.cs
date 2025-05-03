@@ -33,22 +33,23 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCiti
                     return Result<PaginatedResult<CityListItemQuery>>.Success(cachedResult, null);
                 }
             }
-            var cityQuery =  _unitOfWork.CityRepository.GetSelected(s=> new CityListItemQuery(){
+            var cityQuery = _unitOfWork.CityRepository.GetSelected(s => new CityListItemQuery
+            {
                 Id = s.Id,
                 Name = s.Name,
-                countryInCityListItemQuery=new CountryInCityListItemQuery()
+                countryInCityListItemQuery = new CountryInCityListItemQuery
                 {
-                    Id = s.Id,
-                    Name= s.Name,
-                }
-            }
-           );
+                    Id = s.Country.Id,
+                    Name = s.Country.Name
+                },
+                CreatedTime = (DateTime)s.CreatedTime
+            });
             if (!string.IsNullOrWhiteSpace(request.searchQuery))
             {
                 cityQuery = cityQuery.Where(s => s.Name.ToLower().Contains(request.searchQuery.ToLower()));
             }
             cityQuery = cityQuery.OrderByDescending(s => s.CreatedTime);
-            var paginationResult = await _unitOfWork.CityRepository.GetPaginatedResultAsync(query: cityQuery,
+            var paginationResult = await _unitOfWork.CityRepository.GetPaginatedResultAsync< CityListItemQuery,Guid>(query: cityQuery,
     cursor: request.Cursor,
     limit: request.Limit,
     sortKey: s => s.Id);

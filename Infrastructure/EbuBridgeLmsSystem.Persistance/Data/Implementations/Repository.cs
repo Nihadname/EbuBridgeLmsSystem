@@ -239,10 +239,7 @@ namespace LearningManagementSystem.DataAccess.Data.Implementations
                 throw new ArgumentNullException(nameof(query));
             }
 
-            if (string.IsNullOrEmpty(cursor))
-            {
-                throw new ArgumentException($"'{nameof(cursor)}' cannot be null or empty.", nameof(cursor));
-            }
+        
 
             if (sortKey is null)
             {

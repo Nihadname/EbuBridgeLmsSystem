@@ -39,6 +39,16 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCo
                 ImageUrl = course.ImageUrl,
                 Price = course.Price,
                 Requirements = course.Requirements,
+                CreatedTime= (DateTime)course.CreatedTime,
+                lessons = course.Lessons.Select(s=>new LessonInCourseListItemDto()
+                {
+                    Id = s.Id,
+                    Description = s.Description,
+                    GradingPolicy = s.GradingPolicy,
+                    LessonType = s.LessonType,
+                    Status = s.Status,
+                    Title = s.Title,
+                }).ToList(),
                 Language=new LanguageInCourseListItemDto()
                 {
                     Id=course.LanguageId,
@@ -50,7 +60,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCo
                 courseQuery = courseQuery.Where(s => s.Name.ToLower().Contains(request.SearchQuery));
             }
             courseQuery = courseQuery.OrderByDescending(s => s.CreatedTime);
-            var paginationResult = await _unitOfWork.CourseRepository.GetPaginatedResultAsync(query: courseQuery,
+            var paginationResult = await _unitOfWork.CourseRepository.GetPaginatedResultAsync<CourseListItemDto,Guid>(query: courseQuery,
     cursor: request.Cursor,
     limit: request.Limit,
     sortKey: s => s.Id);

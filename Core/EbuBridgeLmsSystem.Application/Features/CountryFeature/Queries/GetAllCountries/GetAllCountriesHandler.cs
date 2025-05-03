@@ -14,12 +14,10 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllC
     public sealed class GetAllCountriesHandler : IRequestHandler<GetAllCountriesQuery, Result<PaginatedResult<CountryListItemQuery>>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
         private readonly IDistributedCache _cache;
-        public GetAllCountriesHandler(IUnitOfWork unitOfWork, IMapper mapper, IDistributedCache cache)
+        public GetAllCountriesHandler(IUnitOfWork unitOfWork,IDistributedCache cache)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
             _cache = cache;
         }
 

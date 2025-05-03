@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -20,7 +21,16 @@ namespace EbuBridgeLmsSystem.Persistance.Extensions
         )
         where TKey : IComparable
         {
-            
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+
+            if (keySelector == null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
             if (includes != null && includes.Length > 0)
             {
                 foreach (var include in includes)
