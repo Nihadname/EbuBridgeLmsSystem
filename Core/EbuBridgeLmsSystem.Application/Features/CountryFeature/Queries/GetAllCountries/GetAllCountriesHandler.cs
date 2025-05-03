@@ -35,27 +35,30 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetAllC
                     return Result<PaginatedResult<CountryListItemQuery>>.Success(cachedResult,null);
                 }
             }
-            var countryQuery =await _unitOfWork.CountryRepository.GetQuery(s=>!s.IsDeleted,true, includes: new Func<IQueryable<Country>, IQueryable<Country>>[] {
-                 query => query
-            .Include(p => p.Cities) }
-           );
+            var countryQuery = _unitOfWork.CountryRepository.GetSelected(s => new CountryListItemQuery()
+            {
+                Id = s.Id,
+                Name = s.Name,
+                IsDeleted = s.IsDeleted,
+                CreatedTime= (DateTime)s.CreatedTime,
+                citiesinCountryListItemCommands = s.Cities.Select(s => new CitiesinCountryListItemCommand()
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                }).ToList()
+            });
             if (!string.IsNullOrWhiteSpace(request.searchQuery))
             {
                 countryQuery = countryQuery.Where(s => s.Name.ToLower().Contains(request.searchQuery));
             }
             countryQuery = countryQuery.OrderByDescending(s => s.CreatedTime);
-            var paginationResult = await _unitOfWork.CountryRepository.GetPaginatedResultAsync(request.Cursor, request.Limit, includes: new Func<IQueryable<Country>, IQueryable<Country>>[] {
-                 query => query
-            .Include(p => p.Cities) });
+            var paginationResult = await _unitOfWork.CountryRepository.GetPaginatedResultAsync<CountryListItemQuery,Guid>(query: countryQuery,
+    cursor: request.Cursor,
+    limit: request.Limit,
+    sortKey: s => s.Id);
             var mappedResult = new PaginatedResult<CountryListItemQuery>
             {
-                Data = paginationResult.Data.Select(country => new CountryListItemQuery
-                {
-                    Id = country.Id,
-                    Name = country.Name,
-                    IsDeleted = country.IsDeleted,
-                    citiesinCountryListItemCommands=_mapper.Map<List<CitiesinCountryListItemCommand>>(country.Cities),
-                }).AsEnumerable(),
+                Data = paginationResult.Data,
                 NextCursor = paginationResult.NextCursor
             };
             var cacheOptions = new DistributedCacheEntryOptions

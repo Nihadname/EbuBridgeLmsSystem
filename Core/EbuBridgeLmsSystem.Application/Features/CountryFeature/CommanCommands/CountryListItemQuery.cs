@@ -5,6 +5,7 @@
         public Guid Id { get; init; }
         public string Name { get; init; }
         public bool IsDeleted { get; init; }
+        public DateTime CreatedTime { get; init; }
         public List<CitiesinCountryListItemCommand> citiesinCountryListItemCommands { get; init; }
 
     }

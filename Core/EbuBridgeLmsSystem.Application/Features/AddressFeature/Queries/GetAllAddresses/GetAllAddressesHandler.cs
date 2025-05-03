@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using EbuBridgeLmsSystem.Domain.Entities;
+﻿using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
 
@@ -13,13 +11,11 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Queries.GetAllA
     public class GetAllAddressesHandler : IRequestHandler<GetAllAddressQuery, Result<PaginatedResult<AddressListItemQuery>>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
         private readonly IDistributedCache _cache;
 
-        public GetAllAddressesHandler(IDistributedCache cache, IMapper mapper, IUnitOfWork unitOfWork)
+        public GetAllAddressesHandler(IDistributedCache cache, IUnitOfWork unitOfWork)
         {
             _cache = cache;
-            _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
@@ -32,31 +28,33 @@ namespace EbuBridgeLmsSystem.Application.Features.AddressFeature.Queries.GetAllA
                 var cachedResult = JsonSerializer.Deserialize<PaginatedResult<AddressListItemQuery>>(cachedData);
                 return Result<PaginatedResult<AddressListItemQuery>>.Success(cachedResult, null);
             }
-            var addressQuery = await _unitOfWork.AddressRepository.GetQuery(s=>!s.IsDeleted, true, includes: new Func<IQueryable<Address>, IQueryable<Address>>[] {
-                 query => query
-            .Include(p => p.Country).Include(s=>s.City).Include(s=>s.AppUser) });
+            var addressQuery =  _unitOfWork.AddressRepository.GetSelected(selector: Address => new AddressListItemQuery {
+                Id = Address.Id,
+                Country = Address.Country.Name,
+                City = Address.City.Name,
+                Region = Address.Region,
+                Street = Address.Street,
+               CreatedTime = (DateTime)Address.CreatedTime,
+               AppUserInAdress=new AppUserInAdress() { 
+                  Id=Address.AppUserId,
+                  UserName=Address.AppUser.UserName               }
+            });
             if (!string.IsNullOrWhiteSpace(request.searchQuery))
             {
-                addressQuery = addressQuery.Where(s => s.Country.Name.ToLower().Contains(request.searchQuery.ToLower())
-                ||s.City.Name.ToLower().Contains(request.searchQuery.ToLower())||
+                addressQuery = addressQuery.Where(s => s.Country.ToLower().Contains(request.searchQuery.ToLower())
+                ||s.City.ToLower().Contains(request.searchQuery.ToLower())||
                 s.Region.ToLower().Contains(request.searchQuery.ToLower())||
                 s.Street.ToLower().Contains(request.searchQuery.ToLower()));
             }
             addressQuery = addressQuery.OrderByDescending(s => s.CreatedTime);
-            var paginationResult = await _unitOfWork.AddressRepository.GetPaginatedResultAsync(request.Cursor, request.Limit, includes: new Func<IQueryable<Address>, IQueryable<Address>>[] {
-                 query => query
-            .Include(p => p.Country).Include(s=>s.City).Include(s=>s.AppUser) });
+            var paginationResult = await _unitOfWork.AddressRepository.GetPaginatedResultAsync<AddressListItemQuery, Guid>(
+    query: addressQuery,
+    cursor: request.Cursor,
+    limit: request.Limit,
+    sortKey: s => s.Id);
             var mappedResult = new PaginatedResult<AddressListItemQuery>
             {
-                Data = paginationResult.Data.Select(Address => new AddressListItemQuery
-                {
-                    Id = Address.Id,
-                    Country = Address.Country.Name,
-                    City = Address.City.Name,
-                    Region = Address.Region,
-                    Street = Address.Street,
-                    AppUserInAdress = _mapper.Map<AppUserInAdress>(Address.AppUser)
-                }).AsEnumerable(),
+                Data = paginationResult.Data,
                 NextCursor = paginationResult.NextCursor
             };
             var cacheOptions = new DistributedCacheEntryOptions

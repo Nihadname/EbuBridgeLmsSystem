@@ -36,27 +36,30 @@ namespace EbuBridgeLmsSystem.Application.Features.AuditLogFeature.Query.GetAllLo
                     return Result<PaginatedResult<AuditLogListItemDto>>.Success(cachedResult, null);
                 }
             }
-            var auditLogQuery = await _unitOfWork.AuditLogRepository.GetQuery(s => (string.IsNullOrWhiteSpace(tableName) ||
+            var auditLogQuery =  _unitOfWork.AuditLogRepository.GetSelected(s=> new AuditLogListItemDto()
+            {
+                Id = s.Id,
+                TableName = s.TableName,
+                Action = s.Action,
+                UserId = s.UserId,
+                UserName = s.UserName,
+                Changes = s.Changes,
+                ClientIpAddress = s.ClientIpAddress,
+            }, s => (string.IsNullOrWhiteSpace(tableName) ||
                              EF.Functions.Like(s.TableName, $"%{tableName}%")) &&
                             (string.IsNullOrWhiteSpace(action) ||
                              EF.Functions.Like(s.Action, $"%{action}%")) &&
                             (string.IsNullOrWhiteSpace(userId) ||
-                             EF.Functions.Like(s.UserId, $"%{userId}%"))&&!s.IsDeleted, true);
+                             EF.Functions.Like(s.UserId, $"%{userId}%")));
             
             auditLogQuery = auditLogQuery.OrderByDescending(s => s.CreatedTime);
-            var paginationResult = await _unitOfWork.AuditLogRepository.GetPaginatedResultAsync(request.Cursor, request.Limit);
+            var paginationResult = await _unitOfWork.AuditLogRepository.GetPaginatedResultAsync(query: auditLogQuery,
+    cursor: request.Cursor,
+    limit: request.Limit,
+    sortKey: s => s.Id);
             var mappedResult = new PaginatedResult<AuditLogListItemDto>
             {
-                Data = paginationResult.Data.Select(auditLog => new AuditLogListItemDto
-                {
-                    TableName = auditLog.TableName,
-                    Action = auditLog.Action,
-                    UserId = auditLog.UserId,
-                    UserName = auditLog.UserName,
-                    Timestamp = auditLog.Timestamp,
-                    Changes = auditLog.Changes,
-                    ClientIpAddress = auditLog.ClientIpAddress
-                }).AsEnumerable(),
+                Data = paginationResult.Data,
                 NextCursor = paginationResult.NextCursor
             };
                 var cacheOptions = new DistributedCacheEntryOptions

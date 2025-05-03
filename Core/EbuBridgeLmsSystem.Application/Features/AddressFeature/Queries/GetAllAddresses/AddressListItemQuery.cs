@@ -7,6 +7,7 @@
         public string City { get; init; }
         public string Region { get; init; }
         public string Street { get; init; }
+        public DateTime CreatedTime { get; init; }
         public AppUserInAdress AppUserInAdress { get; init; }
     }
     public sealed record AppUserInAdress

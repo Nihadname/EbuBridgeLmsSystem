@@ -33,26 +33,28 @@ namespace EbuBridgeLmsSystem.Application.Features.CityFeature.Queries.GetAllCiti
                     return Result<PaginatedResult<CityListItemQuery>>.Success(cachedResult, null);
                 }
             }
-            var cityQuery = await _unitOfWork.CityRepository.GetQuery(s=>!s.IsDeleted, true, includes: new Func<IQueryable<City>, IQueryable<City>>[] {
-                 query => query
-            .Include(p => p.Country) }
+            var cityQuery =  _unitOfWork.CityRepository.GetSelected(s=> new CityListItemQuery(){
+                Id = s.Id,
+                Name = s.Name,
+                countryInCityListItemQuery=new CountryInCityListItemQuery()
+                {
+                    Id = s.Id,
+                    Name= s.Name,
+                }
+            }
            );
             if (!string.IsNullOrWhiteSpace(request.searchQuery))
             {
                 cityQuery = cityQuery.Where(s => s.Name.ToLower().Contains(request.searchQuery.ToLower()));
             }
             cityQuery = cityQuery.OrderByDescending(s => s.CreatedTime);
-            var paginationResult = await _unitOfWork.CityRepository.GetPaginatedResultAsync(request.Cursor, request.Limit, includes: new Func<IQueryable<City>, IQueryable<City>>[] {
-                 query => query
-            .Include(p => p.Country) });
+            var paginationResult = await _unitOfWork.CityRepository.GetPaginatedResultAsync(query: cityQuery,
+    cursor: request.Cursor,
+    limit: request.Limit,
+    sortKey: s => s.Id);
             var mappedResult = new PaginatedResult<CityListItemQuery>
             {
-                Data = paginationResult.Data.Select(city => new CityListItemQuery
-                {
-                    Id = city.Id,
-                    Name = city.Name,
-                    countryInCityListItemQuery=_mapper.Map<CountryInCityListItemQuery>(city.Country)
-                }).AsEnumerable(),
+                Data = paginationResult.Data,
                 NextCursor = paginationResult.NextCursor
             };
             var cacheOptions = new DistributedCacheEntryOptions

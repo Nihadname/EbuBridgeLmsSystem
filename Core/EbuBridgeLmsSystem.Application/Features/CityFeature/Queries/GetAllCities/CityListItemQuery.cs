@@ -4,6 +4,7 @@
     {
         public Guid Id  { get; init; }
         public string Name { get; init; }
+        public DateTime CreatedTime { get; init; }
         public CountryInCityListItemQuery   countryInCityListItemQuery  { get; init; }
     }
     public class CountryInCityListItemQuery

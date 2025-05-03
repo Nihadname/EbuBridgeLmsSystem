@@ -5,7 +5,6 @@ using EbuBridgeLmsSystem.Persistance.Extensions;
 using LearningManagementSystem.Core.Entities.Common;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace LearningManagementSystem.DataAccess.Data.Implementations
 {
@@ -227,11 +226,53 @@ namespace LearningManagementSystem.DataAccess.Data.Implementations
             }
         }
 
-         public async Task<PaginatedResult<T>> GetPaginatedResultAsync(string cursor,int limit,params Func<IQueryable<T>, IQueryable<T>>[] includes)
+      public async Task<PaginatedResult<TResult>> GetPaginatedResultAsync<TResult, TKey>(
+    IQueryable<TResult> query,
+    string cursor,
+    int limit,
+    Expression<Func<TResult, TKey>> sortKey,
+    params Func<IQueryable<TResult>, IQueryable<TResult>>[] includes)
+    where TKey : IComparable
         {
-            IQueryable<T> query = _table.AsQueryable();
-            query = query.Where(s => !s.IsDeleted);
-            return await query.PaginateCursorAsync(cursor, limit, x => x.Id,includes);
+            if (query is null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+
+            if (string.IsNullOrEmpty(cursor))
+            {
+                throw new ArgumentException($"'{nameof(cursor)}' cannot be null or empty.", nameof(cursor));
+            }
+
+            if (sortKey is null)
+            {
+                throw new ArgumentNullException(nameof(sortKey));
+            }
+
+            foreach (var include in includes)
+            {
+                query = include(query);
+            }
+            query = query.OrderBy(sortKey);
+
+            return await query.PaginateCursorAsync(cursor, limit, sortKey, includes);
+
+        }
+        public IQueryable<TResult> GetSelected<TResult>(Expression<Func<T, TResult>> selector, Expression<Func<T, bool>> predicate = null)
+        {
+            var query = _context.Set<T>()
+                        .Where(x => !EF.Property<bool>(x, "IsDeleted"))
+                        .Select(selector);
+            if (predicate != null)
+            {
+                var parameter = Expression.Parameter(typeof(TResult), "x");
+                var body = Expression.Invoke(predicate, Expression.Convert(parameter, typeof(T)));
+                var lambda = Expression.Lambda<Func<TResult, bool>>(body, parameter);
+
+                query = query.Where(lambda);
+            }
+
+            return query;
         }
     }
 }

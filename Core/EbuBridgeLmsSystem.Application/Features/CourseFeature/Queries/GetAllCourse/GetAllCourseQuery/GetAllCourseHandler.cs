@@ -1,11 +1,8 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities;
-using EbuBridgeLmsSystem.Domain.Entities.Common;
+﻿using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
 namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCourse.GetAllCourseQuery
@@ -32,37 +29,34 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCo
                     return Result<PaginatedResult<CourseListItemDto>>.Success(cachedResult,null);
                 }
             }
-            var courseQuery = await _unitOfWork.CourseRepository.GetQuery(s => !s.IsDeleted, true, includes: new Func<IQueryable<Course>, IQueryable<Course>>[] {
-                 query => query
-            .Include(p => p.Language) });
+            var courseQuery =  _unitOfWork.CourseRepository.GetSelected(course => new CourseListItemDto()
+            {
+                Id = course.Id,
+                Name = course.Name,
+                Description = course.Description,
+                difficultyLevel = course.DifficultyLevel,
+                DurationInHours = course.DurationInHours,
+                ImageUrl = course.ImageUrl,
+                Price = course.Price,
+                Requirements = course.Requirements,
+                Language=new LanguageInCourseListItemDto()
+                {
+                    Id=course.LanguageId,
+                    Name=course.Name,
+                }
+            } );
             if (!string.IsNullOrWhiteSpace(request.SearchQuery))
             {
                 courseQuery = courseQuery.Where(s => s.Name.ToLower().Contains(request.SearchQuery));
             }
             courseQuery = courseQuery.OrderByDescending(s => s.CreatedTime);
-            var paginationResult = await _unitOfWork.CourseRepository.GetPaginatedResultAsync(request.Cursor, request.Limit, includes: new Func<IQueryable<Course>, IQueryable<Course>>[] {
-                 query => query
-            .Include(p => p.Language) });
+            var paginationResult = await _unitOfWork.CourseRepository.GetPaginatedResultAsync(query: courseQuery,
+    cursor: request.Cursor,
+    limit: request.Limit,
+    sortKey: s => s.Id);
             var mappedResult = new PaginatedResult<CourseListItemDto>
             {
-                Data = paginationResult.Data.Select(course => new CourseListItemDto
-                {
-                    Id = course.Id,
-                    Name = course.Name,
-                    Description=course.Description,
-                    difficultyLevel=course.DifficultyLevel,
-                    DurationInHours=course.DurationInHours,
-                    ImageUrl = course.ImageUrl,
-                    Price = course.Price,
-                    Requirements = course.Requirements,
-                    Language=new LanguageInCourseListItemDto
-                    {
-                        Id=course.Language.Id,
-                        Name = course.Language.Name,
-                    }
-                    
-
-                }).AsEnumerable(),
+                Data = paginationResult.Data,
                 NextCursor = paginationResult.NextCursor
             };
             var cacheOptions = new DistributedCacheEntryOptions

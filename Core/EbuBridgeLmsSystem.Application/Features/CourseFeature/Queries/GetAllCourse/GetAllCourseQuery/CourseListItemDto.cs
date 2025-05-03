@@ -18,6 +18,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCo
         public int DurationInHours { get; init; }
         public string Requirements { get; init; }
         public decimal Price { get; init; }
+        public DateTime CreatedTime { get; init; }
         public LanguageInCourseListItemDto Language { get; init; }
     }
     public sealed record LanguageInCourseListItemDto
