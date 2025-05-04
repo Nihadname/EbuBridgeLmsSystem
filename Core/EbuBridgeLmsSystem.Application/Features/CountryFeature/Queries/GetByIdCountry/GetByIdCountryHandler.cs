@@ -4,6 +4,7 @@ using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetByIdCountry
 {
@@ -19,11 +20,20 @@ namespace EbuBridgeLmsSystem.Application.Features.CountryFeature.Queries.GetById
 
         public async Task<Result<CountryReturnQuery>> Handle(GetByIdCountryQuery request, CancellationToken cancellationToken)
         {
-            var existedCountry=await _unitOfWork.CountryRepository.GetEntity(s=>s.Id==request.Id&!s.IsDeleted);
+            var existedCountry=await _unitOfWork.CountryRepository.GetSelected(s=> new CountryReturnQuery()
+            {
+                Id = s.Id,
+               CreatedTime=s.CreatedTime,
+               Name = s.Name,
+               citiesinCountryListItemCommands=s.Cities.Select(s=>new CitiesinCountryListItemCommand()
+               {
+                   Id = s.Id,
+                   Name = s.Name,
+               }).Take(2).ToList()
+            }).FirstOrDefaultAsync(s=>s.Id==request.Id,cancellationToken);
             if (existedCountry == null)
                 return Result<CountryReturnQuery>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
-            var mappedCountry=_mapper.Map<CountryReturnQuery>(existedCountry);
-            return Result<CountryReturnQuery>.Success(mappedCountry, null);
+            return Result<CountryReturnQuery>.Success(existedCountry, null);
         }
     }
 }

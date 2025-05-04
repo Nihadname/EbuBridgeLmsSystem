@@ -48,7 +48,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCo
                     LessonType = s.LessonType,
                     Status = s.Status,
                     Title = s.Title,
-                }).ToList(),
+                }).Take(2).ToList(),
                 Language=new LanguageInCourseListItemDto()
                 {
                     Id=course.LanguageId,
