@@ -7,16 +7,16 @@ using Microsoft.Extensions.Logging;
 
 namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.LessonStudentApproval
 {
-    public sealed class LessonStudentApprovalHandler : IRequestHandler<LessonStudentApprovalCommand, Result<Unit>>
+    public sealed class LessonStudentTeacherApprovalHandler : IRequestHandler<LessonStudentTeacherApprovalCommand, Result<Unit>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger<LessonStudentApprovalHandler> _logger;
-        public LessonStudentApprovalHandler(IUnitOfWork unitOfWork, ILogger<LessonStudentApprovalHandler> logger)
+        private readonly ILogger<LessonStudentTeacherApprovalHandler> _logger;
+        public LessonStudentTeacherApprovalHandler(IUnitOfWork unitOfWork, ILogger<LessonStudentTeacherApprovalHandler> logger)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
         }
-        public async Task<Result<Unit>> Handle(LessonStudentApprovalCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(LessonStudentTeacherApprovalCommand request, CancellationToken cancellationToken)
         {
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
@@ -24,6 +24,10 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
                 var existedLessonStudent = await _unitOfWork.LessonStudentRepository.GetEntity(s => s.Id == request.LessonStudentId && !s.IsDeleted);
                 if (existedLessonStudent == null)
                     return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
+                var isTeacherExist=await _unitOfWork.TeacherRepository.isExists(s => s.Id == request.TeacherId&&!s.IsDeleted);
+                if(!isTeacherExist)
+                    return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
+                var isTeacherIsInTheCourseOfStudent=await _unitOfWork.
                 existedLessonStudent.isApproved = true;
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 LessonStudentStudentApprovalOutBox lessonStudentStudentApprovalOutBox = new()

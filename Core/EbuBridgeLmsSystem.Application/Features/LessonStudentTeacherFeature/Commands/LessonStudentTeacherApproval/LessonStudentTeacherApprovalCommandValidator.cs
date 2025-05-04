@@ -1,19 +1,17 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.LessonStudentApproval
 {
-    public sealed class LessonStudentApprovalCommandValidator : AbstractValidator<LessonStudentApprovalCommand>
+    public sealed class LessonStudentTeacherApprovalCommandValidator : AbstractValidator<LessonStudentTeacherApprovalCommand>
     {
-        public LessonStudentApprovalCommandValidator()
+        public LessonStudentTeacherApprovalCommandValidator()
         {
             RuleFor(s => s.LessonStudentId)
               .NotEmpty().WithMessage("Student lesson request ID is required.")
               .Must(id => id != Guid.Empty).WithMessage("Student lesson request ID cannot be an empty GUID.");
+            RuleFor(s => s.TeacherId)
+             .NotEmpty().WithMessage("Teacher request ID is required.")
+             .Must(id => id != Guid.Empty).WithMessage("Teacher request ID cannot be an empty GUID.");
         }
     }
 }

@@ -11,13 +11,13 @@ using Microsoft.Extensions.Logging;
 
 namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.LessonStudentCreate
 {
-    public sealed class LessonStudentCreateHandler : IRequestHandler<LessonStudentCreateCommand, Result<Unit>>
+    public sealed class LessonStudentTeacherCreateHandler : IRequestHandler<LessonStudentTeacherCreateCommand, Result<Unit>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAppUserResolver _userResolver;
-        private readonly ILogger<LessonStudentCreateHandler> _logger;
+        private readonly ILogger<LessonStudentTeacherCreateHandler> _logger;
         private readonly UserManager<AppUser> _userManager;
-        public LessonStudentCreateHandler(IUnitOfWork unitOfWork, IAppUserResolver userResolver, ILogger<LessonStudentCreateHandler> logger, UserManager<AppUser> userManager)
+        public LessonStudentTeacherCreateHandler(IUnitOfWork unitOfWork, IAppUserResolver userResolver, ILogger<LessonStudentTeacherCreateHandler> logger, UserManager<AppUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _userResolver = userResolver;
@@ -25,7 +25,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
             _userManager = userManager;
         }
 
-        public async Task<Result<Unit>> Handle(LessonStudentCreateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(LessonStudentTeacherCreateCommand request, CancellationToken cancellationToken)
         {
                 var currentUserInTheSystem = await _userResolver.GetCurrentUserAsync(s=>s.Student.Id==request.StudentId,includes: new Func<IQueryable<AppUser>, IQueryable<AppUser>>[]{
                q => q.Include(p => p.Student).ThenInclude(s => s.courseStudents).ThenInclude(cs => cs.Course).ThenInclude(c => c.Lessons),
@@ -64,6 +64,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
                     LessonId = request.LessonId,
                     StudentId = request.StudentId,
                     isFinished = false,
+                    TeacherId=null,
                 };
                 await _unitOfWork.LessonStudentRepository.Create(lessonStudent);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);

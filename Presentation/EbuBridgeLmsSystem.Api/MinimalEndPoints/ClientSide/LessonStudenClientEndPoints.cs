@@ -12,7 +12,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.ClientSide
         {
             app.MapPost($"{baseUrl}LessonStudent", async ([FromForm] LessonStudentCreateDto LessonCreateDto, ISender mediator) =>
             {
-                var LessonStudentCreateCommand = new LessonStudentCreateCommand()
+                var LessonStudentCreateCommand = new LessonStudentTeacherCreateCommand()
                 {
                     LessonId = LessonCreateDto.LessonId,
                     StudentId = LessonCreateDto.StudentId,

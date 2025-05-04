@@ -1,8 +1,5 @@
 ﻿using EbuBridgeLmsSystem.Domain.Repositories;
-using EbuBridgeLmsSystem.Persistance.Data;
 using LearningManagementSystem.Core.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
 {
@@ -38,6 +35,8 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
         public ICourseStudentApprovalOutBoxRepository CourseStudentApprovalOutBoxRepository { get; private set; }
         public ILessonUnitAssignmentRepository LessonUnitAssignmentRepository { get; private set; }
         public ILessonStudentStudentApprovalOutBoxRepository LessonStudentStudentApprovalOutBoxRepository { get; private set; }
+        public ICourseTeacherRepository CourseTeacherRepository { get; private set; }
+        public ICourseTeacherLessonRepository CourseTeacherLessonRepository { get; private set; }
 
         public UnitOfWork(ApplicationDbContext applicationDbContext)
         {
@@ -67,6 +66,8 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
             CourseStudentApprovalOutBoxRepository = new CourseStudentApprovalOutBoxRepository(applicationDbContext);
             LessonUnitAssignmentRepository = new LessonUnitAssignmentRepository(applicationDbContext);
             LessonStudentStudentApprovalOutBoxRepository = new LessonStudentStudentApprovalOutBoxRepository(applicationDbContext);
+            CourseTeacherRepository = new CourseTeacherRepository(applicationDbContext);
+            CourseTeacherLessonRepository = new CourseTeacherLessonRepository(applicationDbContext);
             _applicationDbContext = applicationDbContext;
 
         }

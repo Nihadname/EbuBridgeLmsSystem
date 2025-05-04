@@ -12,7 +12,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
         {
             app.MapPatch($"{baseUrl}LessonStudent/ApproveLessonStudentRequest", async ([FromForm] LessonStudentApproveRequestDto LessonStudentApproveRequestDto, ISender mediator) =>
             {
-                var LessonStudentApproveRequestCommand = new LessonStudentApprovalCommand()
+                var LessonStudentApproveRequestCommand = new LessonStudentTeacherApprovalCommand()
                 {
                     LessonStudentId = LessonStudentApproveRequestDto.Id
                 };
