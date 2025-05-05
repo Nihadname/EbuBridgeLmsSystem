@@ -58,6 +58,8 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<LessonUnitAssignment> lessonUnitAssignments { get; set; }
         public  DbSet<LessonStudentStudentApprovalOutBox> LessonStudentStudentApprovalOutBoxes { get;set; }
         public DbSet<CourseTeacherLesson> CourseTeacherLessons { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

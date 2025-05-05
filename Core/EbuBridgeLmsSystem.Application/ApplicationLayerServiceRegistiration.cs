@@ -58,6 +58,7 @@ namespace EbuBridgeLmsSystem.Application
                 opt.Providers.Add<GzipCompressionProvider>();
             });
             serviceDescriptors.AddTransient(typeof(IPipelineBehavior<,>), typeof(FluentValidationBehavior<,>));
+            serviceDescriptors.AddSignalR();
 
         }
     }

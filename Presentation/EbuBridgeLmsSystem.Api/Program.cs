@@ -2,6 +2,7 @@ using EbuBridgeLmsSystem.Api;
 using EbuBridgeLmsSystem.Api.Middlewares;
 using EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin;
 using EbuBridgeLmsSystem.Application;
+using EbuBridgeLmsSystem.Application.Hubs;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Infrastructure;
 using EbuBridgeLmsSystem.Persistance;
@@ -44,7 +45,7 @@ if (app.Environment.IsDevelopment())
         c.InjectJavascript("/swagger/custom-swagger.js");
     });
 }
-
+app.MapHub<ChatHub>("/chathub");
 app.RegisterMinimalEndpoints(config);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
