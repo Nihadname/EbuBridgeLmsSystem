@@ -13,8 +13,9 @@ namespace EbuBridgeLmsSystem.Application.Hubs
             _sender = sender;
         }
 
-        public async Task SendMessage(string senderId, string receiverId, string message)
+        public async Task SendMessage(string receiverId, string message)
         {
+            var senderId = Context.UserIdentifier;
             if (string.IsNullOrEmpty(senderId) || string.IsNullOrEmpty(receiverId) || string.IsNullOrEmpty(message))
             {
                 throw new ArgumentException("Sender, receiver, or message cannot be null or empty.");
