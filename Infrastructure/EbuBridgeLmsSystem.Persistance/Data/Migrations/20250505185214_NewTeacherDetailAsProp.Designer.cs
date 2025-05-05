@@ -4,6 +4,7 @@ using EbuBridgeLmsSystem.Persistance.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250505185214_NewTeacherDetailAsProp")]
+    partial class NewTeacherDetailAsProp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2154,6 +2157,36 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.CourseStudentApprovalOutBox", b =>
+                {
+                    b.OwnsOne("EbuBridgeLmsSystem.Domain.Entities.ValueObjects.TeacherDetailApprovalOutBox", "TeacherDetailApprovalOutBox", b1 =>
+                        {
+                            b1.Property<Guid>("CourseStudentApprovalOutBoxId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Email")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("FullName")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("PhoneNumber")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Subject")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("CourseStudentApprovalOutBoxId");
+
+                            b1.ToTable("courseStudentApprovalOutBoxes");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CourseStudentApprovalOutBoxId");
+                        });
+
+                    b.Navigation("TeacherDetailApprovalOutBox");
+                });
+
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.CourseTeacher", b =>
                 {
                     b.HasOne("EbuBridgeLmsSystem.Domain.Entities.Course", "Course")
@@ -2232,36 +2265,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                         .HasForeignKey("LessonId");
 
                     b.Navigation("Lesson");
-                });
-
-            modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LessonStudentStudentApprovalOutBox", b =>
-                {
-                    b.OwnsOne("EbuBridgeLmsSystem.Domain.Entities.ValueObjects.TeacherDetailApprovalOutBox", "TeacherDetailApprovalOutBox", b1 =>
-                        {
-                            b1.Property<Guid>("LessonStudentStudentApprovalOutBoxId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Email")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("FullName")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("PhoneNumber")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Subject")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("LessonStudentStudentApprovalOutBoxId");
-
-                            b1.ToTable("LessonStudentStudentApprovalOutBoxes");
-
-                            b1.WithOwner()
-                                .HasForeignKey("LessonStudentStudentApprovalOutBoxId");
-                        });
-
-                    b.Navigation("TeacherDetailApprovalOutBox");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LessonStudentTeacher", b =>

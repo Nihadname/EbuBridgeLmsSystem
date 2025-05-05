@@ -1,10 +1,6 @@
-﻿using EbuBridgeLmsSystem.Domain.Enums;
+﻿using EbuBridgeLmsSystem.Domain.Entities.ValueObjects;
+using EbuBridgeLmsSystem.Domain.Enums;
 using LearningManagementSystem.Core.Entities.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EbuBridgeLmsSystem.Domain.Entities
 {

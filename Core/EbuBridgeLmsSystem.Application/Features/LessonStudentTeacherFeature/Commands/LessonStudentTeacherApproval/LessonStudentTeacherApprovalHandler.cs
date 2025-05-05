@@ -4,6 +4,7 @@ using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.LessonStudentApproval
 {
@@ -24,11 +25,18 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
                 var existedLessonStudent = await _unitOfWork.LessonStudentRepository.GetEntity(s => s.Id == request.LessonStudentId && !s.IsDeleted);
                 if (existedLessonStudent == null)
                     return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
-                var isTeacherExist=await _unitOfWork.TeacherRepository.isExists(s => s.Id == request.TeacherId&&!s.IsDeleted);
-                if(!isTeacherExist)
+                var existedTeacher=await _unitOfWork.TeacherRepository.GetEntity(s => s.Id == request.TeacherId&&!s.IsDeleted);
+                if(existedTeacher is null)
                     return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
-                var isTeacherIsInTheCourseOfStudent=await _unitOfWork.
+                var isTeacherInTheCourseOfStudent = existedTeacher.CourseTeachers
+     .Any(teacher => teacher.Id == existedTeacher.Id &&
+         teacher.CourseTeacherLessons
+             .Any(lesson => lesson.LessonId == existedLessonStudent.LessonId));
+                if(!isTeacherInTheCourseOfStudent)
+                    return Result<Unit>.Failure(Error.Custom("TeacherAddition","the teacher you are trying to assign to this is not in these course or lesson"), null, ErrorType.BusinessLogicError);
+
                 existedLessonStudent.isApproved = true;
+                existedLessonStudent.TeacherId = request.TeacherId;
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 LessonStudentStudentApprovalOutBox lessonStudentStudentApprovalOutBox = new()
                 {
