@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{24459C5D-2945-4EB5-A732-DD693462BC18}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{EBDCADE3-695D-4C1A-84B4-1693DB8B366D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EbuBridgeLmsSystem.Api", "Presentation\EbuBridgeLmsSystem.Api\EbuBridgeLmsSystem.Api.csproj", "{07CBBEE8-BA37-4239-94E2-68C5D8A4B7FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EbuBridgeLmsSystem.LmsAiApi", "Presentation\EbuBridgeLmsSystem\EbuBridgeLmsSystem.LmsAiApi.csproj", "{6D01C9AF-20C5-405D-B842-50BECAAC1DE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{07CBBEE8-BA37-4239-94E2-68C5D8A4B7FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07CBBEE8-BA37-4239-94E2-68C5D8A4B7FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07CBBEE8-BA37-4239-94E2-68C5D8A4B7FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D01C9AF-20C5-405D-B842-50BECAAC1DE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D01C9AF-20C5-405D-B842-50BECAAC1DE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D01C9AF-20C5-405D-B842-50BECAAC1DE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D01C9AF-20C5-405D-B842-50BECAAC1DE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,5 +61,6 @@ Global
 		{E16C6F6C-EA7D-4E02-A243-D30DD4F6AFCD} = {F657DE2E-A9D2-4485-B544-7A073E7997C6}
 		{35664EB7-9F30-418C-9E2B-35717BDB65F1} = {F657DE2E-A9D2-4485-B544-7A073E7997C6}
 		{07CBBEE8-BA37-4239-94E2-68C5D8A4B7FE} = {EBDCADE3-695D-4C1A-84B4-1693DB8B366D}
+		{6D01C9AF-20C5-405D-B842-50BECAAC1DE8} = {EBDCADE3-695D-4C1A-84B4-1693DB8B366D}
 	EndGlobalSection
 EndGlobal

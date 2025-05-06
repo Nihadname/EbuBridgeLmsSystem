@@ -1,6 +1,5 @@
 using EbuBridgeLmsSystem.Api;
 using EbuBridgeLmsSystem.Api.Middlewares;
-using EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin;
 using EbuBridgeLmsSystem.Application;
 using EbuBridgeLmsSystem.Application.Hubs;
 using EbuBridgeLmsSystem.Domain.Entities;
@@ -30,7 +29,7 @@ builder.Services.AddInfrastructureServices(config);
 builder.Services.RegisterApplicationLayerServices(config);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddHttpClient();
 var app = builder.Build();
 
