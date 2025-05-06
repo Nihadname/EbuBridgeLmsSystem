@@ -1,5 +1,5 @@
 ﻿using EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCourse.GetAllCourseQuery;
-using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;

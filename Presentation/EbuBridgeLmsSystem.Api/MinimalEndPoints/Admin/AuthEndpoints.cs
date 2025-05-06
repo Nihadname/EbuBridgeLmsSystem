@@ -12,7 +12,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
     {
         public static void MapAuthAdminEndpoints(this IEndpointRouteBuilder app, string baseUrl)
         {
-            app.MapPost($"{baseUrl}/Auth/RegisterForStudent", async (StudentRegistrationDto studentRegistrationDto, IMapper mapper, ISender _mediator, IValidator<RegisterDto> validator) =>
+            app.MapPost($"{baseUrl}/Auth/RegisterForStudent", async (StudentRegistrationDto studentRegistrationDto, IMapper mapper, ISender _mediator) =>
             {
                 
                 var mappedRegisterDto = mapper.Map<CreateAppUserAsStudentCommand>(studentRegistrationDto);

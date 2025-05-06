@@ -1,4 +1,4 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities;
+﻿using EbuBridgeLmsSystem.Domain.Entities.Common;
 using System.Linq.Expressions;
 
 namespace EbuBridgeLmsSystem.Application.Interfaces

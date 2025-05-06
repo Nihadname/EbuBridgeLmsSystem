@@ -1,4 +1,6 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities;
+﻿using EbuBridgeLmsSystem.Domain.Entities.Common;
+using EbuBridgeLmsSystem.Domain.Entities.LmsAiSassSystem;
+using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 using EbuBridgeLmsSystem.Persistance.Processors;
 using LearningManagementSystem.Core.Entities.Common;
 using Microsoft.AspNetCore.Identity;
@@ -33,7 +35,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<LessonUnitVideo>  lessonUnitVideos { get; set; }
         public DbSet<Note> notes { get; set; }
         public DbSet<QuizOption> quizOptions { get; set; }
-        public DbSet<QuizQuestion> quizQuestions { get; set; }
+        public DbSet<Domain.Entities.LmsAiSassSystem.QuizQuestion> quizQuestions { get; set; }
         public DbSet<QuizResult> quizResults { get; set; }
         public DbSet<RequestToRegister> requestToRegister { get; set; }
         public DbSet<Fee> fees { get; set; }
@@ -59,6 +61,11 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public  DbSet<LessonStudentStudentApprovalOutBox> LessonStudentStudentApprovalOutBoxes { get;set; }
         public DbSet<CourseTeacherLesson> CourseTeacherLessons { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<Quiz> Quizzes { get; set; }
+        public DbSet<Domain.Entities.LmsAiSassSystem.QuizQuestion> QuizQuestions { get; set; }
+        public DbSet<QuizQuestionOption> QuizOptions { get; set; }
+        public DbSet<Article> Articles { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -17,6 +17,7 @@ namespace EbuBridgeLmsSystem.Api
             app.MapCourseClientEndPointsthis(clientSideUrl);
             app.MapLessonStudentClientEndPoints(clientSideUrl);
             app.MapLessonStudentEndPoints(baseAdminUrl);
+            app.MapRoleAdminEndpoints(baseAdminUrl);
 
         }
     }

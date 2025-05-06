@@ -32,7 +32,8 @@ using EbuBridgeLmsSystem.Application.Features.CountryFeature.CommanCommands;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.CreateCountry;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.DeleteCountry;
 using EbuBridgeLmsSystem.Application.Features.CountryFeature.Commands.UpdateCountry;
-using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.Common;
+using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 using Microsoft.AspNetCore.Http;
 
 namespace EbuBridgeLmsSystem.Application.Profiles

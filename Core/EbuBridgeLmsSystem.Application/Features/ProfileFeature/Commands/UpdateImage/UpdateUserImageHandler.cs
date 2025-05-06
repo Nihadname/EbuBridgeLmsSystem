@@ -1,7 +1,6 @@
 ﻿using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Helpers.Enums;
 using EbuBridgeLmsSystem.Application.Interfaces;
-using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;

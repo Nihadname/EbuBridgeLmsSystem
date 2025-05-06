@@ -1,4 +1,5 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities;
+﻿using EbuBridgeLmsSystem.Domain.Entities.Common;
+using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 using EbuBridgeLmsSystem.Persistance.Data;
 using LearningManagementSystem.Core.Entities.Common;
 using Microsoft.AspNetCore.Http;

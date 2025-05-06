@@ -1,7 +1,6 @@
 ﻿using EbuBridgeLmsSystem.Application.Dtos.Auth;
 using EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth;
 using EbuBridgeLmsSystem.Application.Validators.AuthValidators;
-using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using FluentValidation;
 using LearningManagementSystem.Core.Entities.Common;

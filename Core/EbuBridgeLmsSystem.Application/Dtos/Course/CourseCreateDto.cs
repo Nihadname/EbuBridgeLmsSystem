@@ -1,4 +1,4 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities;
+﻿using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 using Microsoft.AspNetCore.Http;
 
 namespace EbuBridgeLmsSystem.Application.Dtos.Course

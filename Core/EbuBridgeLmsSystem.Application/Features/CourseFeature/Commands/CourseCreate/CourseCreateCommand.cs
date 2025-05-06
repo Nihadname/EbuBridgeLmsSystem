@@ -1,5 +1,5 @@
 ﻿using EbuBridgeLmsSystem.Application.Dtos.Course;
-using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;

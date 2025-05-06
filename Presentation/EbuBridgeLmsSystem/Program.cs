@@ -17,7 +17,7 @@ builder.Services.AddPersistenceServices(config);
 builder.Services.AddInfrastructureServices(config);
 builder.Services.RegisterApplicationLayerServices(config);
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -26,7 +26,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();

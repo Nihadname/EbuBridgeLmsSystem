@@ -1,4 +1,4 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities;
+﻿using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
 using System;

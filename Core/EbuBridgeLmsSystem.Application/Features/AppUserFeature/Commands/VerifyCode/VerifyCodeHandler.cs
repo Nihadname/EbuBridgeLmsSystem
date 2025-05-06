@@ -1,5 +1,4 @@
 ﻿using EbuBridgeLmsSystem.Application.Helpers.Extensions;
-using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;

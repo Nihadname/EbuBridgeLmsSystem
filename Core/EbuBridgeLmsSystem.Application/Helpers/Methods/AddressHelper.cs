@@ -1,5 +1,5 @@
 ﻿using EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.Common;
-using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

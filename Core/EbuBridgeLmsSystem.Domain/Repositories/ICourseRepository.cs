@@ -1,5 +1,5 @@
 ﻿using EbuBridgeLmsSystem.Domain.DomainDtos.Course;
-using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 
 namespace EbuBridgeLmsSystem.Domain.Repositories
 {

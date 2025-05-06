@@ -1,6 +1,7 @@
 ﻿using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
+using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;
@@ -28,7 +29,7 @@ namespace EbuBridgeLmsSystem.Application.Features.ChatMessageFeature.Commands.Ch
             {
                 return Result<Unit>.Failure(Error.Unauthorized, null, ErrorType.UnauthorizedError);
             }
-            var isUsersExist = await _userManager.FindByIdAsync(request.ReceiverAppUserId) is not null || await _userManager.Users.AnyAsync(s=>s.Id==request.SenderAppUserId&&s.Id==userId) is not null;
+            var isUsersExist = await _userManager.FindByIdAsync(request.ReceiverAppUserId) is not null || await _userManager.Users.FirstOrDefaultAsync(s=>s.Id==request.SenderAppUserId&&s.Id==userId) is not null;
             if (!isUsersExist)
             {
                 return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);

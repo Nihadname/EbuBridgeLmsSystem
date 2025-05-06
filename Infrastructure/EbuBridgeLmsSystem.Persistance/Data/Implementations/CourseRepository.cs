@@ -1,7 +1,7 @@
 ﻿using EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCourse.GetAllCourseQuery;
 using EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetByIdCourse;
 using EbuBridgeLmsSystem.Domain.DomainDtos.Course;
-using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.DataAccess.Data.Implementations;
 using Microsoft.EntityFrameworkCore;

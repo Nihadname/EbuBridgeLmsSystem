@@ -2,7 +2,7 @@ using EbuBridgeLmsSystem.Api;
 using EbuBridgeLmsSystem.Api.Middlewares;
 using EbuBridgeLmsSystem.Application;
 using EbuBridgeLmsSystem.Application.Hubs;
-using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Infrastructure;
 using EbuBridgeLmsSystem.Persistance;
 using EbuBridgeLmsSystem.Persistance.Data;

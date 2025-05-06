@@ -1,4 +1,4 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities;
+﻿using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 using FluentValidation;
 
 namespace EbuBridgeLmsSystem.Application.Validators.LessonStudentValidators

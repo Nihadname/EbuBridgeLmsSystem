@@ -1,7 +1,7 @@
 ﻿using EbuBridgeLmsSystem.Application.Features.AddressFeature.Commands.UpdateAdress;
 using EbuBridgeLmsSystem.Application.Helpers.Methods;
-using EbuBridgeLmsSystem.Domain.Entities;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
+using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 using EbuBridgeLmsSystem.Domain.Repositories;
 using LearningManagementSystem.Core.Entities.Common;
 using MediatR;

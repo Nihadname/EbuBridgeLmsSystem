@@ -1,5 +1,5 @@
 ﻿using EbuBridgeLmsSystem.Application.AppDefaults;
-using EbuBridgeLmsSystem.Domain.Entities;
+using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Persistance.Data;
 using EbuBridgeLmsSystem.Persistance.SeedDatas.Extensions;
 using Microsoft.AspNetCore.Identity;
