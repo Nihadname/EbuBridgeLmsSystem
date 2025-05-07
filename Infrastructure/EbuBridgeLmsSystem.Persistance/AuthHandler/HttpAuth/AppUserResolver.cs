@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Security.Claims;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace EbuBridgeLmsSystem.Persistance.AuthHandler.HttpAuth
 {

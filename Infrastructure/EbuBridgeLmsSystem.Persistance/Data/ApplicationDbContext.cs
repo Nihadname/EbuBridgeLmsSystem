@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace EbuBridgeLmsSystem.Persistance.Data
@@ -18,8 +17,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data
 
         public ApplicationDbContext(DbContextOptions options, IServiceProvider serviceProvider) : base(options)
         {
-            
-          _serviceProvider = serviceProvider;
+            _serviceProvider = serviceProvider;
         }
         private IAuditLogProcessor AuditLogProcessor => _serviceProvider.GetRequiredService<IAuditLogProcessor>();
 
@@ -32,10 +30,13 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<LessonStudentTeacher> lessonsStudents { get; set; }
         public DbSet<LessonUnitMaterial> lessonUnitMaterials { get; set; }
         public DbSet<LessonQuiz> lessonQuizzes { get; set; }
-        public DbSet<LessonUnitVideo>  lessonUnitVideos { get; set; }
+        public DbSet<QuizResult> QuizResults { get; set; }
+        public DbSet<QuizQuestion> QuizQuestions { get; set; }
+        public DbSet<QuizOption> QuizOptions { get; set; }
+        public DbSet<LessonUnitVideo> lessonUnitVideos { get; set; }
         public DbSet<Note> notes { get; set; }
         public DbSet<QuizOption> quizOptions { get; set; }
-        public DbSet<Domain.Entities.LmsAiSassSystem.QuizQuestion> quizQuestions { get; set; }
+        public DbSet<Domain.Entities.LmsAiSassSystem.ArticleQuizQuestion> quizQuestions { get; set; }
         public DbSet<QuizResult> quizResults { get; set; }
         public DbSet<RequestToRegister> requestToRegister { get; set; }
         public DbSet<Fee> fees { get; set; }
@@ -46,24 +47,24 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<TeacherFacultyDegree> TeacherFacultyDegrees { get; set; }
         public DbSet<RefreshToken> refreshTokens { get; set; }
-        public  DbSet<Country> Countries { get; set; }
+        public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<Language> languages { get; set; }
         public DbSet<CourseImageOutBox> courseImageOutBoxes { get; set; }
         public DbSet<LessonUnit> lessonUnits { get; set; }
-        public DbSet<LessonUnitAttendance> lessonUnitAttendances { get; set; } 
+        public DbSet<LessonUnitAttendance> lessonUnitAttendances { get; set; }
         public DbSet<LessonUnitStudentHomework> lessonUnitStudentHomeworks { get; set; }
         public DbSet<LessonHomeworkLink> lessonHomeworkLinks { get; set; }
         public DbSet<LessonUnitStudentHomeworkMaterial> lessonUnitStudentHomeworkMaterials { get; set; }
         public DbSet<CourseStudentApprovalOutBox> courseStudentApprovalOutBoxes { get; set; }
         public DbSet<LessonUnitAssignment> lessonUnitAssignments { get; set; }
-        public  DbSet<LessonStudentStudentApprovalOutBox> LessonStudentStudentApprovalOutBoxes { get;set; }
+        public DbSet<LessonStudentStudentApprovalOutBox> LessonStudentStudentApprovalOutBoxes { get; set; }
         public DbSet<CourseTeacherLesson> CourseTeacherLessons { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<Quiz> Quizzes { get; set; }
-        public DbSet<Domain.Entities.LmsAiSassSystem.QuizQuestion> QuizQuestions { get; set; }
-        public DbSet<QuizQuestionOption> QuizOptions { get; set; }
+        public DbSet<Domain.Entities.LmsAiSassSystem.ArticleQuizQuestion> ArticleQuizQuestions { get; set; }
+        public DbSet<QuizQuestionOption> QuizQuestionOptions { get; set; }
         public DbSet<Article> Articles { get; set; }
 
 
@@ -81,11 +82,11 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var entries = ChangeTracker.Entries<BaseEntity>();
-       await AuditLogProcessor.HandleAuditLogs(entries);
+            await AuditLogProcessor.HandleAuditLogs(entries);
 
             foreach (var entry in entries)
             {
-               
+
                 if (entry.State == EntityState.Added)
                 {
                     entry.Property(s => s.CreatedTime).CurrentValue = DateTime.UtcNow;

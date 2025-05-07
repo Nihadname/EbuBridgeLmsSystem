@@ -12,7 +12,7 @@ namespace EbuBridgeLmsSystem.Domain.Repositories
         Task CommitTransactionAsync(CancellationToken cancellationToken = default);
         Task RollbackTransactionAsync(CancellationToken cancellationToken = default);
         Task SaveChangesAsync(CancellationToken cancellationToken = default);
-         void Dispose();
+         //void Dispose();
         public IRequstToRegisterRepository RequstToRegisterRepository { get; }
         public INoteRepository NoteRepository { get; }
         public IReportRepository ReportRepository { get; }

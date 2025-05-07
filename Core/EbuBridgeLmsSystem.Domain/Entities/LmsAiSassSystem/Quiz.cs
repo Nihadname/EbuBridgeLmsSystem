@@ -7,6 +7,6 @@ namespace EbuBridgeLmsSystem.Domain.Entities.LmsAiSassSystem
         public string Title { get; set; }
         public Guid ArticleId { get; set; }
         public Article Article { get; set; }
-        public ICollection<QuizQuestion> QuizQuestions { get; set; }
+        public ICollection<ArticleQuizQuestion> QuizQuestions { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using EbuBridgeLmsSystem.Persistance.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250507162509_newRelationsForQuizAndArticle")]
+    partial class newRelationsForQuizAndArticle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -245,17 +248,14 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.Property<DateTime?>("DeletedTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Explanation")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("QuizId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedTime")
                         .HasColumnType("datetime2");
@@ -1095,9 +1095,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.Property<DateTime?>("DeletedTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DurationMinutes")
-                        .HasColumnType("int");
-
                     b.Property<string>("Instructions")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -1722,12 +1719,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.Property<DateTime?>("DeletedTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Difficulty")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Explanation")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -1737,8 +1728,8 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.Property<string>("QuestionText")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("QuestionType")
-                        .HasColumnType("int");
+                    b.Property<string>("QuestionType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedTime")
                         .HasColumnType("datetime2");
@@ -2717,7 +2708,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LmsSystem.QuizQuestion", b =>
                 {
                     b.HasOne("EbuBridgeLmsSystem.Domain.Entities.LmsSystem.LessonQuiz", "LessonQuiz")
-                        .WithMany("QuizQuestions")
+                        .WithMany()
                         .HasForeignKey("LessonQuizId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2965,11 +2956,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.Navigation("LessonStudents");
 
                     b.Navigation("LessonUnits");
-                });
-
-            modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LmsSystem.LessonQuiz", b =>
-                {
-                    b.Navigation("QuizQuestions");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LmsSystem.LessonStudentTeacher", b =>
