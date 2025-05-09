@@ -65,8 +65,10 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<Domain.Entities.LmsAiSassSystem.ArticleQuizQuestion> ArticleQuizQuestions { get; set; }
         public DbSet<QuizQuestionOption> QuizQuestionOptions { get; set; }
-        public DbSet<Article> Articles { get; set; }
-
+        public DbSet<Article> Articles { get; set; } 
+        public DbSet<SaasStudent> SaasStudents { get; set; }
+        public DbSet<Subscribtion> Subscribtions { get; set; }
+        public DbSet<SaasStudentSubscribtion> SaasStudentSubscribtions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

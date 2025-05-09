@@ -4,6 +4,7 @@ using EbuBridgeLmsSystem.Persistance.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250509131200_SubscriptionAndSaasStudentAdding")]
+    partial class SubscriptionAndSaasStudentAdding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -362,54 +365,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.ToTable("SaasStudents");
                 });
 
-            modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LmsAiSassSystem.SaasStudentSubscribtion", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("CreatedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTimeOffset>("EndDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsTrialAvailable")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("SaasStudentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("StartDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid>("SubscribtionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("TrialDays")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SaasStudentId");
-
-                    b.HasIndex("SubscribtionId");
-
-                    b.ToTable("SaasStudentSubscribtions");
-                });
-
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LmsAiSassSystem.Subscribtion", b =>
                 {
                     b.Property<Guid>("Id")
@@ -425,19 +380,39 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTimeOffset>("EndDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTrialAvailable")
                         .HasColumnType("bit");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid>("SaasStudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("StartDate")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<int>("SubscritionType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrialDays")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedTime")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SaasStudentId");
 
                     b.ToTable("Subscribtions");
                 });
@@ -2477,23 +2452,15 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.Navigation("AppUser");
                 });
 
-            modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LmsAiSassSystem.SaasStudentSubscribtion", b =>
+            modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LmsAiSassSystem.Subscribtion", b =>
                 {
                     b.HasOne("EbuBridgeLmsSystem.Domain.Entities.LmsAiSassSystem.SaasStudent", "SaasStudent")
-                        .WithMany("SaasStudentSubscribtions")
+                        .WithMany("Subscribtions")
                         .HasForeignKey("SaasStudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EbuBridgeLmsSystem.Domain.Entities.LmsAiSassSystem.Subscribtion", "Subscribtion")
-                        .WithMany("SaasStudentSubscribtions")
-                        .HasForeignKey("SubscribtionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("SaasStudent");
-
-                    b.Navigation("Subscribtion");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LmsSystem.Address", b =>
@@ -3059,12 +3026,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LmsAiSassSystem.SaasStudent", b =>
                 {
-                    b.Navigation("SaasStudentSubscribtions");
-                });
-
-            modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LmsAiSassSystem.Subscribtion", b =>
-                {
-                    b.Navigation("SaasStudentSubscribtions");
+                    b.Navigation("Subscribtions");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LmsSystem.City", b =>

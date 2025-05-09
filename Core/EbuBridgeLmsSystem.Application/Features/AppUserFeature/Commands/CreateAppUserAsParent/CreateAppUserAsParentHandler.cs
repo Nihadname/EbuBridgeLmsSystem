@@ -43,7 +43,11 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
                 var appUserResult = await _userManager.CreateUser(request.RegisterDto, _unitOfWork, _emailService, _backgroundJobClient);
                 if(!appUserResult.IsSuccess)
                     return Result<UserGetDto>.Failure(appUserResult.Error, appUserResult.Errors, (ErrorType)appUserResult.ErrorType);
-                await _userManager.AddToRoleAsync(appUserResult.Data, RolesEnum.Parent.ToString());
+             var result=   await _userManager.AddToRoleAsync(appUserResult.Data, RolesEnum.Parent.ToString());
+                if (!result.Succeeded)
+                {
+                    return Result<UserGetDto>.Failure(Error.ValidationFailed, result.Errors.Select(s => s.Description).ToList(), ErrorType.ValidationError);
+                }
                 request.ParentCreateDto.AppUserId = appUserResult.Data.Id   ;
                 var mappedParent = _mapper.Map<Parent>(request.ParentCreateDto);
                 var Students = new List<Student>();

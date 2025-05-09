@@ -1,7 +1,6 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
-using LearningManagementSystem.Core.Entities.Common;
+﻿using EbuBridgeLmsSystem.Domain.Entities.LmsAiSassSystem;
+using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 
 namespace EbuBridgeLmsSystem.Domain.Entities.Common
 {
@@ -46,6 +45,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities.Common
         public Student Student { get; set; }
         public Teacher Teacher { get; set; }
         public Parent Parent { get; set; }
+        public SaasStudent SaasStudent { get; set; }
         public RefreshToken RefreshToken { get; set; }
         public ICollection<Note> Notes { get; set; }
         public ICollection<Report> Reports { get; set; }
@@ -57,6 +57,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities.Common
         public DateTime? ExpiredDate { get; set; }
         public string CustomerId { get; set; }
         public bool IsSubscribed { get; set; }
+
 
 
     }
