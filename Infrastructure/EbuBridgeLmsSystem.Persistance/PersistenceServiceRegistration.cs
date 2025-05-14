@@ -66,24 +66,38 @@ namespace EbuBridgeLmsSystem.Persistance
             
             services.AddScoped<IAppUserResolver,AppUserResolver>();
             //services.AddScoped<IAuthService,AuthService>();
-            services.AddScoped<IAddressRepository, AddressRepository>();
-            services.AddScoped<ICourseRepository,CourseRepository>();
-            services.AddScoped<IFeeRepository, FeeRepository>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<ILessonRepository, LessonRepository>();
-            services.AddScoped<INoteRepository, NoteRepository>();
-            services.AddScoped<IParentRepository, ParentRepository>();
-            services.AddScoped<IReportOptionRepository, ReportOptionRepository>();
-            services.AddScoped<IReportRepository, ReportRepository>();
-            services.AddScoped<IReportOptionRepository,ReportOptionRepository>();
-            services.AddScoped<IRequstToRegisterRepository, RequstToRegisterRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<ITeacherRepository, TeacherRepository>();
+            services.AddScoped<IParentRepository, ParentRepository>();
+            services.AddScoped<IRequstToRegisterRepository, RequstToRegisterRepository>();
+            services.AddScoped<ICourseRepository, CourseRepository>();
+            services.AddScoped<INoteRepository, NoteRepository>();
+            services.AddScoped<IReportRepository, ReportRepository>();
+            services.AddScoped<IReportOptionRepository, ReportOptionRepository>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<IFeeRepository, FeeRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
-            services.AddScoped<IAuditLogProcessor,AuditLogProcessor>();
+            services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+            services.AddScoped<ILanguageRepository, LanguageRepository>();
+            services.AddScoped<ICourseImageOutBoxRepository, CourseImageOutBoxRepository>();
+            services.AddScoped<ICourseStudentRepository, CourseStudentRepository>();
             services.AddScoped<ILessonUnitMaterialRepository, LessonUnitMaterialRepository>();
+            services.AddScoped<ILessonRepository, LessonRepository>();
+            services.AddScoped<ILessonUnitVideoRepository, LessonUnitVideoRepository>();
+            services.AddScoped<ILessonStudentRepository, LessonStudentRepository>();
+            services.AddScoped<ILessonUnitRepository, LessonUnitRepository>();
+            services.AddScoped<ILessonUnitAttendanceRepository, LessonUnitAttendanceRepository>();
+            services.AddScoped<ICourseStudentApprovalOutBoxRepository, CourseStudentApprovalOutBoxRepository>();
+            services.AddScoped<ILessonUnitAssignmentRepository, LessonUnitAssignmentRepository>();
+            services.AddScoped<ILessonStudentStudentApprovalOutBoxRepository, LessonStudentStudentApprovalOutBoxRepository>();
+            services.AddScoped<ICourseTeacherRepository, CourseTeacherRepository>();
+            services.AddScoped<ICourseTeacherLessonRepository, CourseTeacherLessonRepository>();
+            services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
+            services.AddScoped<ISaasStudentRepository, SaasStudentRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
         }
     }
 }

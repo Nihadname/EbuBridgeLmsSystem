@@ -1,6 +1,4 @@
-﻿using EbuBridgeLmsSystem.Application.Dtos.Auth;
-using EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.CreateAppUserAsParent;
-using EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth;
+﻿using EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth;
 using EbuBridgeLmsSystem.Application.Interfaces;
 using EbuBridgeLmsSystem.Domain.Entities.Common;
 using EbuBridgeLmsSystem.Domain.Entities.LmsAiSassSystem;
@@ -43,7 +41,14 @@ namespace EbuBridgeLmsSystem.Application.Features.AppUserFeature.Commands.Create
                 {
                     return Result<Unit>.Failure(Error.ValidationFailed, result.Errors.Select(s=>s.Description).ToList(), ErrorType.ValidationError);
                 }
-              throw new NotImplementedException();
+                var newSassStudent = new SaasStudent()
+                {
+                    AppUserId=appUserResult.Data.Id,
+                };
+                await _unitOfWork.SaasStudentRepository.Create(newSassStudent);
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.CommitTransactionAsync(cancellationToken);
+                return Result<Unit>.Success(Unit.Value,SuccessReturnType.Created);
             }
             catch (Exception ex)
             {

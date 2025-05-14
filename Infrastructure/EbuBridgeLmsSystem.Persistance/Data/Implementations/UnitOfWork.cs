@@ -38,6 +38,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
         public ICourseTeacherRepository CourseTeacherRepository { get; private set; }
         public ICourseTeacherLessonRepository CourseTeacherLessonRepository { get; private set; }
         public IChatMessageRepository ChatMessageRepository { get; private set; }
+        public ISaasStudentRepository SaasStudentRepository { get; private set; }
 
         public UnitOfWork(ApplicationDbContext applicationDbContext)
         {
@@ -70,6 +71,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
             CourseTeacherRepository = new CourseTeacherRepository(applicationDbContext);
             CourseTeacherLessonRepository = new CourseTeacherLessonRepository(applicationDbContext);
             ChatMessageRepository = new ChatMessageRepository(applicationDbContext);
+            SaasStudentRepository = new SaasStudentRepository(applicationDbContext);
             _applicationDbContext = applicationDbContext;
 
         }
