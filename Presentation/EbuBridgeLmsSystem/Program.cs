@@ -11,11 +11,12 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var config = builder.Configuration;
-var app = builder.Build();
 
 builder.Services.AddPersistenceServices(config);
 builder.Services.AddInfrastructureServices(config);
 builder.Services.RegisterApplicationLayerServices(config);
+var app = builder.Build();
+
 
 
 if (app.Environment.IsDevelopment())

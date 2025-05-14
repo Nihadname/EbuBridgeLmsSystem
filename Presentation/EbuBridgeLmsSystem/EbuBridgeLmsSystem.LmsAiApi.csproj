@@ -21,4 +21,9 @@
     <ProjectReference Include="..\..\Infrastructure\EbuBridgeLmsSystem.Persistance\EbuBridgeLmsSystem.Persistance.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="MinimalEndPoints\Admin\" />
+  </ItemGroup>
+
 </Project>
