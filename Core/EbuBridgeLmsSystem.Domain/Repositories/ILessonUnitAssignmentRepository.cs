@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 
 namespace EbuBridgeLmsSystem.Domain.Repositories
 {
-    public interface ILessonUnitAssignmentRepository
+    public interface ILessonUnitAssignmentRepository:IRepository<LessonUnitAssignment>
     {
+        Task<LessonUnitAssignment> GetLatestUnitAssignment();
     }
 }

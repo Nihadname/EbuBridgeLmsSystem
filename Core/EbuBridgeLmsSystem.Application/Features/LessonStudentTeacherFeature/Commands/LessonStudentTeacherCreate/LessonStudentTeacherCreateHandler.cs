@@ -57,6 +57,20 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
                 {
                     return UncompletedLessonsError(existedLesson.Title);
                 }
+            //var existedTeacher = await _unitOfWork.TeacherRepository.GetEntity(s => s.Id == request.TeacherId&&!s.IsDeleted);
+            //if (existedTeacher is null)
+            //{
+            //    return Result<Unit>.Failure(Error.NotFound,null,ErrorType.NotFoundError);
+            //}
+            //var teacherCourseIds = existedTeacher.CourseTeachers.Select(ct => ct.CourseId).ToList();
+            //var studentCourseIds = existedStudent.courseStudents.Select(cs => cs.CourseId).ToList();
+
+            //var isTheTeacherInCourseAndLessonStudentIsIn = teacherCourseIds.Intersect(studentCourseIds).Any();
+            //if(isTheTeacherInCourseAndLessonStudentIsIn is false)
+            //{
+
+            //    return Result<Unit>.Failure(Error.Custom("teacherCourse","teacher is not in the same course that student is in"), null, ErrorType.NotFoundError);
+            //}
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
@@ -64,8 +78,8 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonStudentFeature.Commands.
                 {
                     LessonId = request.LessonId,
                     StudentId = request.StudentId,
-                    isFinished = false,
                     TeacherId=null,
+                    isFinished = false,
                 };
                 await _unitOfWork.LessonStudentRepository.Create(lessonStudent);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);

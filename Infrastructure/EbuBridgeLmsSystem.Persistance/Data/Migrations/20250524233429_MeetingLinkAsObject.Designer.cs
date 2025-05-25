@@ -4,6 +4,7 @@ using EbuBridgeLmsSystem.Persistance.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250524233429_MeetingLinkAsObject")]
+    partial class MeetingLinkAsObject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1397,9 +1400,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("TeacherId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("UpdatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -1410,8 +1410,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.HasIndex("LessonUnitId");
 
                     b.HasIndex("StudentId");
-
-                    b.HasIndex("TeacherId");
 
                     b.ToTable("lessonUnitAssignments");
                 });
@@ -2739,12 +2737,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EbuBridgeLmsSystem.Domain.Entities.LmsSystem.Teacher", "Teacher")
-                        .WithMany("lessonUnitAssignments")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.OwnsOne("EbuBridgeLmsSystem.Domain.Entities.LmsSystem.LessonUnitAssignment+Meeting", "LessonMeeting", b1 =>
                         {
                             b1.Property<Guid>("LessonUnitAssignmentId")
@@ -2771,8 +2763,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.Navigation("LessonUnit");
 
                     b.Navigation("Student");
-
-                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("EbuBridgeLmsSystem.Domain.Entities.LmsSystem.LessonUnitAttendance", b =>
@@ -3217,8 +3207,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                     b.Navigation("TeacherFacultyDegrees");
 
                     b.Navigation("lessonStudentTeachers");
-
-                    b.Navigation("lessonUnitAssignments");
                 });
 #pragma warning restore 612, 618
         }

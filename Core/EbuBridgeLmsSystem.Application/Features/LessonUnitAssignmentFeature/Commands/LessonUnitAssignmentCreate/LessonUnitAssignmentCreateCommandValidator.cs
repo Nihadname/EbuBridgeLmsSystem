@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace EbuBridgeLmsSystem.Application.Features.LessonUnitAssignment.Commands.LessonUnitAssignmentCreate
+namespace EbuBridgeLmsSystem.Application.Features.LessonUnitAssignmentFeature.Commands.LessonUnitAssignmentCreate
 {
     public sealed class LessonUnitAssignmentCreateCommandValidator : AbstractValidator<LessonUnitAssignmentCreateCommand>
     {
