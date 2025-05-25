@@ -51,6 +51,7 @@ namespace EbuBridgeLmsSystem.Application
             serviceDescriptors.AddHostedService<CourseImageUploadBackgroundService>();
             serviceDescriptors.AddHostedService<CourseApprovalEmailSendingBackgroundService>();
             serviceDescriptors.AddHostedService<LessonApprovalEmailSendingBackgroundService>();
+            serviceDescriptors.AddHostedService<AddingMeetingLinkToLessonAssignmentBackgroundService>();
             serviceDescriptors.AddResponseCompression(opt =>
             {
                 opt.EnableForHttps = true;

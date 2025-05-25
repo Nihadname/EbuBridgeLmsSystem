@@ -13,7 +13,7 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonUnitAssignmentFeature.Co
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAppUserResolver _appUserResolver;
         private static readonly int  TimeGap=10;
-        //private static readonly string meetingUrlDefaultLink = "https://meet.jit.si/";
+        
         public LessonUnitAssignmentCreateHandler(IUnitOfWork unitOfWork, IAppUserResolver appUserResolver)
         {
             _unitOfWork = unitOfWork;
@@ -67,9 +67,6 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonUnitAssignmentFeature.Co
             await _unitOfWork.SaveChangesAsync();
             return Result<Unit>.Success(Unit.Value, successReturnType: SuccessReturnType.Created);
         }
-        //static string GenerateRoomName()
-        //{
-        //    return "MyMeetingRoom_" + Guid.NewGuid().ToString("N").Substring(0, 8);
-        //}
+      
     }
 }
