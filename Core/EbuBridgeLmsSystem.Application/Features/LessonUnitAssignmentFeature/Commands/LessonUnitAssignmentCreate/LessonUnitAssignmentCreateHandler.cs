@@ -67,6 +67,6 @@ namespace EbuBridgeLmsSystem.Application.Features.LessonUnitAssignmentFeature.Co
             await _unitOfWork.SaveChangesAsync();
             return Result<Unit>.Success(Unit.Value, successReturnType: SuccessReturnType.Created);
         }
-      
+       
     }
 }

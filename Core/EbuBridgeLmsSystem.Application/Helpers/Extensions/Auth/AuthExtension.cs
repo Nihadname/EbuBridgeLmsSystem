@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 using System.Security.Cryptography;
+using EbuBridgeLmsSystem.Domain.Enums;
 
 namespace EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth
 {
@@ -112,5 +113,46 @@ namespace EbuBridgeLmsSystem.Application.Helpers.Extensions.Auth
             return Result<AppUser>.Success(user, null);
         }
 
+        public static async Task<bool> CheckExistenceOfRoleInAppUser(UserManager<AppUser> userManager, AppUser appUser, string role,List<string> roles)
+        {
+            ArgumentNullException.ThrowIfNull(userManager);
+            ArgumentNullException.ThrowIfNull(appUser);
+    
+            if (!string.IsNullOrWhiteSpace(role)&&roles is not null)
+                throw new ArgumentException("both roles cant be sent");
+            if (role is null && roles is null)
+                throw new ArgumentException("Either single role or roles collection must be provided");
+            
+
+            var user = await userManager.GetUserByEmailAsync(appUser.Email);
+            if (user is null)
+            {
+                throw new ArgumentException("User not found"); 
+            }
+            var userRoles = await userManager.GetRolesAsync(appUser);
+            bool isRoleExist;
+            if (!string.IsNullOrWhiteSpace(role))
+            {
+                 isRoleExist = userRoles.Contains(role)?true:false;
+                return isRoleExist;
+            }
+
+            int roleAcceptanceCount = 0;
+            foreach (var roleItem in roles)
+            {
+                isRoleExist = await userManager.IsInRoleAsync(appUser, roleItem);
+                if (isRoleExist)
+                {
+                    roleAcceptanceCount++;
+                }
+            }
+
+            if (roleAcceptanceCount == roles.Count)
+            {
+                return true;
+            }
+            return false;
+            
+        } 
     }
 }
