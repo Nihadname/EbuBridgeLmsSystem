@@ -26,7 +26,7 @@ public sealed class
     public async Task<Result<Unit>> Handle(LessonUnitAssignmentMeetingVerifyCommand request,
         CancellationToken cancellationToken)
     {
-        var currentUser = await _userResolver.GetCurrentUserAsync();
+        var currentUser = await _userResolver.GetCurrentUserAsync(s => !s.IsDeleted);
         if(currentUser == null)
             return Result<Unit>.Failure(Error.Unauthorized, null,ErrorType.UnauthorizedError);
         var isUserTeacher  =await AuthExtension.CheckExistenceOfRoleInAppUser(_userManager, currentUser, "Teacher",null);

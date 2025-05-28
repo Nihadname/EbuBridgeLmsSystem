@@ -1405,6 +1405,9 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<bool>("isLessonFinished")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("LessonUnitId");

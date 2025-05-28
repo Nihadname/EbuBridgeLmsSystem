@@ -15,6 +15,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities.LmsSystem
         public TimeSpan Duration { get; set; }
         public Meeting LessonMeeting { get; set; }
         public LessonUnitAttendance lessonUnitAttendance { get; set; }
+        public bool isLessonFinished { get; set; }
 
 
 
