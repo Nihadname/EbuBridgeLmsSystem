@@ -35,6 +35,10 @@ public sealed class SetStudentAttendanceHandler: IRequestHandler<SetStudentAtten
             return Result<Unit>.Failure(Error.Unauthorized, null,ErrorType.UnauthorizedError);
         }
         var existedStudent=await _unitOfWork.StudentRepository.GetEntity(s=>s.Id == request.StudentId);
+        if (existedStudent == null)
+        {
+            return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
+        }
         var existedLessonAssignment=await _unitOfWork.LessonUnitAssignmentRepository.GetEntity(s=>s.Id == request.LessonUnitAssignmentId);
         if (existedStudent == null || existedLessonAssignment == null)
         {

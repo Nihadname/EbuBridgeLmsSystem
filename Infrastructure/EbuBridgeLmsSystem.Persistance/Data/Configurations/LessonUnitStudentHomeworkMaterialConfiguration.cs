@@ -18,6 +18,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Configurations
             builder.HasIndex(s => s.CreatedTime);
             builder.Property(s => s.UpdatedTime).HasDefaultValueSql("GETDATE()");
             builder.Property(s => s.FileName).HasMaxLength(400);
+            builder.Property(s => s.HomeWorkFileName).HasMaxLength(200);
 
         }
     }

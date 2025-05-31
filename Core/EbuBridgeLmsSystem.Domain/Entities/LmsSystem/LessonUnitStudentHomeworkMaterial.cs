@@ -9,6 +9,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities.LmsSystem
 {
     public class LessonUnitStudentHomeworkMaterial : BaseEntity
     {
+        public string HomeWorkFileName { get; set; }
         public string FileName { get; set; }
         public Guid LessonUnitStudentHomeworkId { get; set; }
         public LessonUnitStudentHomework LessonUnitStudentHomework { get; set; }
