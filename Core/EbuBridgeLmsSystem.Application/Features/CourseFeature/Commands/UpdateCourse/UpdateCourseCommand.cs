@@ -14,7 +14,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.UpdateC
         public string Description { get; init; }
         public DifficultyLevel? difficultyLevel { get; init; }
         public int? DurationHours { get; init; }
-        public Guid? LanguageId { get; init; }
+        public List<Guid>? LanguageIds { get; init; }
         public string Requirements { get; init; }
         public decimal? Price { get; init; }
     }

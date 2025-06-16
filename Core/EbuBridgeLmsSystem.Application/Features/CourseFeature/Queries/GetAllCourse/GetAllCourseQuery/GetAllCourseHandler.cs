@@ -49,11 +49,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetAllCo
                     Status = s.Status,
                     Title = s.Title,
                 }).Take(2).ToList(),
-                Language=new LanguageInCourseListItemDto()
-                {
-                    Id=course.LanguageId,
-                    Name=course.Name,
-                }
+               
             } );
             if (!string.IsNullOrWhiteSpace(request.SearchQuery))
             {

@@ -28,11 +28,7 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Queries.GetByIdC
                 ImageUrl = existedCourse.ImageUrl,
                 Price = existedCourse.Price,
                 Requirements = existedCourse.Requirements,
-                Language =new LanguageInCourseListItemDto()
-                {
-                    Id=existedCourse.LanguageId,
-                    Name=existedCourse.Language.Name,
-                },
+               
                 lessonInCourses = existedCourse.Lessons.Select(p => new LessonInCourseReturnDto()
                 {
                     Title = p.Title,

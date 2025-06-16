@@ -69,6 +69,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<SaasStudent> SaasStudents { get; set; }
         public DbSet<Subscribtion> Subscribtions { get; set; }
         public DbSet<SaasStudentSubscribtion> SaasStudentSubscribtions { get; set; }
+        public DbSet<CourseLanguage> CourseLanguages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -6,7 +6,6 @@ using EbuBridgeLmsSystem.Persistance.AuthHandler.HttpAuth;
 
 using EbuBridgeLmsSystem.Persistance.Data;
 using EbuBridgeLmsSystem.Persistance.Data.Implementations;
-using EbuBridgeLmsSystem.Persistance.Processors;
 using LearningManagementSystem.Core.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;

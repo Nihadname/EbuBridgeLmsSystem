@@ -1,4 +1,5 @@
-﻿using LearningManagementSystem.Core.Entities.Common;
+﻿using EbuBridgeLmsSystem.Domain.Entities.LmsAiSassSystem;
+using LearningManagementSystem.Core.Entities.Common;
 
 namespace EbuBridgeLmsSystem.Domain.Entities.LmsSystem
 {
@@ -14,8 +15,7 @@ namespace EbuBridgeLmsSystem.Domain.Entities.LmsSystem
         public string Requirements { get; set; }
         public decimal Price { get; set; }
         public ICollection<CourseStudent> CourseStudents { get; set; }
-        public Guid LanguageId { get; set; }
-        public Language Language { get; set; }
+        public ICollection<CourseLanguage>  CourseLanguages { get; set; }
         public int MaxAmountOfPeople { get; set; }
         public ICollection<CourseTeacher> CourseTeachers { get; set; }
 

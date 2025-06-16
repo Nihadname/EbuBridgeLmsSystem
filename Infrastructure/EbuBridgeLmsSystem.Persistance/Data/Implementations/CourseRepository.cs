@@ -19,7 +19,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
         }
         public async Task<CourseDomainReturnDto> GetCourseReturnDtoByIdAsync(Guid Id,CancellationToken cancellationToken)
         {
-            var course = await _context.Courses.Where(s => s.Id == Id && !s.IsDeleted).Include(p => p.Language)
+            var course = await _context.Courses.Where(s => s.Id == Id && !s.IsDeleted)
         .Include(p => p.Lessons).Select(existedCourse => new CourseDomainReturnDto() {
             Id = existedCourse.Id,
             Name = existedCourse.Name,
@@ -27,11 +27,7 @@ namespace EbuBridgeLmsSystem.Persistance.Data.Implementations
             difficultyLevel = existedCourse.DifficultyLevel,
             DurationInHours = existedCourse.DurationInHours,
             ImageUrl = existedCourse.ImageUrl,
-            Language = new LanguageInCourseListItemDto()
-            {
-                Id = existedCourse.Language.Id,
-                Name = existedCourse.Language.Name,
-            },
+            
             Price = existedCourse.Price,
             Requirements = existedCourse.Requirements,
             lessonInCourses = existedCourse.Lessons.Select(p => new LessonInCourseReturnDto()

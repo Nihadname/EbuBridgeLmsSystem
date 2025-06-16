@@ -40,6 +40,6 @@ namespace EbuBridgeLmsSystem.Domain.Repositories
         public IChatMessageRepository ChatMessageRepository { get; }
         public ISaasStudentRepository SaasStudentRepository { get; }
         public ILessonUnitStudentHomeworkRepository LessonUnitStudentHomeworkRepository { get; }
-
+        public ICourseLanguageRepository CourseLanguageRepository { get; }
     }
 }

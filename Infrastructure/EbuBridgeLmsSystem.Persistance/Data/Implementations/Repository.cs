@@ -17,6 +17,9 @@ namespace LearningManagementSystem.DataAccess.Data.Implementations
             _context = context;
             _table = context.Set<T>();
         }
+
+        
+
         public async Task Create(T entity)
         {
             try

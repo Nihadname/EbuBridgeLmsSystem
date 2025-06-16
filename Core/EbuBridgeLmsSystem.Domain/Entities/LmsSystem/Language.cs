@@ -5,6 +5,6 @@ namespace EbuBridgeLmsSystem.Domain.Entities.LmsSystem
     public sealed class Language : BaseEntity
     {
         public string Name { get; set; }
-        public Course Course { get; set; }
+        public ICollection<CourseLanguage>  CourseLanguages { get; set; }
     }
 }

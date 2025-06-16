@@ -54,7 +54,6 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
                     Name = request.Name,
                     Description = request.Description,
                     DifficultyLevel = request.difficultyLevel,
-                    LanguageId = request.LanguageId,
                     DurationInHours =request.DurationHours,
                     Requirements = request.Requirements,
                     Price = request.Price,
@@ -62,6 +61,13 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.CourseC
                     MaxAmountOfPeople = request.MaxAmountOfPeople,
                 };
                 await _unitOfWork.CourseRepository.Create(newCourse);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+                var courseLanguage = new CourseLanguage()
+                {
+ LanguageId = request.LanguageId,   
+ CourseId = newCourse.Id,
+                };
+                await _unitOfWork.CourseLanguageRepository.Create(courseLanguage);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 var temporaryImage =  request.formFile.Save(newCourse.Id);
                 var newCourseImageOutBox = new CourseImageOutBox()

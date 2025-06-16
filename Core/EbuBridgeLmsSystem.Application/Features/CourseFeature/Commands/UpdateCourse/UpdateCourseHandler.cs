@@ -116,13 +116,26 @@ namespace EbuBridgeLmsSystem.Application.Features.CourseFeature.Commands.UpdateC
         }
         private async Task<Result<bool>> UpdateCourseLanguage(UpdateCourseCommand request, Course existingCourse)
         {
-            if (!request.LanguageId.HasValue || request.LanguageId == Guid.Empty) return Result<bool>.Success(false,null);
+            if (request?.LanguageIds?.Count==0) return Result<bool>.Success(false,null);
+            existingCourse.CourseLanguages.Clear();
+            List<CourseLanguage> newLanguages = new();
+            foreach (var languageId in request.LanguageIds)
+            {
+                var existedLanguage=await _unitOfWork.LanguageRepository.GetEntity(s => s.Id == languageId);
+                if (existedLanguage is null)
+                {
+                    return Result<bool>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
 
-            var languageExists = await _unitOfWork.LanguageRepository.isExists(s => s.Id == request.LanguageId&&!s.IsDeleted);
-            if (!languageExists)
-                return Result<bool>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
+                }
 
-            existingCourse.LanguageId = request.LanguageId.Value;
+                newLanguages.Add(new CourseLanguage()
+                {
+                  LanguageId = languageId,
+                  CourseId = request.CourseId,
+                });
+
+            }
+             existingCourse.CourseLanguages = newLanguages;
             return Result<bool>.Success(true, null);
         }
         private bool UpdateCoursePrice(UpdateCourseCommand request, Course existingCourse)

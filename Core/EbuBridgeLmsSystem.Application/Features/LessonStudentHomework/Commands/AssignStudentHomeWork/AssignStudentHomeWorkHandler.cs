@@ -39,7 +39,7 @@ public sealed class AssignStudentHomeWorkHandler:IRequestHandler<AssignStudentHo
         {
             return Result<Unit>.Failure(Error.NotFound, null, ErrorType.NotFoundError);
         }
-        
+        var existedTitle=await _unitOfWork.LessonUnitStudentHomeworkRepository.GetEntity(s => s.Title.ToLower() == request.Title.ToLower());
         throw new NotImplementedException();
     }
 }
