@@ -25,7 +25,7 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
                             var limitSetToCourses=course.CourseTeachers.Select(s=>s.Teacher).Count();
                         }
                     }
-                    await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+                    await Task.Delay(TimeSpan.FromSeconds(80), stoppingToken);
                 }
                 catch (OperationCanceledException)
                 {

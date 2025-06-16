@@ -64,7 +64,7 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
 
                     }
 
-                    await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
+                    await Task.Delay(TimeSpan.FromSeconds(80), stoppingToken);
                 }
                 catch (OperationCanceledException)
                 {

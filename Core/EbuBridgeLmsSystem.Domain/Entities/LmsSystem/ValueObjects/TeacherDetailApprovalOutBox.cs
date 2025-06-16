@@ -1,6 +1,6 @@
 ﻿namespace EbuBridgeLmsSystem.Domain.Entities.ValueObjects
 {
-    public class TeacherDetailApprovalOutBox
+    public sealed class TeacherDetailApprovalOutBox
     {
         public string FullName { get; set; }
         public string Subject { get; set; }
