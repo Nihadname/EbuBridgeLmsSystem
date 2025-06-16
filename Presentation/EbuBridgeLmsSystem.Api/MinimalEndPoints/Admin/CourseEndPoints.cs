@@ -29,8 +29,8 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
                 var result=await mediator.Send(courseCommand);
                 return result.ToApiResult();
 
-            }).WithTags("Course").DisableAntiforgery();
-            app.MapDelete($"{baseUrl}/Course/Delete", async([FromForm] CourseDeleteDto courseDeleteDto, IMediator mediator) =>
+            }).WithTags("Course");
+            app.MapDelete($"{baseUrl}/Course/Delete", async(CourseDeleteDto courseDeleteDto, IMediator mediator) =>
             {
                 var courseDeleteCommand = new DeleteCourseCommand()
                 {
@@ -40,7 +40,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
                 return result.ToApiResult();
             }).WithTags("Course");
 
-            app.MapPatch($"{baseUrl}/Course/ApproveStudentCourseRequest",  async ([FromForm] ApproveStudentCourseRequestDto ApproveStudentCourseRequestDto,  ISender mediator) =>
+            app.MapPatch($"{baseUrl}/Course/ApproveStudentCourseRequest",  async (ApproveStudentCourseRequestDto ApproveStudentCourseRequestDto,  ISender mediator) =>
             {
                 var newApproveStudentCourseRequestCommand = new ApproveStudentCourseRequestCommand()
                 {
@@ -48,7 +48,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
                 };
                 var result = await mediator.Send(newApproveStudentCourseRequestCommand);
                 return result.ToApiResult();
-            }).WithTags("Course").DisableAntiforgery();
+            }).WithTags("Course");
            
             }
         

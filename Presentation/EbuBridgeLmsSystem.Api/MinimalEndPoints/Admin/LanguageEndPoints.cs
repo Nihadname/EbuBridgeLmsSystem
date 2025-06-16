@@ -10,7 +10,7 @@ public static class LanguageEndPoints
 {
     public static void MapLanguageAdminEndpoints(this IEndpointRouteBuilder app, string baseUrl)
     {
-        app.MapPost($"{baseUrl}/Language", async ([FromForm] LanguageCreateDto LanguageCreateDto, ISender mediator) =>
+        app.MapPost($"{baseUrl}/Language", async (LanguageCreateDto LanguageCreateDto, ISender mediator) =>
         {
             var newLanguageCreateCommand = new LanguageCreateCommand()
             {

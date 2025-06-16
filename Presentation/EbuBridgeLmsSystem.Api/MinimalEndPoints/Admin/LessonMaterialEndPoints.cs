@@ -16,7 +16,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
         public static void MapLessonMaterialEndPoints(this IEndpointRouteBuilder app, string baseUrl)
         {
             RouteGroupBuilder group = app.MapGroup($"{baseUrl}/LessonMaterial").WithTags("LessonMaterial").RequireAuthorization();
-            group.MapPost(string.Empty,async ([FromForm] LessonMaterialCreateDto lessonMaterialCreateDto, ISender _mediator, IValidator<LessonMaterialCreateDto> validator) =>
+            group.MapPost(string.Empty,async ( LessonMaterialCreateDto lessonMaterialCreateDto, ISender _mediator, IValidator<LessonMaterialCreateDto> validator) =>
             {
                 
                 var lessonMaterialCreateCommand = new LessonMaterialCreateCommand()

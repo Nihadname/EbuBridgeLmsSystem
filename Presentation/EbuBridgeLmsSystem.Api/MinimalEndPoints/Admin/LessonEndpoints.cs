@@ -10,7 +10,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
     {
         public static void MapLessonAdminEndPointsthis(this IEndpointRouteBuilder app, string baseUrl)
         {
-            app.MapPost($"{baseUrl}/Lesson", async ([FromForm] LessonCreateDto LessonCreateDto, ISender mediator) =>
+            app.MapPost($"{baseUrl}/Lesson", async ( LessonCreateDto LessonCreateDto, ISender mediator) =>
             {
                 var newLessonCreateCommand = new LessonCreateCommand()
                 {
@@ -23,7 +23,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
                 };
                 var result = await mediator.Send(newLessonCreateCommand);
                 return result.ToApiResult();
-            }).WithTags("Lesson").DisableAntiforgery();
+            }).WithTags("Lesson");
         }
     }
 }

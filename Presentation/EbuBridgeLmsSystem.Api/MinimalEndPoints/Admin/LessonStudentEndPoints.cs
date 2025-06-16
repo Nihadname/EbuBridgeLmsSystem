@@ -10,7 +10,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
     {
         public static void MapLessonStudentEndPoints(this IEndpointRouteBuilder app, string baseUrl)
         {
-            app.MapPatch($"{baseUrl}LessonStudent/ApproveLessonStudentRequest", async ([FromForm] LessonStudentApproveRequestDto LessonStudentApproveRequestDto, ISender mediator) =>
+            app.MapPatch($"{baseUrl}LessonStudent/ApproveLessonStudentRequest", async ( LessonStudentApproveRequestDto LessonStudentApproveRequestDto, ISender mediator) =>
             {
                 var LessonStudentApproveRequestCommand = new LessonStudentTeacherApprovalCommand()
                 {
@@ -18,7 +18,7 @@ namespace EbuBridgeLmsSystem.Api.MinimalEndPoints.Admin
                 };
                 var result = await mediator.Send(LessonStudentApproveRequestCommand);
                 return result.ToApiResult();
-            }).WithTags("LessonStudent").DisableAntiforgery();
+            }).WithTags("LessonStudent");
 
         }
     }
