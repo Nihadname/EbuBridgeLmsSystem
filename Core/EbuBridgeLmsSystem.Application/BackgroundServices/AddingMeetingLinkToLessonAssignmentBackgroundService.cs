@@ -69,6 +69,9 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
                         _logger.LogInformation("Meeting links saved to database.");
                     }
                 }
+                catch (OperationCanceledException)
+                {
+                }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error occurred in meeting link background service.");

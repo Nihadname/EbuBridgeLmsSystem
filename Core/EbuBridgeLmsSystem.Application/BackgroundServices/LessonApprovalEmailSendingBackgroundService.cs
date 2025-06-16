@@ -19,7 +19,11 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
         }
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using (var scope = _serviceProvider.CreateScope())
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                try
+                {
+  using (var scope = _serviceProvider.CreateScope())
             {
                 var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
                 var emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
@@ -63,6 +67,15 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
                 }
             }
             await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
+                }
+                catch (OperationCanceledException)
+                {
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error executing background service");
+                }
+            }
         }
     }
 }

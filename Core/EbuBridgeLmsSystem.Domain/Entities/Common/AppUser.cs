@@ -1,5 +1,4 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities.LmsAiSassSystem;
-using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
+﻿using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 using Microsoft.AspNetCore.Identity;
 
 namespace EbuBridgeLmsSystem.Domain.Entities.Common
@@ -45,7 +44,6 @@ namespace EbuBridgeLmsSystem.Domain.Entities.Common
         public Student Student { get; set; }
         public Teacher Teacher { get; set; }
         public Parent Parent { get; set; }
-        public SaasStudent SaasStudent { get; set; }
         public RefreshToken RefreshToken { get; set; }
         public ICollection<Note> Notes { get; set; }
         public ICollection<Report> Reports { get; set; }

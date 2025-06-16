@@ -1,5 +1,4 @@
-﻿using EbuBridgeLmsSystem.Domain.Entities.LmsAiSassSystem;
-using LearningManagementSystem.Core.Entities.Common;
+﻿using LearningManagementSystem.Core.Entities.Common;
 
 namespace EbuBridgeLmsSystem.Domain.Entities.LmsSystem
 {

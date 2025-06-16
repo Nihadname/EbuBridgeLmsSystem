@@ -1,5 +1,4 @@
 ﻿using EbuBridgeLmsSystem.Domain.Entities.Common;
-using EbuBridgeLmsSystem.Domain.Entities.LmsAiSassSystem;
 using EbuBridgeLmsSystem.Domain.Entities.LmsSystem;
 using EbuBridgeLmsSystem.Persistance.Processors;
 using LearningManagementSystem.Core.Entities.Common;
@@ -29,15 +28,9 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<Lesson> lessons { get; set; }
         public DbSet<LessonStudentTeacher> lessonsStudents { get; set; }
         public DbSet<LessonUnitMaterial> lessonUnitMaterials { get; set; }
-        public DbSet<LessonQuiz> lessonQuizzes { get; set; }
-        public DbSet<QuizResult> QuizResults { get; set; }
-        public DbSet<QuizQuestion> QuizQuestions { get; set; }
-        public DbSet<QuizOption> QuizOptions { get; set; }
+        
         public DbSet<LessonUnitVideo> lessonUnitVideos { get; set; }
         public DbSet<Note> notes { get; set; }
-        public DbSet<QuizOption> quizOptions { get; set; }
-        public DbSet<Domain.Entities.LmsAiSassSystem.ArticleQuizQuestion> quizQuestions { get; set; }
-        public DbSet<QuizResult> quizResults { get; set; }
         public DbSet<RequestToRegister> requestToRegister { get; set; }
         public DbSet<Fee> fees { get; set; }
         public DbSet<Report> reports { get; set; }
@@ -62,13 +55,6 @@ namespace EbuBridgeLmsSystem.Persistance.Data
         public DbSet<LessonStudentStudentApprovalOutBox> LessonStudentStudentApprovalOutBoxes { get; set; }
         public DbSet<CourseTeacherLesson> CourseTeacherLessons { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
-        public DbSet<Quiz> Quizzes { get; set; }
-        public DbSet<Domain.Entities.LmsAiSassSystem.ArticleQuizQuestion> ArticleQuizQuestions { get; set; }
-        public DbSet<QuizQuestionOption> QuizQuestionOptions { get; set; }
-        public DbSet<Article> Articles { get; set; } 
-        public DbSet<SaasStudent> SaasStudents { get; set; }
-        public DbSet<Subscribtion> Subscribtions { get; set; }
-        public DbSet<SaasStudentSubscribtion> SaasStudentSubscribtions { get; set; }
         public DbSet<CourseLanguage> CourseLanguages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

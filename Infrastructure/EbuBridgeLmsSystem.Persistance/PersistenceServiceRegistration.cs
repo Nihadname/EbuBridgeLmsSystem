@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using EbuBridgeLmsSystem.Persistance.Processors;
 
 namespace EbuBridgeLmsSystem.Persistance
 {
@@ -64,6 +65,7 @@ namespace EbuBridgeLmsSystem.Persistance
        });
             
             services.AddScoped<IAppUserResolver,AppUserResolver>();
+            services.AddScoped<IAuditLogProcessor, AuditLogProcessor>();    
             //services.AddScoped<IAuthService,AuthService>();
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<ITeacherRepository, TeacherRepository>();
@@ -94,7 +96,6 @@ namespace EbuBridgeLmsSystem.Persistance
             services.AddScoped<ICourseTeacherRepository, CourseTeacherRepository>();
             services.AddScoped<ICourseTeacherLessonRepository, CourseTeacherLessonRepository>();
             services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
-            services.AddScoped<ISaasStudentRepository, SaasStudentRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         }

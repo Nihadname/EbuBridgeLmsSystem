@@ -19,57 +19,76 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using (var scope = _serviceProvider.CreateScope())
+            while (!stoppingToken.IsCancellationRequested)
             {
-                var unitOfWork=scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-                var imageService=scope.ServiceProvider.GetRequiredService<IPhotoOrVideoService>();
-                var outBoxQuery = await unitOfWork.CourseImageOutBoxRepository.GetQuery(s => s.OutboxProccess == Domain.Enums.OutboxProccess.Pending&& !s.IsDeleted);
-                var pendingOutBoxes=outBoxQuery.OrderBy(s=>s.CreatedTime).ToList();
-               
-                foreach (var pendingOutBox in pendingOutBoxes)
+                try
                 {
-                    if (stoppingToken.IsCancellationRequested)
-                        break;
-                    try
+                    using (var scope = _serviceProvider.CreateScope())
                     {
-                        var existedCourseWithId = await unitOfWork.CourseRepository.GetEntity(s => s.Id == pendingOutBox.CourseId&&!s.IsDeleted);
-                        if(existedCourseWithId != null)
+                        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+                        var imageService = scope.ServiceProvider.GetRequiredService<IPhotoOrVideoService>();
+                        var outBoxQuery = await unitOfWork.CourseImageOutBoxRepository.GetQuery(s =>
+                            s.OutboxProccess == Domain.Enums.OutboxProccess.Pending && !s.IsDeleted);
+                        var pendingOutBoxes = outBoxQuery.OrderBy(s => s.CreatedTime).ToList();
+
+                        foreach (var pendingOutBox in pendingOutBoxes)
                         {
-                            var fileName = ImageExtension.GetImageFileNameFromCourseId(existedCourseWithId.Id);
-                            if (fileName != null)
+                            if (stoppingToken.IsCancellationRequested)
+                                break;
+                            try
                             {
-                               var result= imageService.UploadMediaAsyncWithUrl(fileName);
-                                if (result is not null)
+                                var existedCourseWithId =
+                                    await unitOfWork.CourseRepository.GetEntity(s =>
+                                        s.Id == pendingOutBox.CourseId && !s.IsDeleted);
+                                if (existedCourseWithId != null)
                                 {
-                                    existedCourseWithId.ImageUrl=result;
-                                    await unitOfWork.CourseRepository.Update(existedCourseWithId);
-                                    await unitOfWork.SaveChangesAsync();
-                                    pendingOutBox.OutboxProccess = Domain.Enums.OutboxProccess.Completed;
-                                    await unitOfWork.CourseImageOutBoxRepository.Update(pendingOutBox);
-                                    await unitOfWork.SaveChangesAsync(stoppingToken);
-                                   fileName.DeleteFile();
+                                    var fileName = ImageExtension.GetImageFileNameFromCourseId(existedCourseWithId.Id);
+                                    if (fileName != null)
+                                    {
+                                        var result = imageService.UploadMediaAsyncWithUrl(fileName);
+                                        if (result is not null)
+                                        {
+                                            existedCourseWithId.ImageUrl = result;
+                                            await unitOfWork.CourseRepository.Update(existedCourseWithId);
+                                            await unitOfWork.SaveChangesAsync();
+                                            pendingOutBox.OutboxProccess = Domain.Enums.OutboxProccess.Completed;
+                                            await unitOfWork.CourseImageOutBoxRepository.Update(pendingOutBox);
+                                            await unitOfWork.SaveChangesAsync(stoppingToken);
+                                            fileName.DeleteFile();
+                                        }
+                                        else
+                                        {
+                                            pendingOutBox.OutboxProccess = Domain.Enums.OutboxProccess.Failed;
+                                            await unitOfWork.CourseImageOutBoxRepository.Update(pendingOutBox);
+                                            await unitOfWork.SaveChangesAsync(stoppingToken);
+                                            _logger.LogError(
+                                                $"Failed to upload image for course {existedCourseWithId.Id}");
+                                        }
+                                    }
                                 }
-                                else
-                                {
-                                    pendingOutBox.OutboxProccess=Domain.Enums.OutboxProccess.Failed;
-                                    await unitOfWork.CourseImageOutBoxRepository.Update(pendingOutBox);
-                                    await unitOfWork.SaveChangesAsync(stoppingToken);   
-                                    _logger.LogError($"Failed to upload image for course {existedCourseWithId.Id}");
-                                }
+
+
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError($"Error processing outbox for course: {ex.Message}", ex);
                             }
                         }
-                         
 
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError($"Error processing outbox for course: {ex.Message}", ex);
+                        await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
                     }
                 }
-                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+                catch (OperationCanceledException)
+                {
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error executing background service");
+                }
+            
+            
             }
-            }
-          
         }
+    }
     }
 

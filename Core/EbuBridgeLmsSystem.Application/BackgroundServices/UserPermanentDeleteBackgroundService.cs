@@ -43,10 +43,14 @@ namespace EbuBridgeLmsSystem.Application.BackgroundServices
                     }
 
                 }
+                
                 catch (TaskCanceledException)
                 {
                     _logger.LogWarning("Deleting User stopped before next execution.");
                     break;
+                }
+                catch (OperationCanceledException)
+                {
                 }
                 catch (Exception ex)
                 {

@@ -39,7 +39,16 @@ namespace EbuBridgeLmsSystem.Application
 
                 return mapperConfig.CreateMapper();
             });
-            serviceDescriptors.AddHangfire(x => x.UseSqlServerStorage(configuration.GetConnectionString("AppConnectionString")));
+            serviceDescriptors.AddHangfire(config => 
+                config.UseSqlServerStorage(configuration.GetConnectionString("AppConnectionString"), new Hangfire.SqlServer.SqlServerStorageOptions
+                {
+                    QueuePollInterval = TimeSpan.FromSeconds(15), // varsayılan zaten 15s, ama senin sisteminde bu küçük olabilir
+                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                    UseRecommendedIsolationLevel = true,
+                    DisableGlobalLocks = true // performans için önerilir
+                }));
+
             serviceDescriptors.AddHangfireServer();
             var stripeSettings= configuration.GetSection("Stripe");
             StripeConfiguration.ApiKey = stripeSettings["SecretKey"];
